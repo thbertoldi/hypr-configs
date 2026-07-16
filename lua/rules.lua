@@ -1,0 +1,31 @@
+-- Window & layer rules. These MUST be Lua in 0.55 — the hyprlang plaintext
+-- rule parser can't express class/title matchers anymore.
+
+-- Float utility / dialog windows
+hl.window_rule({ match = { class = "^(pavucontrol)$" },              float = true })
+hl.window_rule({ match = { class = "^(nm-connection-editor)$" },     float = true })
+hl.window_rule({ match = { class = "^(blueman-manager)$" },          float = true })
+hl.window_rule({ match = { class = "^(org\\.gnome\\.Calculator)$" }, float = true })
+hl.window_rule({ match = { class = "^(qt6ct|qt5ct|kvantummanager)$" }, float = true })
+hl.window_rule({ match = { class = "^(file_progress)$" },            float = true })
+hl.window_rule({ match = { class = "^(xdg-desktop-portal-gtk)$" },   float = true })
+
+-- Picture-in-Picture (float, pinned, fixed size, bottom-right corner)
+hl.window_rule({
+    match = { title = "^(Picture-in-Picture)$" },
+    float = true,
+    pin   = true,
+    size  = { 480, 270 },
+    move  = "100%-490 100%-280",
+})
+
+-- Inhibit idle while watching video / fullscreen
+hl.window_rule({ match = { class = ".*" }, idle_inhibit = "fullscreen" })
+hl.window_rule({ match = { class = "^(mpv|com\\.github\\.rafostar\\.Clapper)$" }, idle_inhibit = "focus" })
+
+-- Full opacity for fullscreen windows
+hl.window_rule({ match = { fullscreen = true }, opacity = "1.0 1.0" })
+
+-- Layer rules (ignorezero -> ignore_alpha in the Lua API)
+hl.layer_rule({ match = { namespace = "^waybar$" },        ignore_alpha = true })
+hl.layer_rule({ match = { namespace = "^notifications$" }, blur = true })

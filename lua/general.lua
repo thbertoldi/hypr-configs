@@ -1,0 +1,37 @@
+hl.config({
+    general = {
+        gaps_in  = 6,
+        gaps_out = 12,
+
+        border_size = 2,
+        col = {
+            active_border   = { colors = { "rgba(fab387ff)", "rgba(eba0acff)" }, angle = 45 },
+            inactive_border = "rgba(313244ff)",
+        },
+
+        layout = "dwindle",
+
+        resize_on_border = true,
+        allow_tearing    = false,
+    },
+
+    -- pseudotile is no longer a config option in 0.55; use the `pseudo`
+    -- dispatcher (Super+P, see keybinds.lua) to toggle it per-window.
+    dwindle = {
+        preserve_split = true,
+        smart_split    = false,
+    },
+
+    master = {
+        new_status = "master",
+        mfact      = 0.55,
+    },
+
+    misc = {
+        disable_hyprland_logo    = true,
+        disable_splash_rendering = true,
+        vrr                      = 1,
+        focus_on_activate        = true,
+        middle_click_paste       = false,
+    },
+})
