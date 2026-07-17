@@ -39,4 +39,11 @@ hl.on("hyprland.start", function()
     -- Make systemd/dbus aware of the Wayland session for portals
     hl.exec_cmd("systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
     hl.exec_cmd("dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP")
+
+    -- Bring up the systemd graphical session so xdg-desktop-portal can start.
+    -- Without this, graphical-session.target stays inactive (nothing else
+    -- activates it on bare Hyprland), the portal's Requisite= fails, and apps
+    -- never receive the color-scheme=prefer-dark signal -> everything looks light.
+    -- Unit: ~/.config/systemd/user/hyprland-session.target
+    hl.exec_cmd("systemctl --user start hyprland-session.target")
 end)
