@@ -1,166 +1,304 @@
-# Hyprland no openSUSE Tumbleweed
+<div align="center">
 
-Esta configuração usa Hyprland 0.55+ em Lua, com Waybar, Fuzzel, Mako, Eww,
-awww, Hyprlock/Hypridle, Ghostty e wlogout. O visual é Catppuccin Mocha com
-acentos peach/maroon. Os componentes persistentes são supervisionados por
-serviços systemd de usuário; UWSM gerencia o ciclo completo da sessão quando
-ela é iniciada pela entrada **Hyprland (UWSM)**.
+# Hyprland · openSUSE Tumbleweed
 
-## Melhorias ativas
+Um desktop Wayland completo, reproduzível e opinativo — configurado em Lua,
+com visual Catppuccin Mocha e integrações reais para produtividade, agenda,
+agentes locais e estudo.
 
-- Waybar com privacidade, inibidor de ociosidade, perfil de energia e indicador
-  de gravação;
-- dashboard Eww reativo com mídia, áudio, brilho, clipboard e quick toggles;
-- temperatura noturna automática pelo `hyprsunset` (07:00/19:00) e alternância
-  manual no Eww;
-- OSD de volume e brilho pelo `wob`;
-- agente de autorização `hyprpolkitagent` e montagem de mídia pelo `udiskie`;
-- captura anotável com Swappy e gravação H.264/FLAC com `wf-recorder`;
-- seleção de cor, configuração visual de monitores e monitor de sistema.
+[![openSUSE Tumbleweed](https://img.shields.io/badge/openSUSE-Tumbleweed-73BA25?logo=opensuse&logoColor=white)](https://get.opensuse.org/tumbleweed/)
+[![Hyprland 0.55+](https://img.shields.io/badge/Hyprland-0.55%2B-58E1FF?logo=wayland&logoColor=white)](https://hypr.land/)
+[![Lua config](https://img.shields.io/badge/config-Lua-2C2D72?logo=lua&logoColor=white)](hyprland.lua)
+[![Catppuccin Mocha](https://img.shields.io/badge/theme-Catppuccin_Mocha-CBA6F7)](https://catppuccin.com/)
+[![ShellCheck](https://img.shields.io/badge/scripts-ShellCheck-4EAA25?logo=gnubash&logoColor=white)](scripts/)
 
-## Atalhos acrescentados
+</div>
 
-| Atalho | Ação |
+> [!IMPORTANT]
+> O bootstrap foi feito especificamente para **openSUSE Tumbleweed**. Ele cria
+> backup antes de substituir configurações conhecidas e oferece `--dry-run`
+> para revisão prévia.
+
+## O que há aqui
+
+| Área | Componentes e experiência |
 |---|---|
-| `Super+Print` | capturar uma região e abrir no Swappy |
-| `Super+Alt+R` | iniciar/parar gravação de uma região |
-| `Super+Shift+C` | copiar uma cor em hexadecimal com Hyprpicker |
-| `Super+Ctrl+M` | abrir o NWG Displays |
-| `Super+Ctrl+B` | abrir o btop no Ghostty |
-| `Super+W` | abrir/fechar o dashboard Eww |
-| `Super+O` | abrir a agenda moderna no DankCalendar |
-| `Super+G` | abrir o menu de agentes locais |
-| `Super+Shift+A` | abrir o Study Hub no Anki |
+| Compositor | Hyprland 0.55+ em Lua, animações, regras e atalhos modulares |
+| Sessão | UWSM e serviços `systemd --user` supervisionando os daemons |
+| Interface | Waybar, dashboard Eww, Fuzzel, Mako, wlogout e Ghostty |
+| Aparência | Catppuccin Mocha, Kvantum, GTK, Papirus e Bibata |
+| Agenda | DankCalendar com Google e Outlook; Proton Calendar pela web |
+| Estudos | Anki, Study Hub, AnkiConnect autenticado e áudio francês |
+| Agentes | Codex no Ghostty, com perfis de sandbox e aprovação explícitos |
+| Utilitários | screenshots, gravação, clipboard, OSD, VPN, mídia e monitores |
 
-As teclas físicas de áudio e brilho agora também exibem o OSD. `Print`,
-`Shift+Print` e `Ctrl+Print` continuam sendo os fluxos rápidos de screenshot.
+### Destaques
 
-## Agenda integrada
+- **Dashboard reativo:** agenda, mídia, áudio, brilho, clipboard, clima,
+  telemetria e quick toggles em um único painel Eww.
+- **Waybar operacional:** privacidade, gravação, VPN, perfil de energia,
+  inibidor de ociosidade e carga diária do Study Hub.
+- **Agenda unificada:** Google e Outlook pessoal no DankCalendar, com
+  sincronização e lembretes em segundo plano; Proton permanece no navegador.
+- **Study Hub:** 60 notas curadas e 84 cartões sobre Kubernetes, NVIDIA/GPU no
+  Kubernetes e francês, sem substituir coleções já existentes.
+- **Francês com áudio:** 24 MP3s cacheados, HyperTTS como fallback e um
+  diagnóstico silencioso para validar toda a cadeia.
+- **Agentes locais controlados:** atalhos para trabalhar nesta configuração,
+  na agenda, em projetos escolhidos ou no Anki, sem desabilitar sandbox.
+- **Dock/undock resiliente:** o monitor externo é identificado pela descrição,
+  e os workspaces acompanham automaticamente a única tela ativa.
 
-O **DankCalendar** é a interface principal. Ele oferece visual escuro moderno,
-modos dia/semana/mês/agenda e reúne Google e Outlook pessoal no mesmo banco
-local. O relógio da Waybar, `Super+O` e o botão **Agenda** do Eww o abrem; o
-dashboard consulta sua API local e mostra até cinco compromissos dos próximos
-14 dias. No Hyprland, a janela abre flutuante, centralizada e proporcional ao
-monitor. O serviço `dankcalendar.service` mantém sincronização e lembretes
-ativos mesmo quando a janela está escondida.
+## Arquitetura
 
-Adicione as contas no painel **Accounts** da própria agenda ou pelo terminal:
-
-```bash
-~/.config/hypr/scripts/dcal.sh account add google
-~/.config/hypr/scripts/dcal.sh account add microsoft
+```mermaid
+flowchart LR
+    Login["Login · Hyprland (UWSM)"] --> Hypr["Hyprland · Lua"]
+    Hypr --> Config["lua/*.lua"]
+    Hypr --> Session["graphical-session.target"]
+    Session --> Services["systemd --user"]
+    Services --> Bar["Waybar"]
+    Services --> Dash["Eww"]
+    Services --> Desktop["Mako · awww · hypridle · hyprsunset"]
+    Bar --> Scripts["scripts/*.sh"]
+    Dash --> Scripts
+    Scripts --> Calendar["DankCalendar · Akonadi"]
+    Scripts --> Study["Anki · AnkiConnect · HyperTTS"]
+    Scripts --> Agents["Codex · Ghostty"]
 ```
 
-- **Google Calendar** usa OAuth no navegador;
-- **Outlook pessoal** usa OAuth e Microsoft Graph. O clique do meio no relógio
-  e o botão direito em **Agenda** continuam oferecendo o Outlook Web no
-  navegador padrão;
-- **Proton Calendar** permanece no navegador pelo botão Proton ou clique
-  direito no relógio, pois não fornece sincronização CalDAV bidirecional.
+A configuração canônica é [`hyprland.lua`](hyprland.lua). Os fragmentos
+[`conf.d/`](conf.d/) permanecem como referência e caminho de rollback; os
+módulos ativos vivem em [`lua/`](lua/).
 
-O portal `Secret` do Flatpak foi ligado ao KWallet. Assim, tokens OAuth e
-senhas ficam no cofre do sistema e nunca entram neste diretório ou no
-bootstrap. As contas devem ser autenticadas novamente em outra máquina.
+## Instalação
 
-O Merkuro permanece instalado como fallback estável, com tema KDE escuro, e
-pode ser aberto por `~/.config/hypr/scripts/calendar-open.sh merkuro`. O
-KOrganizer/Akonadi continua disponível no modo `classic`; sua integração EWS
-não é usada para Outlook, pois a retirada do EWS no Exchange Online começa em
-outubro de 2026.
+### 1. Obtenha o repositório
 
-## Agentes locais
-
-`Super+G` abre um menu para iniciar o Codex no Ghostty. Há perfis para esta
-configuração, a agenda, uma pasta escolhida, todo `~/.config` ou inspeção somente leitura.
-Os modos editáveis usam `workspace-write` com aprovação `on-request`; nenhuma
-opção do menu desabilita sandbox e aprovações. No primeiro uso em outra máquina,
-execute `codex login` ou simplesmente abra o menu e conclua o login no terminal.
-
-## Study Hub e áudio francês
-
-O **Study Hub** integra o Anki à Waybar, ao dashboard Eww, ao Fuzzel e ao menu
-de agentes. Ele adiciona 60 notas curadas sem substituir a coleção existente:
-
-- 18 cartões de fundamentos de Kubernetes;
-- 18 cartões de NVIDIA/GPU no Kubernetes, com fontes oficiais;
-- 24 frases essenciais de francês, cada uma com reconhecimento e produção.
-
-Clique no indicador da Waybar, use o cartão do Eww ou pressione
-`Super+Shift+A`. O clique do meio no indicador inicia francês; o botão direito
-abre o agente de estudos. O agente acessa o Anki apenas pelo AnkiConnect
-autenticado em `127.0.0.1`, nunca editando o banco SQLite diretamente.
-
-O francês usa MP3s cacheados na mídia do Anki para continuar funcionando
-depois da primeira preparação. HyperTTS fica como fallback para cartões sem
-áudio. Templates antigos da coleção que ainda pediam a voz
-`voices=AwesomeTTS` são copiados para
-`~/.local/state/hypr-study/tts-templates-before-repair.json` e migrados para
-`voices=HyperTTS`. Verifique toda a cadeia sem tocar áudio com:
+Depois de publicá-lo no GitHub, copie a URL exibida pelo botão **Code**:
 
 ```bash
-~/.config/hypr/scripts/study-tts-check.sh
+git clone URL_COPIADA_DO_GITHUB ~/hypr-bootstrap
+cd ~/hypr-bootstrap
 ```
 
-AnkiConnect e HyperTTS são instalados de releases fixadas com SHA-256. A chave
-local da API fica com modo `0600` em
-`~/.local/state/hypr-study/ankiconnect-key`. Login do AnkiWeb, coleção e mídia
-pessoal não são incluídos no repositório: entre e sincronize manualmente caso
-queira compartilhar seus dados entre computadores.
-
-## Reproduzir em outro computador
-
-Transfira **todo este diretório**, pois o script depende de `lua/`, `scripts/`
-e `portable/`. Por exemplo, a partir deste computador:
+Também é possível transferir diretamente a configuração atual:
 
 ```bash
 rsync -a ~/.config/hypr/ usuario@outro-computador:~/hypr-bootstrap/
 ```
 
-No computador de destino:
+### 2. Revise o plano
 
 ```bash
-cd ~/hypr-bootstrap
 chmod +x bootstrap-opensuse-tumbleweed.sh
 ./bootstrap-opensuse-tumbleweed.sh --dry-run
+```
+
+### 3. Instale
+
+```bash
 ./bootstrap-opensuse-tumbleweed.sh \
   --with-extras \
   --wallpaper ~/Pictures/meu-wallpaper.jpg \
   --avatar ~/Pictures/meu-avatar.jpeg
 ```
 
-O instalador:
+O bootstrap:
 
-- confirma que o sistema é openSUSE Tumbleweed;
-- instala as dependências pelos repositórios da distribuição, o DankCalendar
-  e o pacote comunitário do Anki pelo Flathub;
-- baixa fontes/temas de fontes oficiais, em versões e checksums fixados;
-- cria backup datado em `~/.local/state/hypr-bootstrap/backups/`;
-- instala Hyprland e os arquivos auxiliares em `~/.config/`;
-- usa um perfil genérico de monitor no primeiro boot;
-- valida scripts, JSON e a configuração com `Hyprland --verify-config`.
+1. confirma o openSUSE Tumbleweed e instala dependências;
+2. instala DankCalendar e Anki pelo Flathub quando necessário;
+3. baixa ativos visuais fixados por versão e SHA-256;
+4. cria backup em `~/.local/state/hypr-bootstrap/backups/`;
+5. instala a sessão UWSM, configurações e serviços de usuário;
+6. usa um perfil de monitor genérico seguro em hardware diferente;
+7. valida Bash, JSON e a configuração do Hyprland.
 
-Use `--same-hardware` somente se o destino também tiver o mesmo LG ultrawide e
-painel `eDP-1`. Para um painel interno com outro nome, use, por exemplo,
-`--internal-output eDP-2`.
+No primeiro login, escolha **Hyprland (UWSM)** no gerenciador de sessão.
 
-O wallpaper e o avatar atuais não ficam neste repositório. Eles podem ser
-fornecidos pelas opções acima ou colocados em `assets/` conforme o README de lá.
-Perfis VPN, chaves, credenciais, conteúdo do KWallet, Handy e `smarty-pants` não
-são copiados. O mesmo vale para contas de agenda, autenticação do Codex e a
-coleção/login do AnkiWeb.
+### Opções do bootstrap
 
-## Opções úteis
+| Opção | Efeito |
+|---|---|
+| `--with-extras` | instala também o inspetor de eventos Wayland `wev` |
+| `--same-hardware` | preserva o perfil LG ultrawide + `eDP-1` deste computador |
+| `--internal-output eDP-2` | troca o nome esperado do painel interno |
+| `--wallpaper ARQUIVO` | instala o wallpaper usado pelo awww |
+| `--avatar ARQUIVO` | instala o avatar exibido pelo Eww |
+| `--skip-packages` | não executa o zypper |
+| `--skip-themes` | não baixa fontes, cursor ou temas |
+| `--dry-run` | exibe as ações sem modificar a máquina |
 
-```text
---with-extras     instala também o utilitário de diagnóstico de eventos `wev`
---skip-packages   instala apenas os arquivos de configuração
---skip-themes     não baixa Catppuccin, Bibata nem JetBrains Mono Nerd Font
---dry-run         mostra as alterações sem executá-las
+## Monitores e portabilidade
+
+O perfil desta máquina em [`lua/monitors.lua`](lua/monitors.lua) representa um
+fluxo de **uma tela ativa por vez**:
+
+- conectado ao dock: LG ultrawide em `3440x1440@85` e painel interno desligado;
+- desconectado: `monitor-listener.sh` reativa o painel do notebook;
+- workspaces não são presos a um conector, evitando que desapareçam após uma
+  troca de `DP-1` para `HDMI-A-1`.
+
+O monitor LG é identificado por
+[`desc:`](https://wiki.hypr.land/Configuring/Basics/Monitors/), não pelo nome
+instável do conector.
+Em outro computador, o bootstrap instala
+[`portable/monitors-generic.lua`](portable/monitors-generic.lua), que usa modo
+preferencial e posicionamento automático. Use `--same-hardware` apenas em uma
+máquina realmente equivalente.
+
+Depois do primeiro login:
+
+```bash
+hyprctl monitors
+$EDITOR ~/.config/hypr/lua/monitors.lua
+hyprctl reload
 ```
 
-O instalador já habilita os serviços de usuário, o OSD, o dashboard ampliado e
-os fluxos de captura/gravação. No primeiro login, escolha **Hyprland (UWSM)**,
-execute `hyprctl monitors` e ajuste
-`~/.config/hypr/lua/monitors.lua`. Veja [SUGESTOES.md](SUGESTOES.md) para o
-registro das melhorias incorporadas e da política adotada para plugins.
+## Atalhos principais
+
+| Atalho | Ação |
+|---|---|
+| `Super+Return` | abrir Ghostty |
+| `Super+D` | abrir Fuzzel |
+| `Super+W` | abrir ou fechar o dashboard Eww |
+| `Super+O` | abrir a agenda no DankCalendar |
+| `Super+G` | abrir o menu de agentes |
+| `Super+Shift+A` | abrir o Study Hub no Anki |
+| `Super+Print` | capturar uma região e anotar no Swappy |
+| `Super+Alt+R` | iniciar ou parar uma gravação de região |
+| `Super+Shift+C` | copiar uma cor com Hyprpicker |
+| `Super+Ctrl+M` | configurar monitores com NWG Displays |
+| `Super+Ctrl+B` | abrir btop no Ghostty |
+| `Super+Escape` | abrir o menu de sessão |
+
+`Print`, `Shift+Print` e `Ctrl+Print` mantêm os fluxos rápidos de screenshot.
+As teclas físicas de áudio e brilho atualizam o PipeWire/backlight e exibem o
+OSD do wob.
+
+## Agenda
+
+O [DankCalendar](https://github.com/AvengeMedia/dankcalendar) é a
+interface principal de agenda. O relógio da Waybar, `Super+O` e o botão
+**Agenda** do Eww abrem uma janela flutuante proporcional ao monitor. O
+dashboard mostra os próximos compromissos pela API local.
+
+Adicione contas pelo painel **Accounts** ou pelo terminal:
+
+```bash
+~/.config/hypr/scripts/dcal.sh account add google
+~/.config/hypr/scripts/dcal.sh account add microsoft
+```
+
+- Google e Outlook pessoal usam OAuth no navegador;
+- Outlook também fica disponível pela web no clique do meio do relógio;
+- Proton Calendar abre exclusivamente pela web;
+- Merkuro/KOrganizer e Akonadi permanecem como fallbacks.
+
+Tokens ficam no KWallet e não entram no repositório.
+
+## Study Hub
+
+O Study Hub integra [Anki](https://apps.ankiweb.net/) à Waybar, ao Eww, ao
+Fuzzel e aos agentes:
+
+| Baralho | Notas | Cartões |
+|---|---:|---:|
+| Kubernetes Core | 18 | 18 |
+| NVIDIA GPUs on Kubernetes | 18 | 18 |
+| French Essentials | 24 | 48 |
+| **Total** | **60** | **84** |
+
+As notas técnicas possuem links para documentação primária. As frases em
+francês têm cartões de reconhecimento e produção, com MP3 cacheado na mídia do
+Anki. O seed é idempotente e não substitui baralhos importados.
+
+AnkiConnect:
+
+- escuta somente em `127.0.0.1:8765`;
+- exige uma chave aleatória com permissão `0600`;
+- é instalado de uma release revisada e fixada por SHA-256;
+- nunca requer edição direta do SQLite do Anki.
+
+Com o Anki aberto, valide TTS, templates e mídia sem reproduzir áudio:
+
+```bash
+~/.config/hypr/scripts/study-tts-check.sh
+```
+
+Login, coleção, histórico e mídia pessoal do AnkiWeb não são versionados.
+
+## Agentes locais
+
+`Super+G` inicia o Codex no Ghostty com perfis para:
+
+- editar esta configuração;
+- planejar usando a agenda;
+- criar ou revisar flashcards;
+- trabalhar em uma pasta escolhida;
+- inspecionar o computador em modo somente leitura;
+- retomar conversas anteriores.
+
+Perfis editáveis usam `workspace-write` e aprovação `on-request`. Operações em
+massa no Anki, mudanças de templates e exclusões exigem confirmação explícita.
+No primeiro uso, execute `codex login`.
+
+## Estrutura do repositório
+
+```text
+.
+├── hyprland.lua                   # entrada canônica do compositor
+├── lua/                           # módulos ativos do Hyprland
+├── conf.d/                        # configuração legada / rollback
+├── scripts/                       # automações do desktop
+├── portable/
+│   ├── anki/                      # bundle curado do Study Hub
+│   ├── eww/                       # dashboard e listeners
+│   ├── waybar/                    # barra e estilos
+│   ├── systemd/user/              # serviços da sessão
+│   └── ...                        # apps, temas e configurações auxiliares
+├── assets/                        # instruções para arquivos visuais locais
+├── bootstrap-opensuse-tumbleweed.sh
+└── SUGESTOES.md                   # histórico das decisões incorporadas
+```
+
+## Verificação e diagnóstico
+
+```bash
+# Configuração canônica
+Hyprland --verify-config --config ~/.config/hypr/hyprland.lua
+hyprctl configerrors
+
+# Scripts e dados
+bash -n ~/.config/hypr/scripts/*.sh
+jq empty ~/.config/hypr/portable/waybar/config.jsonc
+jq empty ~/.config/hypr/portable/anki/starter-decks.json
+
+# Serviços principais
+systemctl --user status waybar eww mako hypridle
+
+# Reprodução segura
+~/.config/hypr/bootstrap-opensuse-tumbleweed.sh --dry-run
+```
+
+## Dados deliberadamente não versionados
+
+- tokens OAuth, KWallet e contas de agenda;
+- chave local do AnkiConnect;
+- login, coleção e mídia pessoal do AnkiWeb;
+- autenticação e histórico do Codex;
+- perfis VPN e credenciais;
+- wallpaper, avatar e arquivos pessoais;
+- binários opcionais como Handy e configurações privadas do smarty-pants.
+
+Para o registro detalhado das melhorias e decisões de segurança, consulte
+[`SUGESTOES.md`](SUGESTOES.md).
+
+---
+
+<div align="center">
+
+Feito para um desktop pessoal que precisa ser bonito, rápido, estudável e
+reproduzível — sem transformar credenciais em dotfiles.
+
+</div>
