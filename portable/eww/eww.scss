@@ -1,0 +1,233 @@
+$base:     #1e1e2e;
+$mantle:   #181825;
+$crust:    #11111b;
+$surface0: #313244;
+$surface1: #45475a;
+$text:     #cdd6f4;
+$subtext:  #a6adc8;
+$overlay:  #6c7086;
+$peach:    #fab387;
+$maroon:   #eba0ac;
+$red:      #f38ba8;
+$yellow:   #f9e2af;
+$green:    #a6e3a1;
+$teal:     #94e2d5;
+$mauve:    #cba6f7;
+$blue:     #89b4fa;
+$sapphire: #74c7ec;
+$sky:      #89dceb;
+$lavender: #b4befe;
+$pink:     #f5c2e7;
+
+* {
+    all: unset;
+    font-family: "JetBrainsMono NF", monospace;
+    font-size: 13px;
+}
+
+.dashboard-root {
+    background-color: transparentize($mantle, 0.10);
+    border: 1px solid $surface0;
+    border-radius: 18px;
+    color: $text;
+}
+
+.dashboard-content { padding: 14px; }
+
+scrollbar {
+    slider {
+        min-width: 4px;
+        min-height: 40px;
+        border-radius: 4px;
+        background-color: $surface1;
+    }
+}
+
+.card {
+    background-color: transparentize($base, 0.05);
+    border: 1px solid $surface0;
+    border-radius: 14px;
+    padding: 14px;
+    color: $text;
+}
+
+.card-title {
+    color: $peach;
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 6px;
+}
+
+.header-card {
+    .avatar {
+        min-width: 56px;
+        min-height: 56px;
+        border-radius: 28px;
+        background-size: cover;
+        background-position: center;
+        border: 2px solid $mauve;
+    }
+    .header-name { color: $text; font-weight: bold; font-size: 14px; }
+    .header-uptime { color: $subtext; font-size: 11px; }
+}
+
+.clock-card {
+    .clock-time {
+        font-family: "JetBrainsMono NF";
+        font-weight: bold;
+        font-size: 48px;
+        color: $peach;
+    }
+    .clock-date { color: $subtext; font-size: 12px; margin-top: 4px; }
+}
+
+.calendar-card {
+    .card-title { color: $blue; }
+    .calendar { color: $text; font-size: 12px; padding: 4px; }
+}
+
+.agenda-card {
+    .card-title { color: $blue; }
+    .agenda-event {
+        padding: 7px 9px;
+        border-radius: 8px;
+        background-color: transparentize($surface0, 0.30);
+        border-left: 3px solid $blue;
+        &:hover { background-color: $surface0; }
+        &.empty { border-left-color: $overlay; }
+    }
+    .agenda-when { color: $blue; font-size: 10px; font-weight: bold; }
+    .agenda-summary { color: $text; font-size: 11px; }
+    .agenda-location { color: $overlay; font-size: 10px; }
+}
+
+.launchers-card {
+    .card-title { color: $green; }
+    .launcher-btn {
+        color: $text;
+        font-size: 11px;
+        font-weight: bold;
+        padding: 8px 9px;
+        border-radius: 9px;
+        background-color: $surface0;
+        transition: all 150ms ease;
+        &:hover { background-color: $surface1; color: $green; }
+        &.agent { color: $mauve; }
+        &.calendar { color: $blue; }
+        &.proton { color: $pink; }
+    }
+}
+
+.weather-card {
+    .weather-icon { font-size: 36px; color: $sky; }
+    .weather-temp { font-size: 20px; font-weight: bold; color: $text; }
+    .weather-desc { font-size: 12px; color: $subtext; }
+    .weather-city { font-size: 11px; color: $overlay; }
+}
+
+.media-card {
+    .card-title { color: $mauve; }
+    .media-title { font-size: 13px; color: $text; font-weight: bold; }
+    .media-artist { font-size: 11px; color: $subtext; margin-bottom: 6px; }
+    .media-btn {
+        font-size: 18px;
+        color: $text;
+        padding: 4px 12px;
+        border-radius: 8px;
+        background-color: $surface0;
+        transition: all 150ms ease;
+        &:hover { background-color: $surface1; color: $mauve; }
+    }
+    .media-play { color: $green; }
+}
+
+.controls-card {
+    .card-title { color: $sky; }
+    .device-name { color: $subtext; font-size: 10px; }
+    .control-icon {
+        min-width: 30px;
+        min-height: 28px;
+        border-radius: 8px;
+        color: $sky;
+        background-color: transparentize($sky, 0.84);
+        &.on { color: $red; background-color: transparentize($red, 0.82); }
+        &.static { color: $yellow; background-color: transparentize($yellow, 0.84); }
+    }
+    .control-label { color: $subtext; font-size: 11px; }
+    .control-value { color: $text; font-size: 11px; min-width: 38px; }
+    .control-slider {
+        trough {
+            background-color: $surface0;
+            border-radius: 5px;
+            min-height: 8px;
+        }
+        highlight { border-radius: 5px; min-height: 8px; }
+        slider {
+            min-width: 14px;
+            min-height: 14px;
+            border-radius: 8px;
+            background-color: $text;
+        }
+        &.audio highlight { background-color: $sky; }
+        &.brightness highlight { background-color: $yellow; }
+    }
+}
+
+.clipboard-card {
+    .card-title { color: $pink; }
+    .clipboard-row {
+        padding: 2px 0;
+        border-bottom: 1px solid $surface0;
+    }
+    .clipboard-copy {
+        color: $subtext;
+        padding: 5px 7px;
+        border-radius: 7px;
+        background-color: transparentize($surface0, 0.35);
+        &:hover { color: $text; background-color: $surface0; }
+    }
+    .clipboard-delete {
+        color: $overlay;
+        padding: 4px 8px;
+        border-radius: 7px;
+        &:hover { color: $red; background-color: transparentize($red, 0.84); }
+    }
+}
+
+.stats-card {
+    .card-title { color: $teal; }
+    .stat-name { color: $subtext; font-size: 11px; }
+    .stat-pct { color: $text; font-size: 11px; }
+    .stat-bar {
+        trough {
+            background-color: $surface0;
+            border-radius: 4px;
+            min-height: 6px;
+        }
+        highlight {
+            background-color: $teal;
+            border-radius: 4px;
+            min-height: 6px;
+        }
+        &.cpu highlight { background-color: $teal; }
+        &.mem highlight { background-color: $lavender; }
+        &.disk highlight { background-color: $sapphire; }
+    }
+}
+
+.actions-row {
+    .action-btn {
+        font-size: 18px;
+        color: $text;
+        padding: 8px 12px;
+        border-radius: 10px;
+        background-color: $surface0;
+        transition: all 150ms ease;
+        &:hover { background-color: $surface1; color: $lavender; }
+        &.on {
+            color: $green;
+            background-color: transparentize($green, 0.82);
+        }
+        &.off { color: $overlay; }
+    }
+}

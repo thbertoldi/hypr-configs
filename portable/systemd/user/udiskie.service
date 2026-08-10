@@ -1,0 +1,14 @@
+[Unit]
+Description=Montagem automática de mídia removível
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/udiskie --automount --notify --smart-tray
+Restart=on-failure
+Slice=background-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target

@@ -1,0 +1,198 @@
+;; Dashboard lateral — Super+W
+
+(defwindow dashboard
+  :monitor 0
+  :geometry (geometry :x "16px"
+                      :y "16px"
+                      :width "380px"
+                      :height "96%"
+                      :anchor "left center")
+  :stacking "overlay"
+  :exclusive false
+  :focusable false
+  (dashboard-root))
+
+(defwidget dashboard-root []
+  (scroll :class "dashboard-root" :vscroll true :hscroll false
+    (box :class "dashboard-content"
+         :orientation "v"
+         :spacing 14
+         :space-evenly false
+      (header-card)
+      (clock-card)
+      (calendar-card)
+      (agenda-card)
+      (launchers-card)
+      (weather-card)
+      (media-card)
+      (controls-card)
+      (clipboard-card)
+      (stats-card)
+      (actions-row))))
+
+;; Variáveis simples
+(defpoll home     :interval "999999s" "echo $HOME")
+(defpoll username :interval "999999s" "echo $USER")
+(defpoll hostname :interval "999999s" "hostname")
+(defpoll time     :interval "1s"      "date +'%H:%M'")
+(defpoll date     :interval "60s"     "date +'%A, %d %B %Y'")
+(defpoll uptime   :interval "60s"     "uptime -p | sed 's/up //'")
+(defpoll cpu      :interval "2s"      "~/.config/eww/scripts/cpu.sh")
+(defpoll mem      :interval "2s"      "~/.config/eww/scripts/mem.sh")
+(defpoll disk     :interval "10s"     "~/.config/eww/scripts/disk.sh")
+(defpoll weather  :interval "1800s"   "~/.config/eww/scripts/weather.sh")
+(defpoll agenda :interval "60s"
+  :initial "[{\"uid\":\"\",\"when\":\"Próximos 14 dias\",\"summary\":\"Carregando agenda…\",\"location\":\"\",\"class\":\"empty\"}]"
+  "~/.config/eww/scripts/calendar-list.sh")
+(defpoll clipboard :interval "3s" :initial "[]"
+  "~/.config/eww/scripts/clipboard.sh list")
+(defpoll quick :interval "2s"
+  :initial "{\"wifi\":\"off\",\"bluetooth\":\"off\",\"dnd\":\"off\",\"night\":\"off\",\"night_mode\":\"auto\"}"
+  "~/.config/eww/scripts/quick-state.sh")
+
+;; Streams orientados a eventos
+(deflisten media
+  :initial "{\"status\":\"Stopped\",\"title\":\"\",\"artist\":\"\",\"icon\":\"⏵\"}"
+  "~/.config/eww/scripts/media-listen.sh")
+(deflisten audio
+  :initial "{\"volume\":0,\"muted\":false,\"mute_class\":\"off\",\"mic_muted\":true,\"mic_class\":\"on\",\"sink\":\"Saída padrão\",\"icon\":\"\",\"mic_icon\":\"\"}"
+  "~/.config/eww/scripts/audio-listen.sh")
+(deflisten brightness
+  :initial "{\"available\":false,\"value\":0,\"device\":\"Sem backlight\"}"
+  "~/.config/eww/scripts/brightness-listen.sh")
+
+(defwidget header-card []
+  (box :class "card header-card" :orientation "h" :spacing 12 :space-evenly false
+    (box :class "avatar"
+         :style "background-image: url('${home}/Pictures/icon/avatar.jpeg');")
+    (box :orientation "v" :spacing 2 :space-evenly false
+      (label :class "header-name"   :text "${username}@${hostname}" :halign "start")
+      (label :class "header-uptime" :text "up ${uptime}" :halign "start"))))
+
+(defwidget clock-card []
+  (box :class "card clock-card" :orientation "v" :spacing 2 :space-evenly false
+    (label :class "clock-time" :text time :halign "center")
+    (label :class "clock-date" :text date :halign "center")))
+
+(defwidget calendar-card []
+  (box :class "card calendar-card" :orientation "v" :spacing 6 :space-evenly false
+    (label :class "card-title" :text "CALENDAR" :halign "start")
+    (calendar :class "calendar"
+              :show-week-numbers false
+              :show-heading true
+              :show-details false
+              :show-day-names true)))
+
+(defwidget agenda-card []
+  (box :class "card agenda-card" :orientation "v" :spacing 6 :space-evenly false
+    (label :class "card-title" :text "PRÓXIMOS COMPROMISSOS" :halign "start")
+    (for event in agenda
+      (button :class "agenda-event ${event.class}"
+              :onclick "~/.config/hypr/scripts/calendar-open.sh agenda"
+        (box :orientation "v" :spacing 2 :space-evenly false
+          (label :class "agenda-when" :text {event.when} :halign "start")
+          (label :class "agenda-summary" :text {event.summary} :halign "start"
+                 :limit-width 39 :truncate true)
+          (label :class "agenda-location" :text {event.location} :halign "start"
+                 :limit-width 39 :truncate true))))))
+
+(defwidget launchers-card []
+  (box :class "card launchers-card" :orientation "v" :spacing 8 :space-evenly false
+    (label :class "card-title" :text "ACESSO RÁPIDO" :halign "start")
+    (box :orientation "h" :spacing 8 :space-evenly true
+      (button :class "launcher-btn agent"
+              :tooltip "Abrir agentes locais com permissões controladas"
+              :onclick "~/.config/hypr/scripts/agent-menu.sh" "󰚩  AGENTES")
+      (button :class "launcher-btn calendar"
+              :tooltip "Abrir DankCalendar · botão direito: Outlook pessoal na web"
+              :onclick "~/.config/hypr/scripts/calendar-open.sh agenda"
+              :onrightclick "~/.config/hypr/scripts/calendar-open.sh outlook" "  AGENDA")
+      (button :class "launcher-btn proton"
+              :tooltip "Abrir Proton Calendar no navegador"
+              :onclick "~/.config/hypr/scripts/calendar-open.sh proton" "P  PROTON"))))
+
+(defwidget weather-card []
+  (box :class "card weather-card" :orientation "h" :spacing 12 :space-evenly false
+    (label :class "weather-icon" :text {weather?.icon ?: "?"})
+    (box :orientation "v" :spacing 2 :space-evenly false :hexpand true
+      (label :class "weather-temp" :text {weather?.temp ?: "--"} :halign "start")
+      (label :class "weather-desc" :text {weather?.desc ?: ""} :halign "start")
+      (label :class "weather-city" :text {weather?.city ?: ""} :halign "start"))))
+
+(defwidget media-card []
+  (box :class "card media-card" :orientation "v" :spacing 6 :space-evenly false
+    (label :class "card-title" :text "MEDIA" :halign "start")
+    (label :class "media-title" :text {media.title} :halign "start" :limit-width 30 :truncate true)
+    (label :class "media-artist" :text {media.artist} :halign "start" :limit-width 30 :truncate true)
+    (box :orientation "h" :spacing 8 :space-evenly true :halign "center"
+      (button :class "media-btn" :onclick "playerctl --player=playerctld previous" "⏮")
+      (button :class "media-btn media-play" :onclick "playerctl --player=playerctld play-pause" {media.icon})
+      (button :class "media-btn" :onclick "playerctl --player=playerctld next" "⏭"))))
+
+(defwidget controls-card []
+  (box :class "card controls-card" :orientation "v" :spacing 9 :space-evenly false
+    (label :class "card-title" :text "CONTROLS" :halign "start")
+    (label :class "device-name" :text {audio.sink} :halign "start" :limit-width 36 :truncate true)
+    (box :orientation "h" :spacing 8 :space-evenly false
+      (button :class "control-icon ${audio.mute_class}"
+              :tooltip "Silenciar saída"
+              :onclick "~/.config/hypr/scripts/audio-control.sh toggle" {audio.icon})
+      (scale :class "control-slider audio"
+             :value {audio.volume} :min 0 :max 100
+             :onchange "~/.config/hypr/scripts/audio-control.sh set {}"
+             :hexpand true)
+      (label :class "control-value" :text "${audio.volume}%"))
+    (box :orientation "h" :spacing 8 :space-evenly false
+      (button :class "control-icon ${audio.mic_class}"
+              :tooltip "Alternar microfone"
+              :onclick "~/.config/hypr/scripts/audio-control.sh mic-toggle" {audio.mic_icon})
+      (label :class "control-label" :text "Microfone" :halign "start" :hexpand true))
+    (box :orientation "h" :spacing 8 :space-evenly false
+      (label :class "control-icon static" :text "")
+      (scale :class "control-slider brightness"
+             :value {brightness.value} :min 1 :max 100
+             :onchange "~/.config/hypr/scripts/brightness-control.sh set {}"
+             :hexpand true)
+      (label :class "control-value" :text "${brightness.value}%"))))
+
+(defwidget clipboard-card []
+  (box :class "card clipboard-card" :orientation "v" :spacing 6 :space-evenly false
+    (label :class "card-title" :text "CLIPBOARD" :halign "start")
+    (for item in clipboard
+      (box :class "clipboard-row" :orientation "h" :spacing 6 :space-evenly false
+        (button :class "clipboard-copy"
+                :onclick "~/.config/eww/scripts/clipboard.sh copy ${item.id}"
+          (label :text {item.preview} :halign "start" :limit-width 35 :truncate true))
+        (button :class "clipboard-delete"
+                :tooltip "Remover do histórico"
+                :onclick "~/.config/eww/scripts/clipboard.sh delete ${item.id}" "×")))))
+
+(defwidget stats-card []
+  (box :class "card stats-card" :orientation "v" :spacing 8 :space-evenly false
+    (label :class "card-title" :text "SYSTEM" :halign "start")
+    (stat-row :name "CPU" :value cpu :bar "cpu")
+    (stat-row :name "RAM" :value mem :bar "mem")
+    (stat-row :name "DISK" :value disk :bar "disk")))
+
+(defwidget stat-row [name value bar]
+  (box :orientation "h" :spacing 8 :space-evenly false
+    (label :class "stat-name" :text name :halign "start" :style "min-width: 40px;")
+    (scale :class "stat-bar ${bar}" :value value :min 0 :max 100 :active false :hexpand true)
+    (label :class "stat-pct" :text "${value}%" :halign "end" :style "min-width: 40px;")))
+
+(defwidget actions-row []
+  (box :class "card actions-row" :orientation "h" :spacing 8 :space-evenly true :halign "center"
+    (button :class "action-btn ${quick.wifi}" :tooltip "Alternar Wi-Fi"
+            :onclick "~/.config/eww/scripts/quick-toggle.sh wifi" "")
+    (button :class "action-btn ${quick.bluetooth}" :tooltip "Alternar Bluetooth"
+            :onclick "~/.config/eww/scripts/quick-toggle.sh bluetooth" "")
+    (button :class "action-btn ${quick.dnd}" :tooltip "Alternar não perturbe"
+            :onclick "~/.config/eww/scripts/quick-toggle.sh dnd" "")
+    (button :class "action-btn ${quick.night}"
+            :tooltip "Luz noturna (${quick.night_mode}); botão direito restaura automático"
+            :onclick "~/.config/eww/scripts/quick-toggle.sh night"
+            :onrightclick "~/.config/eww/scripts/quick-toggle.sh night-auto" "")
+    (button :class "action-btn" :tooltip "Bloquear tela"
+            :onclick "eww close dashboard && hyprlock" "")
+    (button :class "action-btn" :tooltip "Menu de energia"
+            :onclick "eww close dashboard && wlogout --protocol layer-shell" "⏻")))

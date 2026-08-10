@@ -1,0 +1,16 @@
+[Desktop Entry]
+Name=Merkuro Calendar
+Name[pt_BR]=Agenda Merkuro
+GenericName=Calendar
+GenericName[pt_BR]=Calendário
+Comment=Manage tasks and events in a modern unified calendar
+Comment[pt_BR]=Gerencie tarefas e eventos em uma agenda moderna e unificada
+Exec=env QT_QPA_PLATFORMTHEME=kde merkuro-calendar %u
+Icon=org.kde.merkuro.calendar
+Type=Application
+Terminal=false
+Categories=Qt;KDE;Office;Calendar;
+Keywords=Calendar;Agenda;Events;Tasks;Reminders;Google;Outlook;
+StartupNotify=true
+MimeType=text/calendar;
+SingleMainWindow=true

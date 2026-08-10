@@ -1,0 +1,14 @@
+[Unit]
+Description=Histórico de clipboard do Wayland
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/wl-paste --watch %h/.config/hypr/scripts/clipboard-store.sh
+Restart=on-failure
+Slice=background-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target

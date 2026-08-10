@@ -1,0 +1,14 @@
+[Unit]
+Description=OSD de volume e brilho Wob
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=exec
+ExecStart=%h/.config/hypr/scripts/wob-daemon.sh
+Restart=on-failure
+Slice=app-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target

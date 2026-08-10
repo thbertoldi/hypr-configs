@@ -1,0 +1,14 @@
+[Unit]
+Description=Daemon pessoal smarty-pants
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionFileIsExecutable=%h/.cargo/bin/smarty-pants-daemon
+
+[Service]
+Type=exec
+ExecStart=%h/.cargo/bin/smarty-pants-daemon
+Restart=on-failure
+Slice=background-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target

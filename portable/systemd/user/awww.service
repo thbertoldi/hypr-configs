@@ -1,0 +1,15 @@
+[Unit]
+Description=Daemon e wallpaper awww
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/awww-daemon
+ExecStartPost=%h/.config/hypr/scripts/wallpaper-apply.sh
+Restart=on-failure
+Slice=background-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target

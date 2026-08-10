@@ -1,0 +1,36 @@
+* {
+    background-image: none;
+    box-shadow: none;
+    font-family: "JetBrainsMono NF", monospace;
+}
+
+window {
+    background-color: rgba(30, 30, 46, 0.85);
+    color: #cdd6f4;
+}
+
+button {
+    color: #cdd6f4;
+    background-color: #181825;
+    border: 2px solid #313244;
+    border-radius: 16px;
+    margin: 8px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 25%;
+    transition: all 200ms ease;
+}
+
+button:focus, button:active, button:hover {
+    background-color: #1e1e2e;
+    border-color: #fab387;
+    color: #fab387;
+    outline-style: none;
+}
+
+#lock      { background-image: image(url("/usr/share/wlogout/icons/lock.png")); }
+#logout    { background-image: image(url("/usr/share/wlogout/icons/logout.png")); }
+#suspend   { background-image: image(url("/usr/share/wlogout/icons/suspend.png")); }
+#hibernate { background-image: image(url("/usr/share/wlogout/icons/hibernate.png")); }
+#reboot    { background-image: image(url("/usr/share/wlogout/icons/reboot.png")); }
+#shutdown  { background-image: image(url("/usr/share/wlogout/icons/shutdown.png")); }

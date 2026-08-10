@@ -1,0 +1,14 @@
+[Unit]
+Description=Reconciliação de monitores do Hyprland
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=exec
+ExecStart=%h/.config/hypr/scripts/monitor-listener.sh
+Restart=on-failure
+Slice=background-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target

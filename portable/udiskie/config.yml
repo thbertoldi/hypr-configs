@@ -1,0 +1,14 @@
+program_options:
+  tray: auto
+  menu: flat
+  automount: true
+  notify: true
+  password_cache: 10
+  file_manager: xdg-open
+  terminal: "ghostty --working-directory"
+  password_prompt: "builtin:gui"
+
+notifications:
+  timeout: 3
+  device_added: false
+  device_removed: false

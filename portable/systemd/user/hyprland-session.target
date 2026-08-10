@@ -1,0 +1,9 @@
+[Unit]
+Description=Hyprland session
+Documentation=man:systemd.special(7)
+# BindsTo pulls in and starts graphical-session.target as a dependency. This
+# lets xdg-desktop-portal activate and publish appearance settings to apps.
+BindsTo=graphical-session.target
+Wants=graphical-session-pre.target
+After=graphical-session-pre.target
+PropagatesStopTo=graphical-session.target

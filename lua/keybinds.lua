@@ -1,14 +1,18 @@
 local m = "SUPER"
 
 -- === Apps ===
-hl.bind(m .. " + Return",    hl.dsp.exec_cmd("ghostty"))
-hl.bind(m .. " + D",         hl.dsp.exec_cmd("fuzzel"))
+hl.bind(m .. " + Return",    hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh ghostty"))
+hl.bind(m .. " + D",         hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh fuzzel"))
 hl.bind(m .. " + SHIFT + D", hl.dsp.exec_cmd("fuzzel --dmenu"))
-hl.bind(m .. " + B",         hl.dsp.exec_cmd("firefox"))
-hl.bind(m .. " + E",         hl.dsp.exec_cmd("ghostty -e nnn"))
+hl.bind(m .. " + B",         hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh firefox"))
+hl.bind(m .. " + E",         hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh ghostty -e nnn"))
 hl.bind(m .. " + V",         hl.dsp.exec_cmd("sh -c 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'"))
 hl.bind(m .. " + W",         hl.dsp.exec_cmd("sh -c 'eww open --toggle dashboard'"))
 hl.bind(m .. " + T",         hl.dsp.exec_cmd("~/.config/hypr/scripts/vpn-toggle.sh"))
+hl.bind(m .. " + G",         hl.dsp.exec_cmd("~/.config/hypr/scripts/agent-menu.sh"))
+hl.bind(m .. " + O",         hl.dsp.exec_cmd("~/.config/hypr/scripts/calendar-open.sh agenda"))
+hl.bind(m .. " + CTRL + M",  hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh nwg-displays"))
+hl.bind(m .. " + CTRL + B",  hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh ghostty -e btop"))
 
 -- === Window ===
 hl.bind(m .. " + Q",             hl.dsp.window.close())
@@ -67,7 +71,7 @@ hl.bind(m .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 -- === System ===
 hl.bind(m .. " + Escape",         hl.dsp.exec_cmd("wlogout --protocol layer-shell"))
 hl.bind(m .. " + SHIFT + Escape", hl.dsp.exec_cmd("hyprlock"))
-hl.bind(m .. " + SHIFT + E",      hl.dsp.exit())
+hl.bind(m .. " + SHIFT + E",      hl.dsp.exec_cmd("~/.config/hypr/scripts/session-exit.sh"))
 hl.bind(m .. " + CTRL + R",       hl.dsp.exec_cmd("hyprctl reload"))
 hl.bind(m .. " + N",              hl.dsp.exec_cmd("makoctl dismiss"))
 hl.bind(m .. " + SHIFT + N",      hl.dsp.exec_cmd("makoctl dismiss -a"))
@@ -77,8 +81,8 @@ hl.bind(m .. " + space",          hl.dsp.exec_cmd("hyprctl switchxkblayout all n
 -- === Voice (Handy) ===
 -- Wayland blocks apps from grabbing global hotkeys; the compositor owns the
 -- bind and pokes the running Handy instance via its CLI (D-Bus single-instance).
-hl.bind("CTRL + space",  hl.dsp.exec_cmd("/home/thbertoldi/Applications/Handy.AppImage --toggle-transcription"))
-hl.bind("CTRL + Escape", hl.dsp.exec_cmd("/home/thbertoldi/Applications/Handy.AppImage --cancel"))
+hl.bind("CTRL + space",  hl.dsp.exec_cmd([[sh -c 'test -x "$HOME/Applications/Handy.AppImage" && "$HOME/Applications/Handy.AppImage" --toggle-transcription']]))
+hl.bind("CTRL + Escape", hl.dsp.exec_cmd([[sh -c 'test -x "$HOME/Applications/Handy.AppImage" && "$HOME/Applications/Handy.AppImage" --cancel']]))
 
 -- === smarty-pants AI rewrite (xdg-desktop-portal-hyprland GlobalShortcuts) ===
 hl.bind(m .. " + R", hl.dsp.global("surface-transient:rewrite"))
@@ -90,21 +94,26 @@ hl.bind(m .. " + C", hl.dsp.global("surface-transient:condense"))
 hl.bind("Print",         hl.dsp.exec_cmd("grimblast --notify copysave area   ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png"))
 hl.bind("SHIFT + Print", hl.dsp.exec_cmd("grimblast --notify copysave screen ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png"))
 hl.bind("CTRL + Print",  hl.dsp.exec_cmd("grimblast --notify copysave active ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png"))
+hl.bind(m .. " + Print", hl.dsp.exec_cmd("~/.config/hypr/scripts/screenshot-edit.sh"))
+
+-- === Recording and color picker ===
+hl.bind(m .. " + ALT + R",   hl.dsp.exec_cmd("~/.config/hypr/scripts/screen-record-toggle.sh"))
+hl.bind(m .. " + SHIFT + C", hl.dsp.exec_cmd("hyprpicker --autocopy --format=hex --notify"))
 
 -- === Audio (PipeWire via wpctl) ===
-hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+"), { locked = true, repeating = true })
-hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),        { locked = true, repeating = true })
-hl.bind("XF86AudioMute",        hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),       { locked = true })
-hl.bind("XF86AudioMicMute",     hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),     { locked = true })
+hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("~/.config/hypr/scripts/audio-control.sh up"),         { locked = true, repeating = true })
+hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("~/.config/hypr/scripts/audio-control.sh down"),       { locked = true, repeating = true })
+hl.bind("XF86AudioMute",        hl.dsp.exec_cmd("~/.config/hypr/scripts/audio-control.sh toggle"),     { locked = true })
+hl.bind("XF86AudioMicMute",     hl.dsp.exec_cmd("~/.config/hypr/scripts/audio-control.sh mic-toggle"), { locked = true })
 
 -- === Brightness ===
-hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("brightnessctl set +5%"), { locked = true, repeating = true })
-hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl set 5%-"), { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessUp",   hl.dsp.exec_cmd("~/.config/hypr/scripts/brightness-control.sh up"),   { locked = true, repeating = true })
+hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("~/.config/hypr/scripts/brightness-control.sh down"), { locked = true, repeating = true })
 
 -- === Media keys ===
-hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
-hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl next"),       { locked = true })
-hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
+hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl --player=playerctld play-pause"), { locked = true })
+hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl --player=playerctld next"),       { locked = true })
+hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl --player=playerctld previous"),   { locked = true })
 
 -- === Lid switch (disable the internal panel whether the lid opens or closes;
 -- the undock listener re-enables it when no external monitor is present) ===

@@ -1,0 +1,15 @@
+[Unit]
+Description=Daemon de notificações Mako
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/mako
+ExecReload=/usr/bin/makoctl reload
+Restart=on-failure
+Slice=app-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target

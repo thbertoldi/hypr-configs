@@ -1,0 +1,15 @@
+[Unit]
+Description=Lembretes da agenda KDE
+PartOf=graphical-session.target
+After=graphical-session.target kwalletd.service
+Wants=kwalletd.service
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/kalendarac
+Restart=on-failure
+Slice=background-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target

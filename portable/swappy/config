@@ -1,0 +1,14 @@
+[Default]
+save_dir=$HOME/Pictures/Screenshots
+save_filename_format=annotated-%Y%m%d-%H%M%S.png
+show_panel=true
+line_size=4
+text_size=20
+text_font=JetBrainsMono NF
+paint_mode=brush
+early_exit=false
+fill_shape=false
+auto_save=false
+custom_color=rgba(250,179,135,1)
+transparent=false
+transparency=50

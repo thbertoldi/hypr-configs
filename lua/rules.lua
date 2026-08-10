@@ -10,6 +10,15 @@ hl.window_rule({ match = { class = "^(qt6ct|qt5ct|kvantummanager)$" }, float = t
 hl.window_rule({ match = { class = "^(file_progress)$" },            float = true })
 hl.window_rule({ match = { class = "^(xdg-desktop-portal-gtk)$" },   float = true })
 
+-- Keep the calendar spacious on both the ultrawide and a smaller laptop.
+hl.window_rule({
+    match = { class = "^com\\.danklinux\\.dankcalendar$" },
+    float = true,
+    center = true,
+    size = { "monitor_w*0.76", "monitor_h*0.82" },
+    persistent_size = true,
+})
+
 -- Picture-in-Picture (float, pinned, fixed size, bottom-right corner)
 hl.window_rule({
     match = { title = "^(Picture-in-Picture)$" },

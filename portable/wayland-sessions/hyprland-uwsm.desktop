@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Hyprland (UWSM)
+Comment=Hyprland gerenciado por systemd/UWSM
+Exec=uwsm start -- hyprland.desktop
+TryExec=uwsm
+Type=Application

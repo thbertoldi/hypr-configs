@@ -1,0 +1,15 @@
+[Unit]
+Description=Daemon do dashboard Eww
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/eww --no-daemonize daemon
+ExecReload=/usr/bin/eww reload
+Restart=on-failure
+Slice=app-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target

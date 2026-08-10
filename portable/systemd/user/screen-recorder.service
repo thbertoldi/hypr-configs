@@ -1,0 +1,13 @@
+[Unit]
+Description=Gravação de tela com wf-recorder
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=exec
+ExecStart=%h/.config/hypr/scripts/screen-record-run.sh
+ExecStopPost=%h/.config/hypr/scripts/screen-record-finished.sh
+KillSignal=SIGINT
+TimeoutStopSec=20
+Slice=app-graphical.slice

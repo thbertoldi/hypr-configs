@@ -1,0 +1,22 @@
+[Unit]
+Description=DankCalendar — sincronização e lembretes
+Documentation=https://github.com/AvengeMedia/dankcalendar
+PartOf=graphical-session.target
+After=graphical-session.target xdg-desktop-portal.service
+Wants=xdg-desktop-portal.service
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=simple
+ExecStart=%h/.config/hypr/scripts/dcal.sh run --session --hidden
+# Flatpak places the sandbox in its own transient scope.  Ask the daemon to
+# exit over IPC before systemd tears down the launcher process, avoiding a
+# detached duplicate after restart/logout.
+ExecStop=-%h/.config/hypr/scripts/dcal.sh ipc ui.quit
+Restart=on-failure
+RestartSec=2
+TimeoutStopSec=10
+Slice=app-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target
