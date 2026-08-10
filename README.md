@@ -28,6 +28,7 @@ agentes locais e estudo.
 | Interface | Waybar, dashboard Eww, Fuzzel, Mako, wlogout e Ghostty |
 | Aparência | Catppuccin Mocha, Kvantum, GTK, Papirus e Bibata |
 | Agenda | DankCalendar com Google e Outlook; Proton Calendar pela web |
+| Música | Spotify com Spicetify, Marketplace, MPRIS e bandeja útil |
 | Estudos | Anki, Study Hub, AnkiConnect autenticado e áudio francês |
 | Agentes | Codex no Ghostty, com perfis de sandbox e aprovação explícitos |
 | Utilitários | screenshots, gravação, clipboard, OSD, VPN, mídia e monitores |
@@ -40,6 +41,8 @@ agentes locais e estudo.
   inibidor de ociosidade e carga diária do Study Hub.
 - **Agenda unificada:** Google e Outlook pessoal no DankCalendar, com
   sincronização e lembretes em segundo plano; Proton permanece no navegador.
+- **Música personalizável:** Spotify usa o layout Sleek/Catppuccin do
+  Spicetify, Marketplace visual, MPRIS e controles completos na bandeja.
 - **Study Hub:** 60 notas curadas e 84 cartões sobre Kubernetes, NVIDIA/GPU no
   Kubernetes e francês, sem substituir coleções já existentes.
 - **Francês com áudio:** 24 MP3s cacheados, HyperTTS como fallback e um
@@ -63,6 +66,7 @@ flowchart LR
     Bar --> Scripts["scripts/*.sh"]
     Dash --> Scripts
     Scripts --> Calendar["DankCalendar · Akonadi"]
+    Scripts --> Music["Spotify · Spicetify · MPRIS · tray"]
     Scripts --> Study["Anki · AnkiConnect · HyperTTS"]
     Scripts --> Agents["Codex · Ghostty"]
 ```
@@ -107,7 +111,7 @@ chmod +x bootstrap-opensuse-tumbleweed.sh
 O bootstrap:
 
 1. confirma o openSUSE Tumbleweed e instala dependências;
-2. instala DankCalendar e Anki pelo Flathub quando necessário;
+2. instala DankCalendar, Spotify e Anki pelo Flathub quando necessário;
 3. baixa ativos visuais fixados por versão e SHA-256;
 4. cria backup em `~/.local/state/hypr-bootstrap/backups/`;
 5. instala a sessão UWSM, configurações e serviços de usuário;
@@ -163,6 +167,7 @@ hyprctl reload
 | `Super+D` | abrir Fuzzel |
 | `Super+W` | abrir ou fechar o dashboard Eww |
 | `Super+O` | abrir a agenda no DankCalendar |
+| `Super+M` | abrir o Spotify personalizado |
 | `Super+G` | abrir o menu de agentes |
 | `Super+Shift+A` | abrir o Study Hub no Anki |
 | `Super+Print` | capturar uma região e anotar no Swappy |
@@ -196,6 +201,35 @@ Adicione contas pelo painel **Accounts** ou pelo terminal:
 - Merkuro/KOrganizer e Akonadi permanecem como fallbacks.
 
 Tokens ficam no KWallet e não entram no repositório.
+
+## Música
+
+O cliente oficial do Spotify fornece autenticação, biblioteca e reprodução;
+o [Spicetify](https://github.com/spicetify/cli) substitui a aparência pelo
+**Sleek/Catppuccin** e adiciona o Marketplace para trocar temas, snippets e
+extensões visualmente. A versão Flatpak instalada no escopo do usuário torna a
+personalização reversível e evita permissões de root. Um Spotify do sistema
+pode coexistir sem ser alterado.
+
+`Super+M` e o botão **Spotify** no Eww mostram uma janela Wayland sem barra de
+título, centralizada e proporcional ao monitor. O serviço
+`spotify-tray.service` publica um ícone vetorial nítido e um menu com faixa e
+artista atuais, abrir, play/pause, anterior, próxima, shuffle, repeat e cópia do
+link da faixa. O menu controla o MPRIS do cliente; dashboard, `playerctl` e
+teclas físicas usam a mesma interface. Um override Flatpak restrito bloqueia
+somente o indicador nativo redundante do Spotify, deixando um único ícone na
+bandeja sem afetar MPRIS.
+
+O instalador fixa e valida por SHA-256 o Spicetify 2.44.0, o Marketplace 1.0.9
+e os dois arquivos do tema Sleek. Atualizações do Spotify podem exigir executar
+novamente `~/.config/hypr/scripts/spotify-customize.sh`. Login, biblioteca,
+histórico e cache continuam no perfil privado do Flatpak e não entram no
+repositório.
+
+Em uma instalação nova, primeiro abra o Spotify, faça login e aguarde pelo
+menos 60 segundos; depois execute `spotify-customize.sh`. Esse primeiro uso é
+necessário para o Spotify criar os arquivos esperados pelo Spicetify. Em um
+perfil já autenticado, o bootstrap aplica a personalização automaticamente.
 
 ## Study Hub
 
@@ -286,6 +320,7 @@ systemctl --user status waybar eww mako hypridle
 - tokens OAuth, KWallet e contas de agenda;
 - chave local do AnkiConnect;
 - login, coleção e mídia pessoal do AnkiWeb;
+- login, biblioteca, histórico e cache do Spotify;
 - autenticação e histórico do Codex;
 - perfis VPN e credenciais;
 - wallpaper, avatar e arquivos pessoais;

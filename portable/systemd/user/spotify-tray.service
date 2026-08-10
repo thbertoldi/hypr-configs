@@ -1,0 +1,16 @@
+[Unit]
+Description=Controles do Spotify na bandeja
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+ConditionPathExists=%h/.config/hypr/scripts/spotify-tray.py
+
+[Service]
+Type=exec
+ExecStart=/usr/bin/python3 %h/.config/hypr/scripts/spotify-tray.py
+Restart=on-failure
+RestartSec=2
+Slice=app-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target

@@ -177,6 +177,9 @@ validate_host() {
         "$SCRIPT_DIR/scripts/calendar-open.sh" \
         "$SCRIPT_DIR/scripts/dcal.sh" \
         "$SCRIPT_DIR/scripts/monitor-listener.sh" \
+        "$SCRIPT_DIR/scripts/music-open.sh" \
+        "$SCRIPT_DIR/scripts/spotify-customize.sh" \
+        "$SCRIPT_DIR/scripts/spotify-tray.py" \
         "$SCRIPT_DIR/scripts/study-open.sh" \
         "$SCRIPT_DIR/scripts/study-seed.sh" \
         "$SCRIPT_DIR/scripts/study-status.sh" \
@@ -192,6 +195,7 @@ validate_host() {
         "$SCRIPT_DIR/portable/xdg-desktop-portal/hyprland-portals.conf" \
         "$SCRIPT_DIR/portable/systemd/user/hyprland-session.target" \
         "$SCRIPT_DIR/portable/systemd/user/dankcalendar.service" \
+        "$SCRIPT_DIR/portable/systemd/user/spotify-tray.service" \
         "$SCRIPT_DIR/portable/wayland-sessions/hyprland-uwsm.desktop" \
         "$SCRIPT_DIR/portable/monitors-generic.lua"; do
         [[ -f "$required_source" ]] || die "bundle incompleto; falta $required_source"
@@ -221,6 +225,7 @@ install_packages() {
         qt6ct kvantum-manager kvantum-qt6
         papirus-icon-theme fontawesome-fonts symbols-only-nerd-fonts
         google-noto-sans-fonts google-noto-coloremoji-fonts
+        python3-gobject python3-gobject-Gdk typelib-1_0-AyatanaAppIndicator3-0_1
         libnotify-tools
         jq socat curl unzip xz tar rsync git procps gawk dbus-1-tools glib2-tools
         xdg-user-dirs
@@ -272,6 +277,33 @@ install_dankcalendar() {
     flatpak --user install --noninteractive flathub "$app_id"
 }
 
+install_spotify() {
+    local app_id='com.spotify.Client'
+
+    # Spicetify needs a user-owned deployment. A system Flatpak can coexist
+    # and remains untouched, while the user installation takes precedence.
+    if command -v flatpak >/dev/null 2>&1 \
+        && flatpak info --user "$app_id" >/dev/null 2>&1; then
+        log "Spotify Flatpak do usuário já instalado"
+        return
+    fi
+
+    if (( DRY_RUN )); then
+        log "Instalando Spotify pelo Flathub para o usuário atual"
+        print_command flatpak --user remote-add --if-not-exists flathub \
+            https://flathub.org/repo/flathub.flatpakrepo
+        print_command flatpak --user install --noninteractive flathub "$app_id"
+        return
+    fi
+
+    command -v flatpak >/dev/null 2>&1 \
+        || die "flatpak não está disponível após a instalação de pacotes"
+    log "Instalando Spotify pelo Flathub para o usuário atual"
+    flatpak --user remote-add --if-not-exists flathub \
+        https://flathub.org/repo/flathub.flatpakrepo
+    flatpak --user install --noninteractive flathub "$app_id"
+}
+
 install_anki() {
     local app_id='net.ankiweb.Anki'
 
@@ -311,6 +343,32 @@ install_anki_addons() {
     fi
     bash "$SCRIPT_DIR/scripts/anki-connect-install.sh"
     bash "$SCRIPT_DIR/scripts/anki-tts-install.sh"
+}
+
+configure_spotify() {
+    local prefs="$HOME/.var/app/com.spotify.Client/config/spotify/prefs"
+
+    if (( DRY_RUN )); then
+        print_command flatpak override --user \
+            --no-talk-name=org.kde.StatusNotifierWatcher \
+            com.spotify.Client
+    else
+        flatpak override --user \
+            --no-talk-name=org.kde.StatusNotifierWatcher \
+            com.spotify.Client
+    fi
+
+    if [[ ! -f "$prefs" ]] || ! grep -q '^autologin\.username=' "$prefs"; then
+        log "Spotify novo: personalização adiada até o primeiro login"
+        return
+    fi
+
+    log "Aplicando Spicetify Sleek/Catppuccin e Marketplace ao Spotify"
+    if (( DRY_RUN )); then
+        print_command bash "$SCRIPT_DIR/scripts/spotify-customize.sh"
+        return
+    fi
+    bash "$SCRIPT_DIR/scripts/spotify-customize.sh"
 }
 
 install_wf_recorder() {
@@ -497,6 +555,9 @@ backup_existing_configuration() {
         "$HOME/.local/share/Anki2/addons21/111623432" \
         "$HOME/.var/app/net.ankiweb.Anki/data/Anki2/addons21/2055492159" \
         "$HOME/.var/app/net.ankiweb.Anki/data/Anki2/addons21/111623432" \
+        "$HOME/.config/spicetify/config-xpui.ini" \
+        "$HOME/.config/spicetify/Themes/Sleek" \
+        "$HOME/.config/spicetify/CustomApps/marketplace" \
         "/usr/local/share/wayland-sessions/hyprland-uwsm.desktop" \
         "$HOME/.local/share/themes/$GTK_THEME_NAME" \
         "$HOME/.local/share/icons/Bibata-Modern-Classic" \
@@ -594,9 +655,11 @@ deploy_configuration() {
     fi
 
     if (( DRY_RUN )); then
-        print_command chmod 0755 "$hypr_target/scripts/"'*.sh' "$HOME/.config/eww/scripts/"'*.sh'
+        print_command chmod 0755 "$hypr_target/scripts/"'*.sh' \
+            "$hypr_target/scripts/spotify-tray.py" "$HOME/.config/eww/scripts/"'*.sh'
     else
-        chmod 0755 "$hypr_target/scripts/"*.sh "$HOME/.config/eww/scripts/"*.sh
+        chmod 0755 "$hypr_target/scripts/"*.sh \
+            "$hypr_target/scripts/spotify-tray.py" "$HOME/.config/eww/scripts/"*.sh
     fi
 }
 
@@ -658,7 +721,8 @@ reload_user_units() {
     local units=(
         awww.service mako.service eww.service wob.service udiskie.service
         cliphist.service monitor-listener.service nm-applet.service kwalletd.service
-        smarty-pants.service kalendarac.service dankcalendar.service waybar.service hypridle.service hyprsunset.service
+        smarty-pants.service kalendarac.service dankcalendar.service spotify-tray.service
+        waybar.service hypridle.service hyprsunset.service
         hyprpolkitagent.service
     )
     if (( DRY_RUN )); then
@@ -714,6 +778,34 @@ validate_result() {
             || ! flatpak info net.ankiweb.Anki >/dev/null 2>&1; }; then
         die "Anki ausente após a instalação"
     fi
+    flatpak info --user com.spotify.Client >/dev/null 2>&1 \
+        || die "Spotify Flatpak do usuário ausente após a instalação"
+
+    local spotify_prefs="$HOME/.var/app/com.spotify.Client/config/spotify/prefs"
+    if [[ -f "$spotify_prefs" ]] \
+        && grep -q '^autologin\.username=' "$spotify_prefs"; then
+        local spicetify_config="$HOME/.config/spicetify/config-xpui.ini"
+        [[ -x "$HOME/.spicetify/spicetify" ]] \
+            || die "Spicetify ausente após a instalação"
+        [[ -f "$HOME/.config/spicetify/Themes/Sleek/user.css" ]] \
+            || die "tema Sleek ausente após a instalação"
+        [[ -f "$HOME/.config/spicetify/CustomApps/marketplace/manifest.json" ]] \
+            || die "Marketplace do Spicetify ausente após a instalação"
+        grep -Eq '^current_theme[[:space:]]*=[[:space:]]*Sleek$' "$spicetify_config" \
+            || die "tema Sleek não foi ativado"
+        grep -Eq '^color_scheme[[:space:]]*=[[:space:]]*Catppuccin$' "$spicetify_config" \
+            || die "esquema Catppuccin não foi ativado"
+    fi
+
+    if ! python3 - <<'PY'
+import gi
+gi.require_version("Gtk", "3.0")
+gi.require_version("AyatanaAppIndicator3", "0.1")
+from gi.repository import AyatanaAppIndicator3, Gtk
+PY
+    then
+        die "integração Ayatana AppIndicator indisponível"
+    fi
 }
 
 report_service_state() {
@@ -744,6 +836,12 @@ Próximos passos:
      baralhos curados e o áudio francês. Entre no AnkiWeb e sincronize
      manualmente se quiser levar sua coleção; coleção, login e mídia pessoal
      não são copiados por este bootstrap.
+  7. Abra o Spotify com Super+M. Em uma instalação nova, faça login, aguarde
+     pelo menos 60 segundos e execute
+     ~/.config/hypr/scripts/spotify-customize.sh. Em perfis já autenticados, o
+     bootstrap aplica Sleek/Catppuccin e Marketplace automaticamente. A
+     bandeja oferece faixa atual, play/pause, anterior, próxima, shuffle,
+     repeat e cópia do link da faixa.
 
 O script não troca automaticamente o serviço de rede nem altera PAM, evitando
 derrubar uma conexão remota ou bloquear o login. KWallet funciona, mas o
@@ -755,6 +853,7 @@ main() {
     validate_host
     install_packages
     install_dankcalendar
+    install_spotify
     install_anki
     install_wf_recorder
     install_codex_cli
@@ -764,6 +863,7 @@ main() {
     install_anki_addons
     install_visual_assets
     deploy_configuration
+    configure_spotify
     install_user_images
     apply_desktop_theme
     reload_user_units

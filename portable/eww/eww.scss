@@ -162,6 +162,15 @@ scrollbar {
 
 .media-card {
     .card-title { color: $mauve; }
+    .media-open {
+        color: #1ed760;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 4px 8px;
+        border-radius: 7px;
+        background-color: transparentize(#1ed760, 0.86);
+        &:hover { background-color: transparentize(#1ed760, 0.72); }
+    }
     .media-title { font-size: 13px; color: $text; font-weight: bold; }
     .media-artist { font-size: 11px; color: $subtext; margin-bottom: 6px; }
     .media-btn {

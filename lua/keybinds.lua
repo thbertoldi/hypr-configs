@@ -11,6 +11,7 @@ hl.bind(m .. " + W",         hl.dsp.exec_cmd("sh -c 'eww open --toggle dashboard
 hl.bind(m .. " + T",         hl.dsp.exec_cmd("~/.config/hypr/scripts/vpn-toggle.sh"))
 hl.bind(m .. " + G",         hl.dsp.exec_cmd("~/.config/hypr/scripts/agent-menu.sh"))
 hl.bind(m .. " + O",         hl.dsp.exec_cmd("~/.config/hypr/scripts/calendar-open.sh agenda"))
+hl.bind(m .. " + M",         hl.dsp.exec_cmd("~/.config/hypr/scripts/music-open.sh"))
 hl.bind(m .. " + SHIFT + A", hl.dsp.exec_cmd("~/.config/hypr/scripts/study-open.sh all"))
 hl.bind(m .. " + CTRL + M",  hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh nwg-displays"))
 hl.bind(m .. " + CTRL + B",  hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh ghostty -e btop"))

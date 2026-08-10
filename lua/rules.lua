@@ -19,6 +19,15 @@ hl.window_rule({
     persistent_size = true,
 })
 
+-- Keep Spotify spacious without taking over the whole ultrawide. The official
+-- client has a clean borderless Wayland surface; Spicetify styles its content.
+hl.window_rule({
+    match = { class = "^spotify$" },
+    float = true,
+    center = true,
+    size = { "monitor_w*0.80", "monitor_h*0.84" },
+})
+
 -- A focused study surface that still leaves the workspace visible.
 hl.window_rule({
     match = { class = "^net\\.ankiweb\\.Anki$" },

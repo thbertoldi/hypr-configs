@@ -145,7 +145,11 @@
 
 (defwidget media-card []
   (box :class "card media-card" :orientation "v" :spacing 6 :space-evenly false
-    (label :class "card-title" :text "MEDIA" :halign "start")
+    (box :orientation "h" :spacing 8 :space-evenly false
+      (label :class "card-title" :text "MEDIA" :halign "start" :hexpand true)
+      (button :class "media-open spotify"
+              :tooltip "Abrir Spotify personalizado · Super+M"
+              :onclick "~/.config/hypr/scripts/music-open.sh" "  SPOTIFY"))
     (label :class "media-title" :text {media.title} :halign "start" :limit-width 30 :truncate true)
     (label :class "media-artist" :text {media.artist} :halign "start" :limit-width 30 :truncate true)
     (box :orientation "h" :spacing 8 :space-evenly true :halign "center"

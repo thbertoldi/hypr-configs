@@ -89,3 +89,13 @@ reproduzir o ambiente.
     perfil que consulta o AnkiConnect local autenticado. Edições em massa,
     templates e exclusões exigem confirmação, e acesso SQLite direto é
     proibido pelo próprio prompt do perfil.
+
+## Música
+
+20. **Spotify confiável com interface alternativa.** O cliente oficial mantém
+    login, biblioteca e reprodução confiáveis, enquanto Spicetify aplica o
+    layout Sleek/Catppuccin e oferece um Marketplace visual. A implantação
+    Flatpak do usuário evita `sudo`; `Super+M`, Eww e um StatusNotifier próprio
+    abrem o cliente e controlam MPRIS. A bandeja mostra faixa/artista e oferece
+    play/pause, anterior, próxima, shuffle, repeat e cópia do link. Versões e
+    downloads usados na personalização são fixados e verificados por SHA-256.
