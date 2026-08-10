@@ -19,6 +19,15 @@ hl.window_rule({
     persistent_size = true,
 })
 
+-- A focused study surface that still leaves the workspace visible.
+hl.window_rule({
+    match = { class = "^net\\.ankiweb\\.Anki$" },
+    float = true,
+    center = true,
+    size = { "monitor_w*0.76", "monitor_h*0.84" },
+    persistent_size = true,
+})
+
 -- Picture-in-Picture (float, pinned, fixed size, bottom-right corner)
 hl.window_rule({
     match = { title = "^(Picture-in-Picture)$" },

@@ -101,6 +101,41 @@ scrollbar {
     .agenda-location { color: $overlay; font-size: 10px; }
 }
 
+.study-card {
+    border-left: 3px solid $mauve;
+    .card-title { color: $mauve; margin-bottom: 0; }
+    .study-today { color: $yellow; font-size: 10px; font-weight: bold; }
+    .study-progress { color: $subtext; font-size: 10px; }
+    .study-topic {
+        color: $text;
+        font-size: 10px;
+        font-weight: bold;
+        padding: 7px 8px;
+        border-radius: 8px;
+        background-color: $surface0;
+        &:hover { background-color: $surface1; }
+        &.k8s { color: $blue; }
+        &.gpu { color: $green; }
+        &.french { color: $mauve; }
+    }
+    .study-agent {
+        color: $mauve;
+        font-size: 10px;
+        padding: 7px;
+        border-radius: 8px;
+        background-color: transparentize($mauve, 0.84);
+        &:hover { background-color: transparentize($mauve, 0.72); }
+    }
+    &.clear {
+        border-left-color: $green;
+        .study-today { color: $green; }
+    }
+    &.offline {
+        border-left-color: $overlay;
+        .study-today { color: $overlay; }
+    }
+}
+
 .launchers-card {
     .card-title { color: $green; }
     .launcher-btn {

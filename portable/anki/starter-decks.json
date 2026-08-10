@@ -1,0 +1,374 @@
+{
+  "version": 1,
+  "decks": [
+    {
+      "name": "Study Hub::Kubernetes Core",
+      "model": "Hypr Study — Concept",
+      "tags": ["study-hub", "kubernetes", "k8s"],
+      "notes": [
+        {
+          "fields": {
+            "Source ID": "k8s-001",
+            "Question": "Qual é a menor unidade implantável do Kubernetes?",
+            "Answer": "O <code>Pod</code>: um ou mais contêineres co-localizados que compartilham rede e, quando configurado, armazenamento.",
+            "Context": "Contêineres do mesmo Pod são agendados juntos e podem se comunicar por <code>localhost</code>.",
+            "Source": "https://kubernetes.io/docs/concepts/workloads/pods/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-002",
+            "Question": "Por que normalmente não se criam Pods diretamente em produção?",
+            "Answer": "Porque controladores como <code>Deployment</code>, <code>StatefulSet</code> e <code>Job</code> reconciliam réplicas e substituem Pods que falham.",
+            "Context": "Pods são descartáveis; o controlador mantém o estado desejado.",
+            "Source": "https://kubernetes.io/docs/concepts/workloads/controllers/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-003",
+            "Question": "O que o loop de reconciliação de um controlador faz?",
+            "Answer": "Compara o estado atual ao estado desejado e executa ações para aproximá-los.",
+            "Context": "Esse padrão declarativo é central no Kubernetes e também aparece em operadores customizados.",
+            "Source": "https://kubernetes.io/docs/concepts/architecture/controller/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-004",
+            "Question": "O que um Deployment gerencia?",
+            "Answer": "Um conjunto de Pods, por meio de ReplicaSets, oferecendo atualizações declarativas e rollout/rollback.",
+            "Context": "Ao mudar o template do Pod, o Deployment cria um novo ReplicaSet e faz a transição conforme a estratégia configurada.",
+            "Source": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-005",
+            "Question": "Qual é a diferença essencial entre Deployment e StatefulSet?",
+            "Answer": "StatefulSet oferece identidade de rede estável, ordenação e armazenamento persistente por réplica; Deployment trata réplicas como intercambiáveis.",
+            "Context": "Use StatefulSet quando a aplicação depende de identidade ou ordem; ele não torna automaticamente a aplicação distribuída ou consistente.",
+            "Source": "https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-006",
+            "Question": "Para que serve um Service?",
+            "Answer": "Para expor um conjunto lógico de endpoints por uma interface de rede estável, desacoplando clientes do ciclo de vida dos Pods.",
+            "Context": "Em geral, o Service seleciona Pods por labels; EndpointSlices registram os backends.",
+            "Source": "https://kubernetes.io/docs/concepts/services-networking/service/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-007",
+            "Question": "Quando usar um Service <code>ClusterIP</code>?",
+            "Answer": "Quando o serviço precisa ser alcançado apenas de dentro do cluster. É o tipo padrão.",
+            "Context": "Para entrada externa, considere Gateway/Ingress, LoadBalancer ou NodePort conforme a infraestrutura.",
+            "Source": "https://kubernetes.io/docs/concepts/services-networking/service/#type-clusterip"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-008",
+            "Question": "Qual é o efeito de falha de uma readiness probe?",
+            "Answer": "O contêiner continua executando, mas o Pod deixa de ser considerado pronto e é removido dos endpoints de Services compatíveis.",
+            "Context": "Readiness controla tráfego; não deve ser usada como substituta de liveness.",
+            "Source": "https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-009",
+            "Question": "Qual é o efeito de falha repetida de uma liveness probe?",
+            "Answer": "O kubelet reinicia o contêiner conforme sua política de reinício.",
+            "Context": "Uma liveness probe ruim pode causar reinícios em cascata; ela deve detectar travamento real, não dependências temporariamente indisponíveis.",
+            "Source": "https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-010",
+            "Question": "Quando uma startup probe é útil?",
+            "Answer": "Quando a aplicação demora para iniciar. Enquanto ela não passa, liveness e readiness não começam a interferir.",
+            "Context": "Isso permite tolerar inicialização lenta sem aumentar permanentemente os limiares da liveness probe.",
+            "Source": "https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-011",
+            "Question": "Como requests e limits de CPU diferem?",
+            "Answer": "O request influencia agendamento e a parcela garantida; o limit é imposto por throttling de CPU.",
+            "Context": "CPU é um recurso compressível: atingir o limite reduz tempo de CPU, não causa OOM.",
+            "Source": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-012",
+            "Question": "Como requests e limits de memória diferem?",
+            "Answer": "O request influencia o agendamento; exceder o limit pode levar o contêiner a ser encerrado por OOM sob pressão de memória.",
+            "Context": "Memória é incompressível, por isso o comportamento difere de CPU.",
+            "Source": "https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-013",
+            "Question": "O que determina a classe QoS <code>Guaranteed</code> de um Pod?",
+            "Answer": "Todo contêiner precisa ter requests e limits de CPU e memória definidos, e cada request deve ser igual ao respectivo limit.",
+            "Context": "As classes QoS afetam decisões de eviction quando o nó está sob pressão.",
+            "Source": "https://kubernetes.io/docs/concepts/workloads/pods/pod-qos/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-014",
+            "Question": "Qual a relação entre labels e selectors?",
+            "Answer": "Labels são pares chave/valor anexados a objetos; selectors consultam ou agrupam objetos com base nessas labels.",
+            "Context": "Deployments e Services dependem fortemente de selectors coerentes.",
+            "Source": "https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-015",
+            "Question": "Taints e tolerations garantem que um Pod rode em um nó específico?",
+            "Answer": "Não. Taints repelem Pods sem toleration; para atrair ou exigir nós específicos, combine com node affinity ou nodeSelector.",
+            "Context": "Toleration permite, mas não obriga, o agendamento naquele nó.",
+            "Source": "https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-016",
+            "Question": "Qual a diferença entre ConfigMap e Secret?",
+            "Answer": "Ambos fornecem configuração; Secret é destinado a dados sensíveis, mas não é criptografado no etcd por padrão.",
+            "Context": "Ative encryption at rest, controle RBAC e evite expor Secrets em logs ou manifests públicos.",
+            "Source": "https://kubernetes.io/docs/concepts/configuration/secret/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-017",
+            "Question": "O que um PodDisruptionBudget protege?",
+            "Answer": "A disponibilidade contra interrupções voluntárias simultâneas, como drain ou manutenção de nós.",
+            "Context": "Ele não impede falhas involuntárias e não substitui réplicas suficientes nem distribuição entre zonas.",
+            "Source": "https://kubernetes.io/docs/tasks/run-application/configure-pdb/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "k8s-018",
+            "Question": "O que acontece durante <code>kubectl drain</code>?",
+            "Answer": "O nó é marcado como não agendável e Pods elegíveis são evacuados respeitando as opções e, quando possível, PodDisruptionBudgets.",
+            "Context": "DaemonSet Pods normalmente não são removidos pelo drain; revise flags e workloads locais antes da manutenção.",
+            "Source": "https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Study Hub::NVIDIA GPUs on Kubernetes",
+      "model": "Hypr Study — Concept",
+      "tags": ["study-hub", "kubernetes", "nvidia", "gpu"],
+      "notes": [
+        {
+          "fields": {
+            "Source ID": "gpu-001",
+            "Question": "Qual problema o NVIDIA device plugin resolve no Kubernetes?",
+            "Answer": "Ele anuncia GPUs como recursos estendidos, monitora a saúde e injeta os dispositivos solicitados nos contêineres.",
+            "Context": "O recurso mais comum é <code>nvidia.com/gpu</code>.",
+            "Source": "https://github.com/NVIDIA/k8s-device-plugin"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-002",
+            "Question": "Como um Pod solicita uma GPU NVIDIA inteira?",
+            "Answer": "Definindo um limit inteiro para <code>nvidia.com/gpu</code>, por exemplo <code>limits: { nvidia.com/gpu: 1 }</code>.",
+            "Context": "Recursos estendidos não podem ser superalocados e GPUs normalmente são declaradas em limits.",
+            "Source": "https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-003",
+            "Question": "O que o NVIDIA GPU Operator automatiza?",
+            "Answer": "O ciclo de vida do software necessário para GPUs no cluster: driver, container toolkit, device plugin, descoberta de features, monitoramento e componentes relacionados.",
+            "Context": "A composição exata depende da configuração e do estado dos nós.",
+            "Source": "https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/overview.html"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-004",
+            "Question": "Qual é o papel do NVIDIA Container Toolkit?",
+            "Answer": "Configurar o runtime de contêiner para disponibilizar dispositivos e bibliotecas NVIDIA aos contêineres.",
+            "Context": "O device plugin agenda a GPU; o toolkit permite que o runtime a exponha corretamente.",
+            "Source": "https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/latest/index.html"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-005",
+            "Question": "Para que serve o GPU Feature Discovery?",
+            "Answer": "Para descobrir atributos das GPUs nos nós e publicá-los como labels, permitindo seleção e políticas de agendamento.",
+            "Context": "Labels podem representar modelo, memória, capacidade MIG e outras características.",
+            "Source": "https://github.com/NVIDIA/gpu-feature-discovery"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-006",
+            "Question": "O que é MIG?",
+            "Answer": "Multi-Instance GPU: particionamento por hardware de GPUs compatíveis em instâncias isoladas, cada uma com recursos dedicados.",
+            "Context": "MIG oferece isolamento mais forte de memória e falhas que time-slicing.",
+            "Source": "https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/gpu-operator-mig.html"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-007",
+            "Question": "O que significa a estratégia MIG <code>single</code> no device plugin?",
+            "Answer": "Todos os dispositivos MIG do nó devem seguir uma geometria uniforme e são anunciados como recursos equivalentes <code>nvidia.com/gpu</code>.",
+            "Context": "Ela simplifica o consumo, mas oculta o perfil MIG específico do workload.",
+            "Source": "https://github.com/NVIDIA/k8s-device-plugin#configuration-option-details"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-008",
+            "Question": "O que significa a estratégia MIG <code>mixed</code>?",
+            "Answer": "Perfis MIG diferentes são anunciados como recursos distintos, como <code>nvidia.com/mig-1g.10gb</code>.",
+            "Context": "O nome exato depende da GPU e do perfil disponível.",
+            "Source": "https://github.com/NVIDIA/k8s-device-plugin#configuration-option-details"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-009",
+            "Question": "Time-slicing de GPU oferece isolamento de memória ou de falhas?",
+            "Answer": "Não. Ele compartilha tempo de GPU entre réplicas anunciadas, mas processos continuam compartilhando memória e domínio de falha.",
+            "Context": "Use-o para aumentar utilização quando esse nível de isolamento é aceitável.",
+            "Source": "https://github.com/NVIDIA/k8s-device-plugin#shared-access-to-gpus"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-010",
+            "Question": "O que muda ao ativar <code>renameByDefault</code> no compartilhamento por time-slicing?",
+            "Answer": "O recurso compartilhado recebe o sufixo <code>.shared</code>, deixando explícito para o workload que não é uma GPU exclusiva.",
+            "Context": "Exemplo: <code>nvidia.com/gpu.shared</code>.",
+            "Source": "https://github.com/NVIDIA/k8s-device-plugin#shared-access-to-gpus"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-011",
+            "Question": "Por que pedir mais de uma réplica time-sliced não garante mais capacidade proporcional?",
+            "Answer": "Porque as réplicas representam acessos compartilhados, não fatias isoladas de memória ou desempenho.",
+            "Context": "A documentação do plugin desaconselha tratar duas réplicas como duas vezes a capacidade de uma.",
+            "Source": "https://github.com/NVIDIA/k8s-device-plugin#shared-access-to-gpus"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-012",
+            "Question": "MPS e time-slicing podem ser habilitados simultaneamente no device plugin?",
+            "Answer": "Não. Os modos de compartilhamento MPS e time-slicing são mutuamente exclusivos.",
+            "Context": "MPS também tem restrições de hardware e configuração que devem ser verificadas na versão instalada.",
+            "Source": "https://github.com/NVIDIA/k8s-device-plugin#shared-access-to-gpus"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-013",
+            "Question": "O que o DCGM Exporter fornece ao Prometheus?",
+            "Answer": "Métricas de telemetria de GPU baseadas no NVIDIA Data Center GPU Manager, como utilização, memória, temperatura e erros compatíveis.",
+            "Context": "A lista de métricas depende do hardware, driver e arquivo de counters configurado.",
+            "Source": "https://github.com/NVIDIA/dcgm-exporter"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-014",
+            "Question": "Qual é a primeira verificação quando um Pod com GPU fica Pending?",
+            "Answer": "Inspecionar eventos e confirmar se algum nó anuncia capacidade alocável para o recurso solicitado, além de labels, taints e afinidades.",
+            "Context": "Use <code>kubectl describe pod</code> e confira <code>status.allocatable</code> do nó.",
+            "Source": "https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-015",
+            "Question": "Por que o driver do host e a versão CUDA do contêiner precisam ser compatíveis?",
+            "Answer": "O contêiner usa o driver do host; a runtime CUDA empacotada precisa estar dentro da compatibilidade suportada por esse driver.",
+            "Context": "A imagem não deve tentar carregar um driver de kernel próprio.",
+            "Source": "https://docs.nvidia.com/deploy/cuda-compatibility/index.html"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-016",
+            "Question": "Por que usar node labels/affinity em clusters com GPUs heterogêneas?",
+            "Answer": "Para direcionar workloads a modelos e capacidades compatíveis, em vez de tratar todas as GPUs anunciadas como equivalentes.",
+            "Context": "GPU Feature Discovery pode gerar as labels usadas pela afinidade.",
+            "Source": "https://kubernetes.io/docs/tasks/manage-gpus/scheduling-gpus/"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-017",
+            "Question": "O que significa <code>failOnInitError=true</code> no NVIDIA device plugin?",
+            "Answer": "O plugin falha sua inicialização quando encontra erro, em vez de bloquear indefinidamente e mascarar uma configuração inválida.",
+            "Context": "É o comportamento padrão moderno e ajuda a tornar falhas observáveis.",
+            "Source": "https://github.com/NVIDIA/k8s-device-plugin#configuration-option-details"
+          }
+        },
+        {
+          "fields": {
+            "Source ID": "gpu-018",
+            "Question": "Quais camadas verificar quando um contêiner não enxerga a GPU?",
+            "Answer": "Hardware/driver no nó, container runtime/toolkit, device plugin, recurso alocado ao Pod e variáveis/montagens dentro do contêiner.",
+            "Context": "Diagnosticar por camadas evita atribuir ao scheduler um problema do driver ou runtime.",
+            "Source": "https://docs.nvidia.com/datacenter/cloud-native/gpu-operator/latest/troubleshooting.html"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Study Hub::French Essentials",
+      "model": "Hypr Study — French",
+      "tags": ["study-hub", "french", "français", "a1"],
+      "notes": [
+        {"fields":{"Source ID":"fr-001","French":"Bonjour !","Portuguese":"Olá! / Bom dia!","Hint":"Saudação neutra durante o dia.","Example":"Bonjour, comment allez-vous ? — Olá, como você está?"}},
+        {"fields":{"Source ID":"fr-002","French":"Bonsoir !","Portuguese":"Boa noite!","Hint":"Usado ao encontrar alguém à noite.","Example":"Bonsoir, bienvenue chez nous. — Boa noite, bem-vindo à nossa casa."}},
+        {"fields":{"Source ID":"fr-003","French":"Au revoir !","Portuguese":"Até logo! / Adeus!","Hint":"Despedida comum.","Example":"Merci et au revoir ! — Obrigado e até logo!"}},
+        {"fields":{"Source ID":"fr-004","French":"S'il vous plaît.","Portuguese":"Por favor.","Hint":"Forma formal ou plural; informal: s'il te plaît.","Example":"Un café, s'il vous plaît. — Um café, por favor."}},
+        {"fields":{"Source ID":"fr-005","French":"Merci beaucoup.","Portuguese":"Muito obrigado(a).","Hint":"Beaucoup intensifica merci.","Example":"Merci beaucoup pour votre aide. — Muito obrigado pela sua ajuda."}},
+        {"fields":{"Source ID":"fr-006","French":"Je vous en prie.","Portuguese":"De nada. / Por nada.","Hint":"Resposta educada a merci.","Example":"— Merci ! — Je vous en prie. — Obrigado! — De nada."}},
+        {"fields":{"Source ID":"fr-007","French":"Comment allez-vous ?","Portuguese":"Como você está?","Hint":"Formal ou plural; informal: Comment vas-tu ?","Example":"Bonjour, comment allez-vous aujourd'hui ? — Olá, como você está hoje?"}},
+        {"fields":{"Source ID":"fr-008","French":"Je vais bien, merci.","Portuguese":"Estou bem, obrigado(a).","Hint":"Aller é usado para falar de como alguém está.","Example":"Je vais très bien, et vous ? — Estou muito bem, e você?"}},
+        {"fields":{"Source ID":"fr-009","French":"Je m'appelle Thiago.","Portuguese":"Eu me chamo Thiago.","Hint":"S'appeler é um verbo pronominal.","Example":"Bonjour, je m'appelle Thiago. — Olá, eu me chamo Thiago."}},
+        {"fields":{"Source ID":"fr-010","French":"Enchanté de faire votre connaissance.","Portuguese":"Prazer em conhecê-lo(a).","Hint":"Enchantée se quem fala se identifica no feminino.","Example":"Je m'appelle Claire, enchantée. — Eu me chamo Claire, prazer."}},
+        {"fields":{"Source ID":"fr-011","French":"Je ne comprends pas.","Portuguese":"Eu não entendo.","Hint":"A negação padrão envolve o verbo: ne ... pas.","Example":"Désolé, je ne comprends pas la question. — Desculpe, não entendo a pergunta."}},
+        {"fields":{"Source ID":"fr-012","French":"Pouvez-vous répéter, s'il vous plaît ?","Portuguese":"Você pode repetir, por favor?","Hint":"Pouvez-vous é uma pergunta formal com inversão.","Example":"Pouvez-vous répéter plus lentement ? — Você pode repetir mais devagar?"}},
+        {"fields":{"Source ID":"fr-013","French":"Parlez-vous anglais ?","Portuguese":"Você fala inglês?","Hint":"Pergunta formal; informal: Tu parles anglais ?","Example":"Excusez-moi, parlez-vous anglais ? — Com licença, você fala inglês?"}},
+        {"fields":{"Source ID":"fr-014","French":"Je parle un peu français.","Portuguese":"Eu falo um pouco de francês.","Hint":"Un peu = um pouco.","Example":"Je parle un peu français, mais j'apprends. — Falo um pouco de francês, mas estou aprendendo."}},
+        {"fields":{"Source ID":"fr-015","French":"Où sont les toilettes ?","Portuguese":"Onde fica o banheiro?","Hint":"Toilettes é normalmente plural em francês.","Example":"Excusez-moi, où sont les toilettes ? — Com licença, onde fica o banheiro?"}},
+        {"fields":{"Source ID":"fr-016","French":"Combien ça coûte ?","Portuguese":"Quanto isso custa?","Hint":"Ça é a forma cotidiana de cela.","Example":"Combien coûte ce billet ? — Quanto custa esta passagem?"}},
+        {"fields":{"Source ID":"fr-017","French":"Je voudrais un café.","Portuguese":"Eu gostaria de um café.","Hint":"Je voudrais é mais cortês que je veux.","Example":"Je voudrais un café sans sucre. — Eu gostaria de um café sem açúcar."}},
+        {"fields":{"Source ID":"fr-018","French":"L'addition, s'il vous plaît.","Portuguese":"A conta, por favor.","Hint":"Usado em restaurantes e cafés.","Example":"Nous avons fini. L'addition, s'il vous plaît. — Terminamos. A conta, por favor."}},
+        {"fields":{"Source ID":"fr-019","French":"Quelle heure est-il ?","Portuguese":"Que horas são?","Hint":"Literalmente: que hora é?","Example":"Pardon, quelle heure est-il ? — Desculpe, que horas são?"}},
+        {"fields":{"Source ID":"fr-020","French":"Il est huit heures et demie.","Portuguese":"São oito e meia.","Hint":"Et demie concorda com heure no feminino.","Example":"Le cours commence à huit heures et demie. — A aula começa às oito e meia."}},
+        {"fields":{"Source ID":"fr-021","French":"J'ai besoin d'aide.","Portuguese":"Eu preciso de ajuda.","Hint":"Avoir besoin de = precisar de.","Example":"Excusez-moi, j'ai besoin d'aide. — Com licença, preciso de ajuda."}},
+        {"fields":{"Source ID":"fr-022","French":"Je suis désolé.","Portuguese":"Eu sinto muito. / Desculpe.","Hint":"Désolée se quem fala se identifica no feminino.","Example":"Je suis désolé pour le retard. — Desculpe pelo atraso."}},
+        {"fields":{"Source ID":"fr-023","French":"À bientôt !","Portuguese":"Até breve!","Hint":"Para uma despedida com expectativa de rever a pessoa em breve.","Example":"Bonne journée et à bientôt ! — Bom dia e até breve!"}},
+        {"fields":{"Source ID":"fr-024","French":"Bonne journée !","Portuguese":"Tenha um bom dia!","Hint":"É uma despedida; bonjour é uma saudação.","Example":"Merci pour votre visite. Bonne journée ! — Obrigado pela visita. Tenha um bom dia!"}}
+      ]
+    }
+  ]
+}

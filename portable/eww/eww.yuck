@@ -22,6 +22,7 @@
       (clock-card)
       (calendar-card)
       (agenda-card)
+      (study-card)
       (launchers-card)
       (weather-card)
       (media-card)
@@ -44,6 +45,9 @@
 (defpoll agenda :interval "60s"
   :initial "[{\"uid\":\"\",\"when\":\"Próximos 14 dias\",\"summary\":\"Carregando agenda…\",\"location\":\"\",\"class\":\"empty\"}]"
   "~/.config/eww/scripts/calendar-list.sh")
+(defpoll study :interval "60s"
+  :initial "{\"available\":false,\"total\":0,\"new\":0,\"learn\":0,\"review\":0,\"reviewed_today\":0,\"k8s\":0,\"gpu\":0,\"french\":0,\"class\":\"offline\"}"
+  "~/.config/hypr/scripts/study-status.sh")
 (defpoll clipboard :interval "3s" :initial "[]"
   "~/.config/eww/scripts/clipboard.sh list")
 (defpoll quick :interval "2s"
@@ -95,6 +99,26 @@
                  :limit-width 39 :truncate true)
           (label :class "agenda-location" :text {event.location} :halign "start"
                  :limit-width 39 :truncate true))))))
+
+(defwidget study-card []
+  (box :class "card study-card ${study.class}" :orientation "v" :spacing 8 :space-evenly false
+    (box :orientation "h" :space-evenly false
+      (label :class "card-title" :text "STUDY HUB" :halign "start" :hexpand true)
+      (label :class "study-today" :text "${study.total} PARA HOJE" :halign "end"))
+    (label :class "study-progress"
+           :text "Novos ${study.new} · Aprendendo ${study.learn} · Revisões ${study.review}"
+           :halign "start")
+    (box :orientation "h" :spacing 6 :space-evenly true
+      (button :class "study-topic k8s"
+              :onclick "~/.config/hypr/scripts/study-open.sh k8s" "K8S  ${study.k8s}")
+      (button :class "study-topic gpu"
+              :onclick "~/.config/hypr/scripts/study-open.sh gpu" "GPU  ${study.gpu}")
+      (button :class "study-topic french"
+              :onclick "~/.config/hypr/scripts/study-open.sh french" "FR  ${study.french}"))
+    (button :class "study-agent"
+            :tooltip "Criar, revisar ou melhorar cartões com um agente"
+            :onclick "~/.config/hypr/scripts/agent-menu.sh study"
+            "󰚩  AGENTE DE ESTUDOS")))
 
 (defwidget launchers-card []
   (box :class "card launchers-card" :orientation "v" :spacing 8 :space-evenly false

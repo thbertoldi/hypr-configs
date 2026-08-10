@@ -30,6 +30,7 @@ ela é iniciada pela entrada **Hyprland (UWSM)**.
 | `Super+W` | abrir/fechar o dashboard Eww |
 | `Super+O` | abrir a agenda moderna no DankCalendar |
 | `Super+G` | abrir o menu de agentes locais |
+| `Super+Shift+A` | abrir o Study Hub no Anki |
 
 As teclas físicas de áudio e brilho agora também exibem o OSD. `Print`,
 `Shift+Print` e `Ctrl+Print` continuam sendo os fluxos rápidos de screenshot.
@@ -76,6 +77,37 @@ Os modos editáveis usam `workspace-write` com aprovação `on-request`; nenhuma
 opção do menu desabilita sandbox e aprovações. No primeiro uso em outra máquina,
 execute `codex login` ou simplesmente abra o menu e conclua o login no terminal.
 
+## Study Hub e áudio francês
+
+O **Study Hub** integra o Anki à Waybar, ao dashboard Eww, ao Fuzzel e ao menu
+de agentes. Ele adiciona 60 notas curadas sem substituir a coleção existente:
+
+- 18 cartões de fundamentos de Kubernetes;
+- 18 cartões de NVIDIA/GPU no Kubernetes, com fontes oficiais;
+- 24 frases essenciais de francês, cada uma com reconhecimento e produção.
+
+Clique no indicador da Waybar, use o cartão do Eww ou pressione
+`Super+Shift+A`. O clique do meio no indicador inicia francês; o botão direito
+abre o agente de estudos. O agente acessa o Anki apenas pelo AnkiConnect
+autenticado em `127.0.0.1`, nunca editando o banco SQLite diretamente.
+
+O francês usa MP3s cacheados na mídia do Anki para continuar funcionando
+depois da primeira preparação. HyperTTS fica como fallback para cartões sem
+áudio. Templates antigos da coleção que ainda pediam a voz
+`voices=AwesomeTTS` são copiados para
+`~/.local/state/hypr-study/tts-templates-before-repair.json` e migrados para
+`voices=HyperTTS`. Verifique toda a cadeia sem tocar áudio com:
+
+```bash
+~/.config/hypr/scripts/study-tts-check.sh
+```
+
+AnkiConnect e HyperTTS são instalados de releases fixadas com SHA-256. A chave
+local da API fica com modo `0600` em
+`~/.local/state/hypr-study/ankiconnect-key`. Login do AnkiWeb, coleção e mídia
+pessoal não são incluídos no repositório: entre e sincronize manualmente caso
+queira compartilhar seus dados entre computadores.
+
 ## Reproduzir em outro computador
 
 Transfira **todo este diretório**, pois o script depende de `lua/`, `scripts/`
@@ -100,8 +132,8 @@ chmod +x bootstrap-opensuse-tumbleweed.sh
 O instalador:
 
 - confirma que o sistema é openSUSE Tumbleweed;
-- instala as dependências pelos repositórios da distribuição e o DankCalendar
-  oficial pelo Flathub;
+- instala as dependências pelos repositórios da distribuição, o DankCalendar
+  e o pacote comunitário do Anki pelo Flathub;
 - baixa fontes/temas de fontes oficiais, em versões e checksums fixados;
 - cria backup datado em `~/.local/state/hypr-bootstrap/backups/`;
 - instala Hyprland e os arquivos auxiliares em `~/.config/`;
@@ -115,7 +147,8 @@ painel `eDP-1`. Para um painel interno com outro nome, use, por exemplo,
 O wallpaper e o avatar atuais não ficam neste repositório. Eles podem ser
 fornecidos pelas opções acima ou colocados em `assets/` conforme o README de lá.
 Perfis VPN, chaves, credenciais, conteúdo do KWallet, Handy e `smarty-pants` não
-são copiados. O mesmo vale para contas de agenda e autenticação do Codex.
+são copiados. O mesmo vale para contas de agenda, autenticação do Codex e a
+coleção/login do AnkiWeb.
 
 ## Opções úteis
 

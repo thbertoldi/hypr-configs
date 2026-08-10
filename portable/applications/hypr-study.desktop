@@ -1,0 +1,22 @@
+[Desktop Entry]
+Type=Application
+Name=Study Hub
+Comment=Estudar Kubernetes, NVIDIA GPUs e francês no Anki
+Exec=sh -lc "~/.config/hypr/scripts/study-open.sh all"
+Icon=net.ankiweb.Anki
+Terminal=false
+Categories=Education;
+Keywords=Anki;flashcards;Kubernetes;NVIDIA;GPU;French;Francês;
+Actions=Kubernetes;GPU;French;
+
+[Desktop Action Kubernetes]
+Name=Kubernetes Core
+Exec=sh -lc "~/.config/hypr/scripts/study-open.sh k8s"
+
+[Desktop Action GPU]
+Name=NVIDIA GPUs on Kubernetes
+Exec=sh -lc "~/.config/hypr/scripts/study-open.sh gpu"
+
+[Desktop Action French]
+Name=French Essentials
+Exec=sh -lc "~/.config/hypr/scripts/study-open.sh french"

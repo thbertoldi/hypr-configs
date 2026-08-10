@@ -170,12 +170,24 @@ validate_host() {
         "$SCRIPT_DIR/hyprsunset.conf" \
         "$SCRIPT_DIR/lua/autostart.lua" \
         "$SCRIPT_DIR/scripts/agent-menu.sh" \
+        "$SCRIPT_DIR/scripts/anki-connect-install.sh" \
+        "$SCRIPT_DIR/scripts/anki-connect.sh" \
+        "$SCRIPT_DIR/scripts/anki-tts-install.sh" \
+        "$SCRIPT_DIR/scripts/anki.sh" \
         "$SCRIPT_DIR/scripts/calendar-open.sh" \
         "$SCRIPT_DIR/scripts/dcal.sh" \
         "$SCRIPT_DIR/scripts/monitor-listener.sh" \
+        "$SCRIPT_DIR/scripts/study-open.sh" \
+        "$SCRIPT_DIR/scripts/study-seed.sh" \
+        "$SCRIPT_DIR/scripts/study-status.sh" \
+        "$SCRIPT_DIR/scripts/study-tts-check.sh" \
+        "$SCRIPT_DIR/scripts/study-tts-repair.sh" \
+        "$SCRIPT_DIR/scripts/study-tts-synthesize.sh" \
+        "$SCRIPT_DIR/portable/anki/starter-decks.json" \
         "$SCRIPT_DIR/portable/waybar/config.jsonc" \
         "$SCRIPT_DIR/portable/eww/eww.yuck" \
         "$SCRIPT_DIR/portable/eww/scripts/calendar-list.sh" \
+        "$SCRIPT_DIR/portable/applications/hypr-study.desktop" \
         "$SCRIPT_DIR/portable/applications/org.kde.merkuro.calendar.desktop" \
         "$SCRIPT_DIR/portable/xdg-desktop-portal/hyprland-portals.conf" \
         "$SCRIPT_DIR/portable/systemd/user/hyprland-session.target" \
@@ -258,6 +270,47 @@ install_dankcalendar() {
     flatpak --user remote-add --if-not-exists flathub \
         https://flathub.org/repo/flathub.flatpakrepo
     flatpak --user install --noninteractive flathub "$app_id"
+}
+
+install_anki() {
+    local app_id='net.ankiweb.Anki'
+
+    if command -v anki >/dev/null 2>&1; then
+        log "Anki nativo já instalado; mantendo a versão existente"
+        return
+    fi
+
+    if command -v flatpak >/dev/null 2>&1 \
+        && flatpak info "$app_id" >/dev/null 2>&1; then
+        log "Anki Flatpak já instalado; mantendo a versão existente"
+        return
+    fi
+
+    if (( DRY_RUN )); then
+        log "Instalando Anki pelo Flathub para o usuário atual"
+        print_command flatpak --user remote-add --if-not-exists flathub \
+            https://flathub.org/repo/flathub.flatpakrepo
+        print_command flatpak --user install --noninteractive flathub "$app_id"
+        return
+    fi
+
+    command -v flatpak >/dev/null 2>&1 \
+        || die "flatpak não está disponível após a instalação de pacotes"
+    log "Instalando Anki pelo Flathub para o usuário atual"
+    flatpak --user remote-add --if-not-exists flathub \
+        https://flathub.org/repo/flathub.flatpakrepo
+    flatpak --user install --noninteractive flathub "$app_id"
+}
+
+install_anki_addons() {
+    log "Instalando integrações locais e verificadas do Anki"
+    if (( DRY_RUN )); then
+        print_command bash "$SCRIPT_DIR/scripts/anki-connect-install.sh"
+        print_command bash "$SCRIPT_DIR/scripts/anki-tts-install.sh"
+        return
+    fi
+    bash "$SCRIPT_DIR/scripts/anki-connect-install.sh"
+    bash "$SCRIPT_DIR/scripts/anki-tts-install.sh"
 }
 
 install_wf_recorder() {
@@ -437,7 +490,13 @@ backup_existing_configuration() {
         "$HOME/.config/autostart/blueman.desktop" \
         "$HOME/.config/autostart/org.kde.kalendarac.desktop" \
         "$HOME/.config/systemd/user" \
+        "$HOME/.local/state/hypr-study" \
         "$HOME/.local/share/applications/org.kde.merkuro.calendar.desktop" \
+        "$HOME/.local/share/applications/hypr-study.desktop" \
+        "$HOME/.local/share/Anki2/addons21/2055492159" \
+        "$HOME/.local/share/Anki2/addons21/111623432" \
+        "$HOME/.var/app/net.ankiweb.Anki/data/Anki2/addons21/2055492159" \
+        "$HOME/.var/app/net.ankiweb.Anki/data/Anki2/addons21/111623432" \
         "/usr/local/share/wayland-sessions/hyprland-uwsm.desktop" \
         "$HOME/.local/share/themes/$GTK_THEME_NAME" \
         "$HOME/.local/share/icons/Bibata-Modern-Classic" \
@@ -475,7 +534,8 @@ deploy_configuration() {
     local hypr_target="$HOME/.config/hypr"
     log "Instalando Hyprland e configurações auxiliares"
 
-    run install -d "$hypr_target" "$hypr_target/lua" "$hypr_target/conf.d" "$hypr_target/scripts"
+    run install -d "$hypr_target" "$hypr_target/lua" "$hypr_target/conf.d" \
+        "$hypr_target/scripts" "$hypr_target/portable/anki"
     install_file 0644 "$SCRIPT_DIR/hyprland.lua" "$hypr_target/hyprland.lua"
     install_file 0644 "$SCRIPT_DIR/hyprland.conf" "$hypr_target/hyprland.conf"
     install_file 0644 "$SCRIPT_DIR/hypridle.conf" "$hypr_target/hypridle.conf"
@@ -484,6 +544,8 @@ deploy_configuration() {
     copy_tree "$SCRIPT_DIR/lua" "$hypr_target/lua"
     copy_tree "$SCRIPT_DIR/conf.d" "$hypr_target/conf.d"
     copy_tree "$SCRIPT_DIR/scripts" "$hypr_target/scripts"
+    install_file 0644 "$SCRIPT_DIR/portable/anki/starter-decks.json" \
+        "$hypr_target/portable/anki/starter-decks.json"
 
     if (( ! SAME_HARDWARE )); then
         install_file 0644 "$SCRIPT_DIR/portable/monitors-generic.lua" "$hypr_target/lua/monitors.lua"
@@ -621,6 +683,8 @@ validate_result() {
         bash -n "$script"
     done
     jq empty "$HOME/.config/waybar/config.jsonc"
+    jq -e '.version == 1 and (.decks | type == "array")' \
+        "$HOME/.config/hypr/portable/anki/starter-decks.json" >/dev/null
 
     if ! Hyprland --verify-config --config "$HOME/.config/hypr/hyprland.lua"; then
         die "Hyprland rejeitou a configuração instalada; restaure o backup em $BACKUP_DIR"
@@ -644,6 +708,11 @@ validate_result() {
         && { ! command -v flatpak >/dev/null 2>&1 \
             || ! flatpak info com.danklinux.dankcalendar >/dev/null 2>&1; }; then
         die "DankCalendar ausente após a instalação"
+    fi
+    if ! command -v anki >/dev/null 2>&1 \
+        && { ! command -v flatpak >/dev/null 2>&1 \
+            || ! flatpak info net.ankiweb.Anki >/dev/null 2>&1; }; then
+        die "Anki ausente após a instalação"
     fi
 }
 
@@ -671,6 +740,10 @@ Próximos passos:
      OAuth, contas e tokens não são copiados; Proton fica disponível pela web.
   5. Handy.AppImage e smarty-pants-daemon são integrações pessoais opcionais;
      os atalhos ficam inertes quando os binários não existem.
+  6. Abra o Study Hub com Super+Shift+A. No primeiro uso, o Anki prepara os
+     baralhos curados e o áudio francês. Entre no AnkiWeb e sincronize
+     manualmente se quiser levar sua coleção; coleção, login e mídia pessoal
+     não são copiados por este bootstrap.
 
 O script não troca automaticamente o serviço de rede nem altera PAM, evitando
 derrubar uma conexão remota ou bloquear o login. KWallet funciona, mas o
@@ -682,11 +755,13 @@ main() {
     validate_host
     install_packages
     install_dankcalendar
+    install_anki
     install_wf_recorder
     install_codex_cli
     require_hyprland_055
     install_grimblast
     backup_existing_configuration
+    install_anki_addons
     install_visual_assets
     deploy_configuration
     install_user_images

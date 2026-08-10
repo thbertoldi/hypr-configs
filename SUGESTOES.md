@@ -72,3 +72,20 @@ reproduzir o ambiente.
 16. **Menu de agentes locais.** `Super+G` inicia o Codex em uma pasta e com o
     menor sandbox apropriado. Alterações fora do workspace continuam exigindo
     elevação/aprovação; não há atalho para acesso irrestrito silencioso.
+
+## Estudos integrados
+
+17. **Study Hub no Anki.** Waybar e Eww mostram a carga diária e abrem
+    diretamente Kubernetes, NVIDIA/GPU em Kubernetes ou francês. Sessenta
+    notas iniciais curadas convivem com os baralhos existentes, e
+    `Super+Shift+A` inicia a sessão completa.
+
+18. **Francês com áudio verificável.** As frases iniciais recebem MP3 cacheado,
+    com HyperTTS como fallback. O template legado que apontava para
+    `AwesomeTTS` é salvo e migrado para o identificador atual `HyperTTS`; um
+    diagnóstico testa versão, templates e síntese sem reproduzir som.
+
+19. **Agente de estudos com limites explícitos.** O menu de agentes ganhou um
+    perfil que consulta o AnkiConnect local autenticado. Edições em massa,
+    templates e exclusões exigem confirmação, e acesso SQLite direto é
+    proibido pelo próprio prompt do perfil.

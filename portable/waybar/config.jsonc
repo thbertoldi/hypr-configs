@@ -8,7 +8,7 @@
     "margin-right": 12,
 
     "modules-left": ["hyprland/workspaces", "hyprland/window"],
-    "modules-center": ["clock"],
+    "modules-center": ["clock", "custom/study"],
     "modules-right": ["custom/recording", "privacy", "idle_inhibitor", "power-profiles-daemon", "tray", "custom/kblayout", "custom/vpn", "network", "bluetooth", "pulseaudio", "battery", "cpu", "memory", "custom/power"],
 
     "hyprland/workspaces": {
@@ -34,6 +34,17 @@
         "on-click": "~/.config/hypr/scripts/calendar-open.sh agenda",
         "on-click-middle": "~/.config/hypr/scripts/calendar-open.sh outlook",
         "on-click-right": "~/.config/hypr/scripts/calendar-open.sh proton"
+    },
+
+    "custom/study": {
+        "exec": "~/.config/hypr/scripts/study-status.sh",
+        "return-type": "json",
+        "interval": 60,
+        "signal": 7,
+        "on-click": "~/.config/hypr/scripts/study-open.sh all",
+        "on-click-middle": "~/.config/hypr/scripts/study-open.sh french",
+        "on-click-right": "~/.config/hypr/scripts/agent-menu.sh study",
+        "tooltip": true
     },
 
     "tray": {

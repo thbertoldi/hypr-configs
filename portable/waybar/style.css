@@ -106,6 +106,28 @@ window#waybar {
     letter-spacing: 0.4px;
 }
 
+#custom-study {
+    color: @mauve;
+    background: alpha(@mauve, 0.15);
+    padding: 2px 12px;
+    margin-left: 6px;
+    border-radius: 10px;
+    font-weight: bold;
+}
+#custom-study.due {
+    color: @yellow;
+    background: alpha(@yellow, 0.16);
+}
+#custom-study.clear {
+    color: @green;
+    background: alpha(@green, 0.14);
+}
+#custom-study.offline {
+    color: @overlay;
+    background: alpha(@overlay, 0.10);
+}
+#custom-study:hover { background: alpha(@mauve, 0.25); }
+
 #tray {
     padding: 2px 10px;
     margin: 4px 6px 4px 4px;
