@@ -1,0 +1,14 @@
+# Yazi 26.5.6+: %s is the safely quoted list of selected files.
+# Keep upstream navigation, MIME detection and built-in previewers.
+[opener]
+edit = [
+    { run = "helix %s", desc = "Helix", block = true, for = "unix" },
+]
+read = [
+    { run = "glow -p %s1", desc = "Read Markdown", block = true, for = "unix" },
+]
+
+[open]
+prepend_rules = [
+    { url = "*.{md,markdown,mdown,mkd}", use = ["edit", "read", "reveal"] },
+]

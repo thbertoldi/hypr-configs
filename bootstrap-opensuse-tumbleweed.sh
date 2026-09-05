@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Reproduce this Hyprland desktop on openSUSE Tumbleweed.
+# Reproduce this Hyprland desktop on openSUSE Tumbleweed x86_64 (amd64).
 #
 # The script installs distro packages, pinned visual assets, this Hyprland
 # configuration, and the companion Waybar/Eww/Mako/Fuzzel/etc. files. Existing
@@ -33,25 +33,30 @@ readonly GRIMBLAST_COMMIT="3dcbce715ae8b93107fa8632db15bf976862a573"
 readonly GRIMBLAST_URL="https://raw.githubusercontent.com/hyprwm/contrib/${GRIMBLAST_COMMIT}/grimblast/grimblast"
 readonly GRIMBLAST_SHA256="1e12c15ee3b0160d053a1655019dbbb91174ff4fe7c9bae47f62141146fed091"
 readonly CODEX_CLI_VERSION="0.146.1"
+# Official standalone Linux amd64 releases; no remote install scripts.
+readonly HERDR_URL="https://github.com/herdrdev/herdr/releases/download/v0.8.2/herdr-linux-x86_64"
+readonly HERDR_SHA256="976150a14d490c94b243ea2e1a7eb2dfb67f12e36b182db90936f6728e6aecf4"
+readonly MARKSMAN_URL="https://github.com/artempyanykh/marksman/releases/download/2026-02-08/marksman-linux-x64"
+readonly MARKSMAN_SHA256="be5098e8213219269c47fc0d916a66fa31ce0602ec967475c722260aabf26087"
 
 usage() {
     cat <<'EOF'
-Uso:
-  ./bootstrap-opensuse-tumbleweed.sh [opções]
+Usage:
+  ./bootstrap-opensuse-tumbleweed.sh [options]
 
-Opções:
-  --wallpaper ARQUIVO  Copia a imagem para o caminho usado pelo awww.
-  --avatar ARQUIVO     Copia a imagem para o avatar do painel Eww.
-  --same-hardware      Mantém o perfil LG ultrawide + eDP desta máquina.
-                       Sem esta opção, instala um perfil genérico seguro.
-  --internal-output N  Troca eDP-1 pelo nome do painel interno informado.
-  --with-extras        Instala o utilitário diagnóstico Wayland `wev`.
-  --skip-packages      Não executa zypper (útil se tudo já estiver instalado).
-  --skip-themes        Não baixa fontes, cursor e temas GTK/Kvantum.
-  --dry-run            Mostra as ações sem modificar o computador.
-  -h, --help           Exibe esta ajuda.
+Options:
+  --wallpaper FILE     Copy an image to the wallpaper path used by awww.
+  --avatar FILE        Copy an image to the Eww dashboard avatar path.
+  --same-hardware      Keep this machine's LG ultrawide + eDP profile.
+                       Otherwise, install a safe generic monitor profile.
+  --internal-output N  Replace eDP-1 with the specified internal output name.
+  --with-extras        Install the Wayland diagnostic utility `wev`.
+  --skip-packages      Skip zypper and Herdr/Marksman installation.
+  --skip-themes        Skip font, cursor and GTK/Kvantum theme downloads.
+  --dry-run            Show actions without changing the computer.
+  -h, --help           Show this help.
 
-Exemplo:
+Example:
   ./bootstrap-opensuse-tumbleweed.sh \
     --wallpaper ~/Downloads/whales-clouds.jpg \
     --avatar ~/Pictures/avatar.jpeg
@@ -63,11 +68,11 @@ log() {
 }
 
 warn() {
-    printf 'AVISO: %s\n' "$*" >&2
+    printf 'WARNING: %s\n' "$*" >&2
 }
 
 die() {
-    printf 'ERRO: %s\n' "$*" >&2
+    printf 'ERROR: %s\n' "$*" >&2
     exit 1
 }
 
@@ -89,14 +94,14 @@ cleanup() {
     if [[ -n "$TEMP_DIR" && -d "$TEMP_DIR" ]]; then
         case "$TEMP_DIR" in
             "${TMPDIR:-/tmp}"/hypr-bootstrap.*) rm -rf -- "$TEMP_DIR" ;;
-            *) warn "Diretório temporário inesperado preservado: $TEMP_DIR" ;;
+            *) warn "Preserving unexpected temporary directory: $TEMP_DIR" ;;
         esac
     fi
 }
 
 on_error() {
     local status=$?
-    printf 'ERRO: falha na linha %s (status %s): %s\n' "${BASH_LINENO[0]}" "$status" "$BASH_COMMAND" >&2
+    printf 'ERROR: failure at line %s (status %s): %s\n' "${BASH_LINENO[0]}" "$status" "$BASH_COMMAND" >&2
     exit "$status"
 }
 
@@ -106,17 +111,17 @@ trap on_error ERR
 while (( $# )); do
     case "$1" in
         --wallpaper)
-            (( $# >= 2 )) || die "--wallpaper requer um arquivo"
+            (( $# >= 2 )) || die "--wallpaper requires a file"
             WALLPAPER_SOURCE=$2
             shift 2
             ;;
         --avatar)
-            (( $# >= 2 )) || die "--avatar requer um arquivo"
+            (( $# >= 2 )) || die "--avatar requires a file"
             AVATAR_SOURCE=$2
             shift 2
             ;;
         --internal-output)
-            (( $# >= 2 )) || die "--internal-output requer um nome"
+            (( $# >= 2 )) || die "--internal-output requires a name"
             INTERNAL_OUTPUT=$2
             shift 2
             ;;
@@ -145,22 +150,24 @@ while (( $# )); do
             exit 0
             ;;
         *)
-            die "opção desconhecida: $1"
+            die "unknown option: $1"
             ;;
     esac
 done
 
 validate_host() {
-    [[ $EUID -ne 0 ]] || die "execute como usuário normal; o script chama sudo somente quando necessário"
-    [[ -r /etc/os-release ]] || die "/etc/os-release não encontrado"
+    [[ $EUID -ne 0 ]] || die "run as a normal user; the script invokes sudo only where needed"
+    [[ -r /etc/os-release ]] || die "/etc/os-release not found"
 
     local os_id
     os_id=$( ( . /etc/os-release; printf '%s' "${ID:-}" ) )
-    [[ "$os_id" == "opensuse-tumbleweed" ]] || die "este instalador requer openSUSE Tumbleweed (ID atual: ${os_id:-desconhecido})"
+    [[ "$os_id" == "opensuse-tumbleweed" ]] || die "this installer requires openSUSE Tumbleweed (current ID: ${os_id:-unknown})"
+    [[ $(uname -m) == "x86_64" ]] || die "this bundle supports only amd64/x86_64"
 
-    [[ "$INTERNAL_OUTPUT" =~ ^[A-Za-z0-9_.:-]+$ ]] || die "nome de saída inválido: $INTERNAL_OUTPUT"
-    [[ -z "$WALLPAPER_SOURCE" || -f "$WALLPAPER_SOURCE" ]] || die "wallpaper não encontrado: $WALLPAPER_SOURCE"
-    [[ -z "$AVATAR_SOURCE" || -f "$AVATAR_SOURCE" ]] || die "avatar não encontrado: $AVATAR_SOURCE"
+    [[ "$INTERNAL_OUTPUT" =~ ^[A-Za-z0-9_.:-]+$ ]] || die "invalid output name: $INTERNAL_OUTPUT"
+    [[ -z "$WALLPAPER_SOURCE" || -f "$WALLPAPER_SOURCE" ]] || die "wallpaper not found: $WALLPAPER_SOURCE"
+    [[ -z "$AVATAR_SOURCE" || -f "$AVATAR_SOURCE" ]] || die "avatar not found: $AVATAR_SOURCE"
+    [[ -d "$SCRIPT_DIR/docs" ]] || die "incomplete bundle; missing $SCRIPT_DIR/docs"
 
     local required_source
     for required_source in \
@@ -175,6 +182,7 @@ validate_host() {
         "$SCRIPT_DIR/scripts/anki-tts-install.sh" \
         "$SCRIPT_DIR/scripts/anki.sh" \
         "$SCRIPT_DIR/scripts/calendar-open.sh" \
+        "$SCRIPT_DIR/scripts/cite-pick.sh" \
         "$SCRIPT_DIR/scripts/dcal.sh" \
         "$SCRIPT_DIR/scripts/monitor-listener.sh" \
         "$SCRIPT_DIR/scripts/music-open.sh" \
@@ -187,6 +195,17 @@ validate_host() {
         "$SCRIPT_DIR/scripts/study-tts-repair.sh" \
         "$SCRIPT_DIR/scripts/study-tts-synthesize.sh" \
         "$SCRIPT_DIR/portable/anki/starter-decks.json" \
+        "$SCRIPT_DIR/WORKFLOW.md" \
+        "$SCRIPT_DIR/DECISIONS.md" \
+        "$SCRIPT_DIR/README.md" \
+        "$SCRIPT_DIR/assets/README.md" \
+        "$SCRIPT_DIR/portable/helix/config.toml" \
+        "$SCRIPT_DIR/portable/helix/languages.toml" \
+        "$SCRIPT_DIR/portable/helix/runtime/queries/rpmspec/highlights.scm" \
+        "$SCRIPT_DIR/portable/yazi/yazi.toml" \
+        "$SCRIPT_DIR/portable/yazi/theme.toml" \
+        "$SCRIPT_DIR/portable/herdr/config.toml" \
+        "$SCRIPT_DIR/portable/zapzap/catppuccin-mocha-peach.css" \
         "$SCRIPT_DIR/portable/waybar/config.jsonc" \
         "$SCRIPT_DIR/portable/eww/eww.yuck" \
         "$SCRIPT_DIR/portable/eww/scripts/calendar-list.sh" \
@@ -198,12 +217,12 @@ validate_host() {
         "$SCRIPT_DIR/portable/systemd/user/spotify-tray.service" \
         "$SCRIPT_DIR/portable/wayland-sessions/hyprland-uwsm.desktop" \
         "$SCRIPT_DIR/portable/monitors-generic.lua"; do
-        [[ -f "$required_source" ]] || die "bundle incompleto; falta $required_source"
+        [[ -f "$required_source" ]] || die "incomplete bundle; missing $required_source"
     done
 }
 
 install_packages() {
-    (( SKIP_PACKAGES )) && { log "Pacotes ignorados por --skip-packages"; return; }
+    (( SKIP_PACKAGES )) && { log "Skipping packages due to --skip-packages"; return; }
 
     local packages=(
         hyprland hyprland-wallpapers hypridle hyprlock hyprpicker awww
@@ -221,7 +240,9 @@ install_packages() {
         merkuro korganizer kalendarac kdepim-runtime akonadi-calendar-tools kaccounts-integration
         kaccounts-providers libkgapi6 kdialog
         nodejs24 npm24
-        ghostty nnn MozillaFirefox helix
+        ghostty yazi MozillaFirefox helix
+        glow pandoc-cli lua-language-server texlab taplo shfmt ShellCheck gcc
+        poppler-tools file fd ripgrep fzf zoxide 7zip ImageMagick chafa resvg ffmpeg-8
         qt6ct kvantum-manager kvantum-qt6
         papirus-icon-theme fontawesome-fonts symbols-only-nerd-fonts
         google-noto-sans-fonts google-noto-coloremoji-fonts
@@ -232,7 +253,7 @@ install_packages() {
     )
     local extras=(wev)
 
-    log "Atualizando metadados dos repositórios"
+    log "Refreshing repository metadata"
     if (( DRY_RUN )); then
         print_command sudo zypper --non-interactive refresh
         print_command sudo zypper --non-interactive install "${packages[@]}"
@@ -252,12 +273,12 @@ install_dankcalendar() {
     local app_id='com.danklinux.dankcalendar'
 
     if command -v dcal >/dev/null 2>&1; then
-        log "DankCalendar nativo já instalado"
+        log "Native DankCalendar is already installed"
         return
     fi
 
     if (( DRY_RUN )); then
-        log "Instalando DankCalendar pelo Flathub para o usuário atual"
+        log "Installing DankCalendar from Flathub for the current user"
         print_command flatpak --user remote-add --if-not-exists flathub \
             https://flathub.org/repo/flathub.flatpakrepo
         print_command flatpak --user install --noninteractive flathub "$app_id"
@@ -265,13 +286,13 @@ install_dankcalendar() {
     fi
 
     command -v flatpak >/dev/null 2>&1 \
-        || die "flatpak não está disponível após a instalação de pacotes"
+        || die "flatpak is unavailable after package installation"
     if flatpak info "$app_id" >/dev/null 2>&1; then
-        log "DankCalendar Flatpak já instalado"
+        log "DankCalendar Flatpak is already installed"
         return
     fi
 
-    log "Instalando DankCalendar pelo Flathub para o usuário atual"
+    log "Installing DankCalendar from Flathub for the current user"
     flatpak --user remote-add --if-not-exists flathub \
         https://flathub.org/repo/flathub.flatpakrepo
     flatpak --user install --noninteractive flathub "$app_id"
@@ -284,12 +305,12 @@ install_spotify() {
     # and remains untouched, while the user installation takes precedence.
     if command -v flatpak >/dev/null 2>&1 \
         && flatpak info --user "$app_id" >/dev/null 2>&1; then
-        log "Spotify Flatpak do usuário já instalado"
+        log "User-scoped Spotify Flatpak is already installed"
         return
     fi
 
     if (( DRY_RUN )); then
-        log "Instalando Spotify pelo Flathub para o usuário atual"
+        log "Installing Spotify from Flathub for the current user"
         print_command flatpak --user remote-add --if-not-exists flathub \
             https://flathub.org/repo/flathub.flatpakrepo
         print_command flatpak --user install --noninteractive flathub "$app_id"
@@ -297,8 +318,33 @@ install_spotify() {
     fi
 
     command -v flatpak >/dev/null 2>&1 \
-        || die "flatpak não está disponível após a instalação de pacotes"
-    log "Instalando Spotify pelo Flathub para o usuário atual"
+        || die "flatpak is unavailable after package installation"
+    log "Installing Spotify from Flathub for the current user"
+    flatpak --user remote-add --if-not-exists flathub \
+        https://flathub.org/repo/flathub.flatpakrepo
+    flatpak --user install --noninteractive flathub "$app_id"
+}
+
+install_zapzap() {
+    local app_id='com.rtosta.zapzap'
+
+    if command -v flatpak >/dev/null 2>&1 \
+        && flatpak info "$app_id" >/dev/null 2>&1; then
+        log "ZapZap Flatpak is already installed; keeping the existing version"
+        return
+    fi
+
+    if (( DRY_RUN )); then
+        log "Installing ZapZap from Flathub for the current user"
+        print_command flatpak --user remote-add --if-not-exists flathub \
+            https://flathub.org/repo/flathub.flatpakrepo
+        print_command flatpak --user install --noninteractive flathub "$app_id"
+        return
+    fi
+
+    command -v flatpak >/dev/null 2>&1 \
+        || die "flatpak is unavailable after package installation"
+    log "Installing ZapZap from Flathub for the current user"
     flatpak --user remote-add --if-not-exists flathub \
         https://flathub.org/repo/flathub.flatpakrepo
     flatpak --user install --noninteractive flathub "$app_id"
@@ -308,18 +354,18 @@ install_anki() {
     local app_id='net.ankiweb.Anki'
 
     if command -v anki >/dev/null 2>&1; then
-        log "Anki nativo já instalado; mantendo a versão existente"
+        log "Native Anki is already installed; keeping the existing version"
         return
     fi
 
     if command -v flatpak >/dev/null 2>&1 \
         && flatpak info "$app_id" >/dev/null 2>&1; then
-        log "Anki Flatpak já instalado; mantendo a versão existente"
+        log "Anki Flatpak is already installed; keeping the existing version"
         return
     fi
 
     if (( DRY_RUN )); then
-        log "Instalando Anki pelo Flathub para o usuário atual"
+        log "Installing Anki from Flathub for the current user"
         print_command flatpak --user remote-add --if-not-exists flathub \
             https://flathub.org/repo/flathub.flatpakrepo
         print_command flatpak --user install --noninteractive flathub "$app_id"
@@ -327,15 +373,15 @@ install_anki() {
     fi
 
     command -v flatpak >/dev/null 2>&1 \
-        || die "flatpak não está disponível após a instalação de pacotes"
-    log "Instalando Anki pelo Flathub para o usuário atual"
+        || die "flatpak is unavailable after package installation"
+    log "Installing Anki from Flathub for the current user"
     flatpak --user remote-add --if-not-exists flathub \
         https://flathub.org/repo/flathub.flatpakrepo
     flatpak --user install --noninteractive flathub "$app_id"
 }
 
 install_anki_addons() {
-    log "Instalando integrações locais e verificadas do Anki"
+    log "Installing verified local Anki integrations"
     if (( DRY_RUN )); then
         print_command bash "$SCRIPT_DIR/scripts/anki-connect-install.sh"
         print_command bash "$SCRIPT_DIR/scripts/anki-tts-install.sh"
@@ -343,6 +389,27 @@ install_anki_addons() {
     fi
     bash "$SCRIPT_DIR/scripts/anki-connect-install.sh"
     bash "$SCRIPT_DIR/scripts/anki-tts-install.sh"
+}
+
+configure_zapzap() {
+    local app_id='com.rtosta.zapzap'
+    local style_name='catppuccin-mocha-peach.css'
+    local style_dir="$HOME/.var/app/$app_id/data/ZapZap/customizations/global/css"
+    local settings_code
+    settings_code='from PyQt6.QtCore import QSettings; s=QSettings("ZapZap", "ZapZap"); s.setValue("system/theme", "dark"); s.setValue("system/tray_theme", "symbolic_light"); s.setValue("website/open_page", False); s.setValue("custom/global/css/enabled", True); d=s.value("custom/global/css/disabled_files", []); d=[d] if isinstance(d, str) else list(d or []); s.setValue("custom/global/css/disabled_files", [v for v in d if v != "catppuccin-mocha-peach.css"]); s.sync()'
+
+    log "Applying Catppuccin Mocha/Peach to ZapZap"
+    run install -d "$style_dir"
+    install_file 0644 \
+        "$SCRIPT_DIR/portable/zapzap/$style_name" \
+        "$style_dir/$style_name"
+
+    if (( DRY_RUN )); then
+        print_command flatpak run --command=python3 "$app_id" -c "$settings_code"
+        return
+    fi
+
+    flatpak run --command=python3 "$app_id" -c "$settings_code"
 }
 
 configure_spotify() {
@@ -359,11 +426,11 @@ configure_spotify() {
     fi
 
     if [[ ! -f "$prefs" ]] || ! grep -q '^autologin\.username=' "$prefs"; then
-        log "Spotify novo: personalização adiada até o primeiro login"
+        log "Fresh Spotify profile: customization deferred until the first login"
         return
     fi
 
-    log "Aplicando Spicetify Sleek/Catppuccin e Marketplace ao Spotify"
+    log "Applying Spicetify Sleek/Catppuccin and Marketplace to Spotify"
     if (( DRY_RUN )); then
         print_command bash "$SCRIPT_DIR/scripts/spotify-customize.sh"
         return
@@ -375,7 +442,7 @@ install_wf_recorder() {
     (( SKIP_PACKAGES )) && return
 
     if command -v wf-recorder >/dev/null 2>&1; then
-        log "wf-recorder já está instalado"
+        log "wf-recorder is already installed"
         return
     fi
 
@@ -384,7 +451,7 @@ install_wf_recorder() {
         return
     fi
 
-    log "Instalando wf-recorder"
+    log "Installing wf-recorder"
     if sudo zypper --non-interactive install wf-recorder; then
         return
     fi
@@ -402,9 +469,9 @@ install_wf_recorder() {
     )
 
     [[ -n "$packman_alias" ]] || die \
-        "não foi possível instalar wf-recorder; resolva o conflito de fornecedores dos repositórios e execute novamente"
+        "cannot install wf-recorder; resolve the repository vendor conflict and rerun"
 
-    warn "Repetindo a instalação pelo repositório Packman habilitado ($packman_alias)"
+    warn "Retrying installation from the enabled Packman repository ($packman_alias)"
     sudo zypper --non-interactive install \
         --allow-vendor-change \
         --from "$packman_alias" \
@@ -413,7 +480,7 @@ install_wf_recorder() {
 
 install_codex_cli() {
     if command -v codex >/dev/null 2>&1; then
-        log "Codex CLI já está instalado"
+        log "Codex CLI is already installed"
         return
     fi
 
@@ -425,20 +492,20 @@ install_codex_cli() {
         return
     fi
 
-    log "Instalando Codex CLI $CODEX_CLI_VERSION"
+    log "Installing Codex CLI $CODEX_CLI_VERSION"
     sudo npm install --global --no-audit --no-fund \
         "@openai/codex@$CODEX_CLI_VERSION"
 }
 
 require_hyprland_055() {
     (( DRY_RUN )) && return
-    command -v Hyprland >/dev/null || die "Hyprland não está instalado"
+    command -v Hyprland >/dev/null || die "Hyprland is not installed"
 
     local installed_version
     installed_version=$(rpm -q --qf '%{VERSION}' hyprland 2>/dev/null || true)
-    [[ -n "$installed_version" ]] || die "não foi possível determinar a versão do pacote hyprland"
+    [[ -n "$installed_version" ]] || die "cannot determine the hyprland package version"
     if ! printf '%s\n%s\n' "0.55.0" "$installed_version" | sort -V -C; then
-        die "Hyprland $installed_version é antigo para esta configuração Lua; atualize o snapshot do Tumbleweed com 'sudo zypper dup'"
+        die "Hyprland $installed_version is too old for this Lua configuration; update Tumbleweed with 'sudo zypper dup'"
     fi
 }
 
@@ -455,34 +522,61 @@ download_checked() {
     curl --fail --location --silent --show-error --retry 3 \
         --proto '=https' --tlsv1.2 "$url" --output "$destination"
     printf '%s  %s\n' "$expected" "$destination" | sha256sum --check --status \
-        || die "checksum inválido para $url"
+        || die "invalid checksum for $url"
+}
+
+install_workflow_binary() {
+    local name=$1 url=$2 checksum=$3
+    if command -v "$name" >/dev/null 2>&1; then
+        log "$name is already available; keeping the existing installation"
+        return
+    fi
+    (( SKIP_PACKAGES )) && return
+    if (( DRY_RUN )); then
+        log "Would install $name in ~/.local/bin with verified SHA-256: $url"
+        return
+    fi
+    [[ ! -e "$HOME/.local/bin/$name" && ! -L "$HOME/.local/bin/$name" ]] \
+        || die "preserving existing non-executable file: $HOME/.local/bin/$name"
+    make_temp_dir
+    download_checked "$url" "$checksum" "$TEMP_DIR/$name"
+    install -d "$HOME/.local/bin"
+    install -m 0755 "$TEMP_DIR/$name" "$HOME/.local/bin/$name"
+}
+
+configure_helix() {
+    # use-grammars in the deployed languages.toml limits this to the pinned
+    # RPM-spec parser. All parsers shipped by the distro remain available.
+    log "Preparing the Helix RPM-spec grammar"
+    run hx --grammar fetch
+    run hx --grammar build
 }
 
 install_grimblast() {
     if command -v grimblast >/dev/null 2>&1; then
-        log "Grimblast já está disponível; mantendo a instalação existente"
+        log "Grimblast is already available; keeping the existing installation"
         return
     fi
     if (( DRY_RUN )); then
-        log "Instalaria o Grimblast oficial fixado no commit $GRIMBLAST_COMMIT"
+        log "Would install official Grimblast pinned to commit $GRIMBLAST_COMMIT"
         return
     fi
 
     make_temp_dir
-    log "Instalando Grimblast"
+    log "Installing Grimblast"
     download_checked "$GRIMBLAST_URL" "$GRIMBLAST_SHA256" "$TEMP_DIR/grimblast"
     sudo install -m 0755 "$TEMP_DIR/grimblast" /usr/local/bin/grimblast
 }
 
 install_visual_assets() {
-    (( SKIP_THEMES )) && { log "Temas ignorados por --skip-themes"; return; }
+    (( SKIP_THEMES )) && { log "Skipping themes due to --skip-themes"; return; }
     if (( DRY_RUN )); then
-        log "Baixaria JetBrains Mono Nerd Font, Bibata, Catppuccin GTK e Catppuccin Kvantum com checksums fixados"
+        log "Would download JetBrains Mono Nerd Font, Bibata, Catppuccin GTK and Kvantum with pinned checksums"
         return
     fi
 
     make_temp_dir
-    log "Baixando fontes e temas verificados"
+    log "Downloading verified fonts and themes"
     download_checked "$GTK_THEME_URL" "$GTK_THEME_SHA256" "$TEMP_DIR/catppuccin-gtk.zip"
     download_checked "$NERD_FONT_URL" "$NERD_FONT_SHA256" "$TEMP_DIR/jetbrains-mono.tar.xz"
     download_checked "$BIBATA_URL" "$BIBATA_SHA256" "$TEMP_DIR/bibata.tar.xz"
@@ -524,7 +618,7 @@ backup_existing_configuration() {
     local stamp
     stamp=$(date +'%Y%m%d-%H%M%S')
     BACKUP_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/hypr-bootstrap/backups/${stamp}-$$"
-    log "Criando backup em $BACKUP_DIR"
+    log "Creating backup at $BACKUP_DIR"
 
     local path
     for path in \
@@ -534,6 +628,9 @@ backup_existing_configuration() {
         "$HOME/.config/mako" \
         "$HOME/.config/fuzzel" \
         "$HOME/.config/ghostty" \
+        "$HOME/.config/helix" \
+        "$HOME/.config/yazi" \
+        "$HOME/.config/herdr/config.toml" \
         "$HOME/.config/wlogout" \
         "$HOME/.config/qt6ct" \
         "$HOME/.config/Kvantum" \
@@ -555,6 +652,8 @@ backup_existing_configuration() {
         "$HOME/.local/share/Anki2/addons21/111623432" \
         "$HOME/.var/app/net.ankiweb.Anki/data/Anki2/addons21/2055492159" \
         "$HOME/.var/app/net.ankiweb.Anki/data/Anki2/addons21/111623432" \
+        "$HOME/.var/app/com.rtosta.zapzap/config/ZapZap/ZapZap.conf" \
+        "$HOME/.var/app/com.rtosta.zapzap/data/ZapZap/customizations" \
         "$HOME/.config/spicetify/config-xpui.ini" \
         "$HOME/.config/spicetify/Themes/Sleek" \
         "$HOME/.config/spicetify/CustomApps/marketplace" \
@@ -573,7 +672,7 @@ copy_tree() {
     local source=$1
     local destination=$2
     if [[ -e "$destination" && "$source" -ef "$destination" ]]; then
-        printf '  mantendo árvore já posicionada: %s\n' "$destination"
+        printf '  keeping tree already at destination: %s\n' "$destination"
         return 0
     fi
     run install -d "$destination"
@@ -585,7 +684,7 @@ install_file() {
     local source=$2
     local destination=$3
     if [[ -e "$destination" && "$source" -ef "$destination" ]]; then
-        printf '  mantendo arquivo já posicionado: %s\n' "$destination"
+        printf '  keeping file already at destination: %s\n' "$destination"
         return 0
     fi
     run install -m "$mode" "$source" "$destination"
@@ -593,7 +692,7 @@ install_file() {
 
 deploy_configuration() {
     local hypr_target="$HOME/.config/hypr"
-    log "Instalando Hyprland e configurações auxiliares"
+    log "Installing Hyprland and companion configuration"
 
     run install -d "$hypr_target" "$hypr_target/lua" "$hypr_target/conf.d" \
         "$hypr_target/scripts" "$hypr_target/portable/anki"
@@ -605,9 +704,15 @@ deploy_configuration() {
     copy_tree "$SCRIPT_DIR/lua" "$hypr_target/lua"
     copy_tree "$SCRIPT_DIR/conf.d" "$hypr_target/conf.d"
     copy_tree "$SCRIPT_DIR/scripts" "$hypr_target/scripts"
-    install_file 0644 "$SCRIPT_DIR/portable/anki/starter-decks.json" \
-        "$hypr_target/portable/anki/starter-decks.json"
-
+    # Keep the deployed bundle usable as an installation/reference source too.
+    copy_tree "$SCRIPT_DIR/portable" "$hypr_target/portable"
+    copy_tree "$SCRIPT_DIR/docs" "$hypr_target/docs"
+    run install -d "$hypr_target/assets"
+    install_file 0644 "$SCRIPT_DIR/assets/README.md" "$hypr_target/assets/README.md"
+    install_file 0755 "$SCRIPT_DIR/bootstrap-opensuse-tumbleweed.sh" "$hypr_target/bootstrap-opensuse-tumbleweed.sh"
+    install_file 0644 "$SCRIPT_DIR/README.md" "$hypr_target/README.md"
+    install_file 0644 "$SCRIPT_DIR/WORKFLOW.md" "$hypr_target/WORKFLOW.md"
+    install_file 0644 "$SCRIPT_DIR/DECISIONS.md" "$hypr_target/DECISIONS.md"
     if (( ! SAME_HARDWARE )); then
         install_file 0644 "$SCRIPT_DIR/portable/monitors-generic.lua" "$hypr_target/lua/monitors.lua"
         install_file 0644 "$SCRIPT_DIR/portable/monitors-generic.conf" "$hypr_target/conf.d/10-monitors.conf"
@@ -618,6 +723,10 @@ deploy_configuration() {
     copy_tree "$SCRIPT_DIR/portable/mako" "$HOME/.config/mako"
     copy_tree "$SCRIPT_DIR/portable/fuzzel" "$HOME/.config/fuzzel"
     copy_tree "$SCRIPT_DIR/portable/ghostty" "$HOME/.config/ghostty"
+    copy_tree "$SCRIPT_DIR/portable/helix" "$HOME/.config/helix"
+    copy_tree "$SCRIPT_DIR/portable/yazi" "$HOME/.config/yazi"
+    run install -d "$HOME/.config/herdr"
+    install_file 0644 "$SCRIPT_DIR/portable/herdr/config.toml" "$HOME/.config/herdr/config.toml"
     copy_tree "$SCRIPT_DIR/portable/wlogout" "$HOME/.config/wlogout"
     copy_tree "$SCRIPT_DIR/portable/qt6ct" "$HOME/.config/qt6ct"
     copy_tree "$SCRIPT_DIR/portable/Kvantum" "$HOME/.config/Kvantum"
@@ -677,7 +786,7 @@ install_user_images() {
             "$HOME/.config/hypr/conf.d/80-autostart.conf" \
             "$HOME/.config/hypr/scripts/wallpaper-apply.sh"
     elif [[ -f "$wallpaper_target" ]]; then
-        log "Mantendo wallpaper já existente"
+        log "Keeping the existing wallpaper"
     elif [[ -f /usr/share/hypr/wall0.png ]]; then
         local fallback_target="$HOME/Pictures/wallpapers/hyprland-default.png"
         install_file 0644 /usr/share/hypr/wall0.png "$fallback_target"
@@ -685,9 +794,9 @@ install_user_images() {
             "$HOME/.config/hypr/lua/autostart.lua" \
             "$HOME/.config/hypr/conf.d/80-autostart.conf" \
             "$HOME/.config/hypr/scripts/wallpaper-apply.sh"
-        warn "wallpaper original não veio no bundle; usando /usr/share/hypr/wall0.png. Passe --wallpaper para reproduzir a imagem atual."
+        warn "original wallpaper not bundled; using /usr/share/hypr/wall0.png. Pass --wallpaper to reproduce the original image."
     else
-        warn "nenhum wallpaper disponível; passe --wallpaper ARQUIVO antes do primeiro login"
+        warn "no wallpaper available; pass --wallpaper FILE before your first login"
     fi
 
     local chosen_avatar="$AVATAR_SOURCE"
@@ -695,13 +804,13 @@ install_user_images() {
     if [[ -n "$chosen_avatar" ]]; then
         install_file 0644 "$chosen_avatar" "$avatar_target"
     elif [[ ! -f "$avatar_target" ]]; then
-        warn "avatar do Eww não instalado; use --avatar para preencher o círculo do cabeçalho"
+        warn "Eww avatar not installed; use --avatar to fill the header circle"
     fi
 }
 
 apply_desktop_theme() {
     (( SKIP_THEMES )) && return
-    (( DRY_RUN )) && { log "Aplicaria Catppuccin/Bibata/Papirus via GTK, Qt e gsettings"; return; }
+    (( DRY_RUN )) && { log "Would apply Catppuccin/Bibata/Papirus through GTK, Qt and gsettings"; return; }
 
     local gtk4_theme="$HOME/.local/share/themes/$GTK_THEME_NAME/gtk-4.0"
     if [[ -d "$gtk4_theme" ]]; then
@@ -732,15 +841,15 @@ reload_user_units() {
     fi
     if systemctl --user daemon-reload; then
         systemctl --user enable "${units[@]}" \
-            || warn "não foi possível habilitar todas as unidades; repita 'systemctl --user enable ...' após o login"
+            || warn "cannot enable all units; repeat 'systemctl --user enable ...' after login"
     else
-        warn "não foi possível recarregar o systemd do usuário; faça isso após entrar na sessão"
+        warn "cannot reload user systemd; do this after logging into the session"
     fi
 }
 
 validate_result() {
     (( DRY_RUN )) && return
-    log "Validando arquivos instalados"
+    log "Validating installed files"
 
     local script
     for script in "$HOME/.config/hypr/scripts/"*.sh "$HOME/.config/eww/scripts/"*.sh; do
@@ -751,12 +860,14 @@ validate_result() {
         "$HOME/.config/hypr/portable/anki/starter-decks.json" >/dev/null
 
     if ! Hyprland --verify-config --config "$HOME/.config/hypr/hyprland.lua"; then
-        die "Hyprland rejeitou a configuração instalada; restaure o backup em $BACKUP_DIR"
+        die "Hyprland rejected the installed configuration; restore the backup at $BACKUP_DIR"
     fi
 
     local required_commands=(
         Hyprland hypridle hyprlock hyprsunset hyprpolkitagent awww-daemon waybar mako eww fuzzel
-        ghostty nnn wl-paste cliphist grimblast wpctl brightnessctl playerctl
+        ghostty helix hx yazi herdr marksman glow pandoc wl-paste cliphist grimblast wpctl brightnessctl playerctl
+        pdftoppm file fd rg fzf zoxide 7zz magick chafa resvg ffmpeg
+        lua-language-server texlab taplo shfmt shellcheck gcc
         nmcli nm-applet blueman-manager pavucontrol notify-send jq socat wlogout
         wob swappy wf-recorder udiskie uwsm nwg-displays btop
         merkuro-calendar korganizer kalendarac konsolekalendar kdialog python3 codex
@@ -766,35 +877,44 @@ validate_result() {
     for command_name in "${required_commands[@]}"; do
         command -v "$command_name" >/dev/null 2>&1 || missing+=("$command_name")
     done
-    (( ${#missing[@]} == 0 )) || die "comandos ausentes após a instalação: ${missing[*]}"
+    (( ${#missing[@]} == 0 )) || die "commands missing after installation: ${missing[*]}"
+
+    hx --health markdown
+    hx --health rpmspec
+    herdr config check
 
     if ! command -v dcal >/dev/null 2>&1 \
         && { ! command -v flatpak >/dev/null 2>&1 \
             || ! flatpak info com.danklinux.dankcalendar >/dev/null 2>&1; }; then
-        die "DankCalendar ausente após a instalação"
+        die "DankCalendar missing after installation"
     fi
     if ! command -v anki >/dev/null 2>&1 \
         && { ! command -v flatpak >/dev/null 2>&1 \
             || ! flatpak info net.ankiweb.Anki >/dev/null 2>&1; }; then
-        die "Anki ausente após a instalação"
+        die "Anki missing after installation"
+    fi
+    if ! flatpak info com.rtosta.zapzap >/dev/null 2>&1; then
+        die "ZapZap missing after installation"
     fi
     flatpak info --user com.spotify.Client >/dev/null 2>&1 \
-        || die "Spotify Flatpak do usuário ausente após a instalação"
+        || die "User-scoped Spotify Flatpak missing after installation"
+    [[ -f "$HOME/.var/app/com.rtosta.zapzap/data/ZapZap/customizations/global/css/catppuccin-mocha-peach.css" ]] \
+        || die "ZapZap theme missing after installation"
 
     local spotify_prefs="$HOME/.var/app/com.spotify.Client/config/spotify/prefs"
     if [[ -f "$spotify_prefs" ]] \
         && grep -q '^autologin\.username=' "$spotify_prefs"; then
         local spicetify_config="$HOME/.config/spicetify/config-xpui.ini"
         [[ -x "$HOME/.spicetify/spicetify" ]] \
-            || die "Spicetify ausente após a instalação"
+            || die "Spicetify missing after installation"
         [[ -f "$HOME/.config/spicetify/Themes/Sleek/user.css" ]] \
-            || die "tema Sleek ausente após a instalação"
+            || die "Sleek theme missing after installation"
         [[ -f "$HOME/.config/spicetify/CustomApps/marketplace/manifest.json" ]] \
-            || die "Marketplace do Spicetify ausente após a instalação"
+            || die "Spicetify Marketplace missing after installation"
         grep -Eq '^current_theme[[:space:]]*=[[:space:]]*Sleek$' "$spicetify_config" \
-            || die "tema Sleek não foi ativado"
+            || die "Sleek theme was not enabled"
         grep -Eq '^color_scheme[[:space:]]*=[[:space:]]*Catppuccin$' "$spicetify_config" \
-            || die "esquema Catppuccin não foi ativado"
+            || die "Catppuccin color scheme was not enabled"
     fi
 
     if ! python3 - <<'PY'
@@ -804,66 +924,78 @@ gi.require_version("AyatanaAppIndicator3", "0.1")
 from gi.repository import AyatanaAppIndicator3, Gtk
 PY
     then
-        die "integração Ayatana AppIndicator indisponível"
+        die "Ayatana AppIndicator integration unavailable"
     fi
 }
 
 report_service_state() {
     (( DRY_RUN )) && return
     systemctl is-active --quiet NetworkManager.service \
-        || warn "NetworkManager não está ativo; confirme seu gerenciador de rede antes de executar 'sudo systemctl enable --now NetworkManager'"
+        || warn "NetworkManager is not active; check your network manager before running 'sudo systemctl enable --now NetworkManager'"
     systemctl is-active --quiet bluetooth.service \
-        || warn "Bluetooth não está ativo; se necessário execute 'sudo systemctl enable --now bluetooth'"
+        || warn "Bluetooth is not active; if needed, run 'sudo systemctl enable --now bluetooth'"
 }
 
 finish() {
-    log "Configuração concluída"
+    log "Configuration complete"
     printf 'Backup: %s\n' "$BACKUP_DIR"
     cat <<'EOF'
 
-Próximos passos:
-  1. Termine a sessão e escolha "Hyprland (UWSM)" no gerenciador de login.
-  2. Execute `hyprctl monitors` e ajuste ~/.config/hypr/lua/monitors.lua.
-  3. Importe os perfis VPN; credenciais e KWallet não são copiados.
-  4. Execute `codex login`. Depois adicione Google e Outlook pessoal pelo
-     painel Contas do DankCalendar ou, dentro de ~/.config/hypr/scripts,
-     execute `./dcal.sh account add google` e
-     `./dcal.sh account add microsoft`.
-     OAuth, contas e tokens não são copiados; Proton fica disponível pela web.
-  5. Handy.AppImage e smarty-pants-daemon são integrações pessoais opcionais;
-     os atalhos ficam inertes quando os binários não existem.
-  6. Abra o Study Hub com Super+Shift+A. No primeiro uso, o Anki prepara os
-     baralhos curados e o áudio francês. Entre no AnkiWeb e sincronize
-     manualmente se quiser levar sua coleção; coleção, login e mídia pessoal
-     não são copiados por este bootstrap.
-  7. Abra o Spotify com Super+M. Em uma instalação nova, faça login, aguarde
-     pelo menos 60 segundos e execute
-     ~/.config/hypr/scripts/spotify-customize.sh. Em perfis já autenticados, o
-     bootstrap aplica Sleek/Catppuccin e Marketplace automaticamente. A
-     bandeja oferece faixa atual, play/pause, anterior, próxima, shuffle,
-     repeat e cópia do link da faixa.
+Next steps:
+  1. Log out and select "Hyprland (UWSM)" in the display manager.
+  2. Run `hyprctl monitors` and adjust ~/.config/hypr/lua/monitors.lua.
+  3. Import VPN profiles; credentials and KWallet data are not copied.
+  4. Run `codex login`. Add Google and personal Outlook in DankCalendar's
+     Accounts panel, or run these commands from ~/.config/hypr/scripts:
+     `./dcal.sh account add google`
+     `./dcal.sh account add microsoft`
+     OAuth accounts/tokens are not copied; Proton is available on the web.
+  5. Handy.AppImage and smarty-pants-daemon are optional personal integrations;
+     their shortcuts do nothing when the binaries are unavailable.
+  6. Open Study Hub with Super+Shift+A. On first use, Anki prepares the curated
+     decks and French audio. Sign in to AnkiWeb and sync manually to transfer
+     your collection. Personal collection, login and media are not copied.
+  7. Open ZapZap through Fuzzel, complete the setup wizard and scan the QR code
+     with WhatsApp on your phone. Sessions, messages and downloads are not copied.
+  8. Open Spotify with Super+M. On a fresh installation, sign in, wait at least
+     60 seconds, then run ~/.config/hypr/scripts/spotify-customize.sh.
+     Already-authenticated profiles receive Sleek/Catppuccin and Marketplace
+     automatically. The tray offers the current track, play/pause, previous,
+     next, shuffle, repeat and copy-track-link actions.
+  9. Super+E opens Yazi; text opens in Helix, and O offers Glow reading for
+     Markdown. Start with hx --tutor and see ~/.config/hypr/WORKFLOW.md.
+     Herdr is optional: run herdr inside Ghostty. Transfer projects,
+     bibliographies and personal sessions separately.
 
-O script não troca automaticamente o serviço de rede nem altera PAM, evitando
-derrubar uma conexão remota ou bloquear o login. KWallet funciona, mas o
-desbloqueio automático depende da configuração PAM da máquina de destino.
+The script does not automatically switch network services or edit PAM, to
+avoid disrupting remote connections or login. KWallet works, but automatic
+unlocking depends on the target machine's PAM configuration.
+
 EOF
 }
 
 main() {
     validate_host
+    # openSUSE adds ~/.local/bin at the next login; also use it in this run.
+    export PATH="$HOME/.local/bin:$PATH"
     install_packages
     install_dankcalendar
     install_spotify
+    install_zapzap
     install_anki
     install_wf_recorder
     install_codex_cli
     require_hyprland_055
     install_grimblast
     backup_existing_configuration
+    install_workflow_binary herdr "$HERDR_URL" "$HERDR_SHA256"
+    install_workflow_binary marksman "$MARKSMAN_URL" "$MARKSMAN_SHA256"
     install_anki_addons
     install_visual_assets
     deploy_configuration
+    configure_helix
     configure_spotify
+    configure_zapzap
     install_user_images
     apply_desktop_theme
     reload_user_units

@@ -6,14 +6,14 @@ readonly key_file="${ANKICONNECT_KEY_FILE:-${XDG_STATE_HOME:-$HOME/.local/state}
 
 usage() {
     cat <<'EOF'
-Uso:
+Usage:
   anki-connect.sh ping
-  anki-connect.sh wait [segundos]
-  anki-connect.sh request AÇÃO [PARAMETROS_JSON]
-  anki-connect.sh raw REQUISIÇÃO_JSON
+  anki-connect.sh wait [seconds]
+  anki-connect.sh request ACTION [PARAMETERS_JSON]
+  anki-connect.sh raw REQUEST_JSON
 
-A resposta completa do AnkiConnect é escrita em JSON. O comando falha se o
-Anki estiver fechado, a resposta for inválida ou a API retornar um erro.
+Prints the complete AnkiConnect response as JSON. Fails if Anki is closed,
+the response is invalid, or the API returns an error.
 EOF
 }
 

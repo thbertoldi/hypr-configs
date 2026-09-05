@@ -1,0 +1,24 @@
+# Small Catppuccin Mocha / Peach overlay; other ANSI colors come from Ghostty.
+[app]
+overall = { fg = "#cdd6f4", bg = "#1e1e2e" }
+
+[mgr]
+cwd = { fg = "#fab387" }
+border_style = { fg = "#45475a" }
+
+[tabs]
+active = { fg = "#1e1e2e", bg = "#fab387", bold = true }
+inactive = { fg = "#cdd6f4", bg = "#313244" }
+
+[mode]
+normal_main = { fg = "#1e1e2e", bg = "#fab387", bold = true }
+normal_alt = { fg = "#fab387", bg = "#313244" }
+select_main = { fg = "#1e1e2e", bg = "#a6e3a1", bold = true }
+select_alt = { fg = "#a6e3a1", bg = "#313244" }
+unset_main = { fg = "#1e1e2e", bg = "#f38ba8", bold = true }
+unset_alt = { fg = "#f38ba8", bg = "#313244" }
+
+[indicator]
+parent = { fg = "#cdd6f4", bg = "#313244" }
+current = { fg = "#cdd6f4", bg = "#45475a", bold = true }
+preview = { fg = "#fab387", underline = true }

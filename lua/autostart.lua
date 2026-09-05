@@ -1,6 +1,6 @@
--- A sessão gráfica é supervisionada pelo systemd. Em sessões UWSM, finalize
--- o ambiente do compositor; no modo clássico, mantenha o target mínimo como
--- fallback. Os daemons estão em ~/.config/systemd/user/.
+-- systemd supervises the graphical session. Finalize the compositor environment
+-- in UWSM sessions; keep the minimal target as a fallback in classic sessions.
+-- Daemon units live in ~/.config/systemd/user/.
 hl.on("hyprland.start", function()
     hl.exec_cmd([[
         sh -c '

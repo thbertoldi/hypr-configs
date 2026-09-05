@@ -14,8 +14,8 @@ output_file="$state_dir/output"
 read -r geometry < "$geometry_file"
 read -r output < "$output_file"
 
-# O pacote openSUSE usa UTVideo lossless como padrão, que gera arquivos
-# enormes em ultrawide. H.264 com preset rápido mantém boa qualidade e tamanho.
+# The openSUSE package defaults to lossless UTVideo, producing huge files on
+# ultrawide displays. H.264 with a fast preset balances quality and file size.
 args=(-g "$geometry" -c libx264 -p preset=veryfast -p crf=23 -x yuv420p -f "$output")
 if command -v pactl >/dev/null 2>&1; then
     sink=$(pactl get-default-sink 2>/dev/null || true)

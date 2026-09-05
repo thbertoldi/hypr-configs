@@ -5,7 +5,7 @@ hl.bind(m .. " + Return",    hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.
 hl.bind(m .. " + D",         hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh fuzzel"))
 hl.bind(m .. " + SHIFT + D", hl.dsp.exec_cmd("fuzzel --dmenu"))
 hl.bind(m .. " + B",         hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh firefox"))
-hl.bind(m .. " + E",         hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh ghostty -e nnn"))
+hl.bind(m .. " + E",         hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh ghostty -e yazi"))
 hl.bind(m .. " + V",         hl.dsp.exec_cmd("sh -c 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'"))
 hl.bind(m .. " + W",         hl.dsp.exec_cmd("sh -c 'eww open --toggle dashboard'"))
 hl.bind(m .. " + T",         hl.dsp.exec_cmd("~/.config/hypr/scripts/vpn-toggle.sh"))

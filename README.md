@@ -1,58 +1,53 @@
-<div align="center">
-
 # Hyprland · openSUSE Tumbleweed
 
-Um desktop Wayland completo, reproduzível e opinativo — configurado em Lua,
-com visual Catppuccin Mocha e integrações reais para produtividade, agenda,
-agentes locais e estudo.
+A reproducible Wayland desktop configured in Lua, with Catppuccin Mocha
+styling and integrated calendar, music, study and terminal-writing workflows.
 
-[![openSUSE Tumbleweed](https://img.shields.io/badge/openSUSE-Tumbleweed-73BA25?logo=opensuse&logoColor=white)](https://get.opensuse.org/tumbleweed/)
-[![Hyprland 0.55+](https://img.shields.io/badge/Hyprland-0.55%2B-58E1FF?logo=wayland&logoColor=white)](https://hypr.land/)
-[![Lua config](https://img.shields.io/badge/config-Lua-2C2D72?logo=lua&logoColor=white)](hyprland.lua)
-[![Catppuccin Mocha](https://img.shields.io/badge/theme-Catppuccin_Mocha-CBA6F7)](https://catppuccin.com/)
-[![ShellCheck](https://img.shields.io/badge/scripts-ShellCheck-4EAA25?logo=gnubash&logoColor=white)](scripts/)
+Supported target: **openSUSE Tumbleweed, amd64/x86_64, Hyprland 0.55+**.
+The bootstrap backs up existing configuration before replacing known files.
+Start with `--dry-run` to review its actions.
 
-</div>
+## What's included
 
-> [!IMPORTANT]
-> O bootstrap foi feito especificamente para **openSUSE Tumbleweed**. Ele cria
-> backup antes de substituir configurações conhecidas e oferece `--dry-run`
-> para revisão prévia.
-
-## O que há aqui
-
-| Área | Componentes e experiência |
+| Area | Components and experience |
 |---|---|
-| Compositor | Hyprland 0.55+ em Lua, animações, regras e atalhos modulares |
-| Sessão | UWSM e serviços `systemd --user` supervisionando os daemons |
-| Interface | Waybar, dashboard Eww, Fuzzel, Mako, wlogout e Ghostty |
-| Aparência | Catppuccin Mocha, Kvantum, GTK, Papirus e Bibata |
-| Agenda | DankCalendar com Google e Outlook; Proton Calendar pela web |
-| Música | Spotify com Spicetify, Marketplace, MPRIS e bandeja útil |
-| Estudos | Anki, Study Hub, AnkiConnect autenticado e áudio francês |
-| Agentes | Codex no Ghostty, com perfis de sandbox e aprovação explícitos |
-| Utilitários | screenshots, gravação, clipboard, OSD, VPN, mídia e monitores |
+| Compositor | Hyprland 0.55+ in Lua, modular animations, rules and shortcuts |
+| Session | UWSM and supervised `systemd --user` services |
+| Interface | Waybar, Eww dashboard, Fuzzel, Mako, wlogout and Ghostty |
+| Writing and files | Helix, Yazi, Marksman, Glow, Pandoc and optional Herdr |
+| Appearance | Catppuccin Mocha, Kvantum, GTK, Papirus and Bibata |
+| Calendar | DankCalendar for Google/Outlook; Proton Calendar on the web |
+| Messaging | ZapZap with WhatsApp Web in Catppuccin Mocha/Peach |
+| Music | Spotify with Spicetify, Marketplace, MPRIS and tray controls |
+| Study | Anki, Study Hub, authenticated AnkiConnect and French audio |
+| Local agents | Codex in Ghostty, with explicit sandbox and approval profiles |
+| Utilities | Screenshots, recording, clipboard, OSD, VPN, media and monitors |
 
-### Destaques
+### Highlights
 
-- **Dashboard reativo:** agenda, mídia, áudio, brilho, clipboard, clima,
-  telemetria e quick toggles em um único painel Eww.
-- **Waybar operacional:** privacidade, gravação, VPN, perfil de energia,
-  inibidor de ociosidade e carga diária do Study Hub.
-- **Agenda unificada:** Google e Outlook pessoal no DankCalendar, com
-  sincronização e lembretes em segundo plano; Proton permanece no navegador.
-- **Música personalizável:** Spotify usa o layout Sleek/Catppuccin do
-  Spicetify, Marketplace visual, MPRIS e controles completos na bandeja.
-- **Study Hub:** 60 notas curadas e 84 cartões sobre Kubernetes, NVIDIA/GPU no
-  Kubernetes e francês, sem substituir coleções já existentes.
-- **Francês com áudio:** 24 MP3s cacheados, HyperTTS como fallback e um
-  diagnóstico silencioso para validar toda a cadeia.
-- **Agentes locais controlados:** atalhos para trabalhar nesta configuração,
-  na agenda, em projetos escolhidos ou no Anki, sem desabilitar sandbox.
-- **Dock/undock resiliente:** o monitor externo é identificado pela descrição,
-  e os workspaces acompanham automaticamente a única tela ativa.
+- **Terminal writing:** Helix keeps the existing coding configuration and adds
+  Markdown support through Marksman. Yazi replaces nnn on `Super+E`. Herdr
+  uses Mocha/Peach and forwards graphics previews. See the
+  [writing, reading and citations quick reference](WORKFLOW.md).
+- **Reactive dashboard:** Calendar, media, audio, brightness, clipboard, weather,
+  telemetry and quick toggles in one Eww panel.
+- **Useful status bar:** Privacy, recording, VPN, power profile, idle inhibitor
+  and daily Study Hub workload.
+- **Unified calendar:** Google and personal Outlook accounts in DankCalendar,
+  with background synchronization and reminders; Proton stays in the browser.
+- **Integrated WhatsApp:** User-scoped ZapZap Flatpak, dark mode and a
+  Mocha/Peach theme applied through its native global CSS support.
+- **Customizable music:** Spotify's Sleek/Catppuccin layout, visual Spicetify
+  Marketplace, MPRIS and full tray controls.
+- **Study Hub:** 60 curated notes and 84 cards about Kubernetes, NVIDIA/GPU on
+  Kubernetes and French, without replacing existing collections.
+- **French audio:** 24 cached MP3s, HyperTTS fallback and a silent diagnostic.
+- **Scoped local agents:** Shortcuts for this configuration, calendar,
+  selected projects and Anki, without disabling the sandbox.
+- **Resilient docking:** The external monitor is identified by description;
+  workspaces follow the single active display.
 
-## Arquitetura
+## Architecture
 
 ```mermaid
 flowchart LR
@@ -66,92 +61,99 @@ flowchart LR
     Bar --> Scripts["scripts/*.sh"]
     Dash --> Scripts
     Scripts --> Calendar["DankCalendar · Akonadi"]
+    Scripts --> Messages["ZapZap · WhatsApp Web"]
     Scripts --> Music["Spotify · Spicetify · MPRIS · tray"]
     Scripts --> Study["Anki · AnkiConnect · HyperTTS"]
     Scripts --> Agents["Codex · Ghostty"]
 ```
 
-A configuração canônica é [`hyprland.lua`](hyprland.lua). Os fragmentos
-[`conf.d/`](conf.d/) permanecem como referência e caminho de rollback; os
-módulos ativos vivem em [`lua/`](lua/).
+[`hyprland.lua`](hyprland.lua) is the canonical configuration. Active modules
+live in [`lua/`](lua/); [`conf.d/`](conf.d/) remains a legacy reference and
+rollback path.
 
-## Instalação
+## Installation
 
-### 1. Obtenha o repositório
-
-Depois de publicá-lo no GitHub, copie a URL exibida pelo botão **Code**:
+### 1. Get the repository
 
 ```bash
-git clone URL_COPIADA_DO_GITHUB ~/hypr-bootstrap
+git clone https://github.com/thbertoldi/hypr-configs.git ~/hypr-bootstrap
 cd ~/hypr-bootstrap
 ```
 
-Também é possível transferir diretamente a configuração atual:
+Alternatively, transfer the current bundle directly:
 
 ```bash
-rsync -a ~/.config/hypr/ usuario@outro-computador:~/hypr-bootstrap/
+rsync -a ~/.config/hypr/ user@other-computer:~/hypr-bootstrap/
 ```
 
-### 2. Revise o plano
+### 2. Review the plan
 
 ```bash
 chmod +x bootstrap-opensuse-tumbleweed.sh
 ./bootstrap-opensuse-tumbleweed.sh --dry-run
 ```
 
-### 3. Instale
+### 3. Install
+
+Run as your normal user; the installer requests `sudo` where needed.
 
 ```bash
 ./bootstrap-opensuse-tumbleweed.sh \
   --with-extras \
-  --wallpaper ~/Pictures/meu-wallpaper.jpg \
-  --avatar ~/Pictures/meu-avatar.jpeg
+  --wallpaper ~/Pictures/my-wallpaper.jpg \
+  --avatar ~/Pictures/my-avatar.jpeg
 ```
 
-O bootstrap:
+The bootstrap:
 
-1. confirma o openSUSE Tumbleweed e instala dependências;
-2. instala DankCalendar, Spotify e Anki pelo Flathub quando necessário;
-3. baixa ativos visuais fixados por versão e SHA-256;
-4. cria backup em `~/.local/state/hypr-bootstrap/backups/`;
-5. instala a sessão UWSM, configurações e serviços de usuário;
-6. usa um perfil de monitor genérico seguro em hardware diferente;
-7. valida Bash, JSON e a configuração do Hyprland.
+1. Checks for openSUSE Tumbleweed x86_64 and installs dependencies.
+2. Installs DankCalendar, Spotify, ZapZap and Anki from Flathub where needed.
+3. Downloads visual assets and Herdr/Marksman binaries with pinned SHA-256 hashes.
+4. Backs up configuration under `~/.local/state/hypr-bootstrap/backups/`,
+   including the **entire Helix directory**.
+5. Deploys the UWSM session, settings, writing tools and user services.
+6. Uses a safe generic monitor profile on different hardware.
+7. Validates Bash, JSON, Hyprland, Helix and Herdr.
 
-No primeiro login, escolha **Hyprland (UWSM)** no gerenciador de sessão.
+The goal is a **similar configured experience**, not an immutable OS snapshot:
+distro packages follow Tumbleweed, and existing Herdr/Marksman binaries are
+retained. Distributable app settings live in `portable/`; update those too
+when a local customization should carry over to the next installation.
+The complete installation bundle and guides remain in `~/.config/hypr/`.
 
-### Opções do bootstrap
+At the next login, select **Hyprland (UWSM)** in the display manager.
 
-| Opção | Efeito |
+### Bootstrap options
+
+| Option | Effect |
 |---|---|
-| `--with-extras` | instala também o inspetor de eventos Wayland `wev` |
-| `--same-hardware` | preserva o perfil LG ultrawide + `eDP-1` deste computador |
-| `--internal-output eDP-2` | troca o nome esperado do painel interno |
-| `--wallpaper ARQUIVO` | instala o wallpaper usado pelo awww |
-| `--avatar ARQUIVO` | instala o avatar exibido pelo Eww |
-| `--skip-packages` | não executa o zypper |
-| `--skip-themes` | não baixa fontes, cursor ou temas |
-| `--dry-run` | exibe as ações sem modificar a máquina |
+| `--with-extras` | Also install the `wev` Wayland event inspector |
+| `--same-hardware` | Keep this computer's LG ultrawide + `eDP-1` profile |
+| `--internal-output eDP-2` | Replace the expected internal display name |
+| `--wallpaper FILE` | Install the wallpaper used by awww |
+| `--avatar FILE` | Install the Eww avatar |
+| `--skip-packages` | Skip zypper and Herdr/Marksman installation; dependencies must already exist |
+| `--skip-themes` | Skip font, cursor and theme downloads |
+| `--dry-run` | Show actions without changing the machine |
 
-## Monitores e portabilidade
+## Monitors and portability
 
-O perfil desta máquina em [`lua/monitors.lua`](lua/monitors.lua) representa um
-fluxo de **uma tela ativa por vez**:
+This machine's [`lua/monitors.lua`](lua/monitors.lua) implements a
+**single-active-display** workflow:
 
-- conectado ao dock: LG ultrawide em `3440x1440@85` e painel interno desligado;
-- desconectado: `monitor-listener.sh` reativa o painel do notebook;
-- workspaces não são presos a um conector, evitando que desapareçam após uma
-  troca de `DP-1` para `HDMI-A-1`.
+- Docked: LG ultrawide at `3440x1440@85`, internal display off.
+- Undocked: `monitor-listener.sh` re-enables the laptop display.
+- Workspaces are not tied to a connector, so switching from `DP-1` to
+  `HDMI-A-1` does not leave them stranded.
 
-O monitor LG é identificado por
-[`desc:`](https://wiki.hypr.land/Configuring/Basics/Monitors/), não pelo nome
-instável do conector.
-Em outro computador, o bootstrap instala
-[`portable/monitors-generic.lua`](portable/monitors-generic.lua), que usa modo
-preferencial e posicionamento automático. Use `--same-hardware` apenas em uma
-máquina realmente equivalente.
+The LG is matched by its
+[`desc:`](https://wiki.hypr.land/Configuring/Basics/Monitors/), not an unstable
+connector name. On another computer, the bootstrap installs
+[`portable/monitors-generic.lua`](portable/monitors-generic.lua), which uses
+preferred modes and automatic positioning. Only use `--same-hardware` on a
+genuinely equivalent machine.
 
-Depois do primeiro login:
+After your first login:
 
 ```bash
 hyprctl monitors
@@ -159,181 +161,198 @@ $EDITOR ~/.config/hypr/lua/monitors.lua
 hyprctl reload
 ```
 
-## Atalhos principais
+## Main shortcuts
 
-| Atalho | Ação |
+| Shortcut | Action |
 |---|---|
-| `Super+Return` | abrir Ghostty |
-| `Super+D` | abrir Fuzzel |
-| `Super+W` | abrir ou fechar o dashboard Eww |
-| `Super+O` | abrir a agenda no DankCalendar |
-| `Super+M` | abrir o Spotify personalizado |
-| `Super+G` | abrir o menu de agentes |
-| `Super+Shift+A` | abrir o Study Hub no Anki |
-| `Super+Print` | capturar uma região e anotar no Swappy |
-| `Super+Alt+R` | iniciar ou parar uma gravação de região |
-| `Super+Shift+C` | copiar uma cor com Hyprpicker |
-| `Super+Ctrl+M` | configurar monitores com NWG Displays |
-| `Super+Ctrl+B` | abrir btop no Ghostty |
-| `Super+Escape` | abrir o menu de sessão |
+| `Super+Return` | Open Ghostty |
+| `Super+E` | Open Yazi in Ghostty; text files open in Helix |
+| `Super+D` | Open Fuzzel |
+| `Super+W` | Toggle the Eww dashboard |
+| `Super+O` | Open DankCalendar |
+| `Super+M` | Open customized Spotify |
+| `Super+G` | Open the agent menu |
+| `Super+Shift+A` | Open the Anki Study Hub |
+| `Super+Print` | Capture a region and annotate it with Swappy |
+| `Super+Alt+R` | Start/stop recording a region |
+| `Super+Shift+C` | Copy a color with Hyprpicker |
+| `Super+Ctrl+M` | Configure monitors with NWG Displays |
+| `Super+Ctrl+B` | Open btop in Ghostty |
+| `Super+Escape` | Open the session menu |
 
-`Print`, `Shift+Print` e `Ctrl+Print` mantêm os fluxos rápidos de screenshot.
-As teclas físicas de áudio e brilho atualizam o PipeWire/backlight e exibem o
-OSD do wob.
+`Print`, `Shift+Print` and `Ctrl+Print` keep the quick screenshot workflows.
+Hardware audio/brightness keys update PipeWire/backlight and show the wob OSD.
 
-## Agenda
+## Calendar
 
-O [DankCalendar](https://github.com/AvengeMedia/dankcalendar) é a
-interface principal de agenda. O relógio da Waybar, `Super+O` e o botão
-**Agenda** do Eww abrem uma janela flutuante proporcional ao monitor. O
-dashboard mostra os próximos compromissos pela API local.
+[DankCalendar](https://github.com/AvengeMedia/dankcalendar) is the main calendar
+interface. The Waybar clock, `Super+O` and Eww's **Agenda** button open a
+floating window sized for the monitor. Eww gets upcoming events through the
+local API.
 
-Adicione contas pelo painel **Accounts** ou pelo terminal:
+Add accounts in the **Accounts** panel or from a terminal:
 
 ```bash
 ~/.config/hypr/scripts/dcal.sh account add google
 ~/.config/hypr/scripts/dcal.sh account add microsoft
 ```
 
-- Google e Outlook pessoal usam OAuth no navegador;
-- Outlook também fica disponível pela web no clique do meio do relógio;
-- Proton Calendar abre exclusivamente pela web;
-- Merkuro/KOrganizer e Akonadi permanecem como fallbacks.
+- Google and personal Outlook use browser-based OAuth.
+- Middle-clicking the clock also opens Outlook on the web.
+- Proton Calendar opens exclusively on the web.
+- Merkuro/KOrganizer and Akonadi remain available as fallbacks.
 
-Tokens ficam no KWallet e não entram no repositório.
+Tokens stay in KWallet and are not included in the repository.
 
-## Música
+## Messaging
 
-O cliente oficial do Spotify fornece autenticação, biblioteca e reprodução;
-o [Spicetify](https://github.com/spicetify/cli) substitui a aparência pelo
-**Sleek/Catppuccin** e adiciona o Marketplace para trocar temas, snippets e
-extensões visualmente. A versão Flatpak instalada no escopo do usuário torna a
-personalização reversível e evita permissões de root. Um Spotify do sistema
-pode coexistir sem ser alterado.
+[ZapZap](https://github.com/rafatosta/zapzap) replaces Whatsie as the main
+WhatsApp client. The bootstrap installs the user-scoped Flatpak, requests dark
+mode and injects static global CSS using the desktop's Catppuccin Mocha/Peach
+colors. The versioned theme is in [`portable/zapzap/`](portable/zapzap/).
 
-`Super+M` e o botão **Spotify** no Eww mostram uma janela Wayland sem barra de
-título, centralizada e proporcional ao monitor. O serviço
-`spotify-tray.service` publica um ícone vetorial nítido e um menu com faixa e
-artista atuais, abrir, play/pause, anterior, próxima, shuffle, repeat e cópia do
-link da faixa. O menu controla o MPRIS do cliente; dashboard, `playerctl` e
-teclas físicas usam a mesma interface. Um override Flatpak restrito bloqueia
-somente o indicador nativo redundante do Spotify, deixando um único ícone na
-bandeja sem afetar MPRIS.
+Open **ZapZap** through Fuzzel and complete its setup wizard. Sign in using the
+official WhatsApp Web QR code. Whatsie is not automatically removed, so it can
+remain a fallback until you have checked the migration.
 
-O instalador fixa e valida por SHA-256 o Spicetify 2.44.0, o Marketplace 1.0.9
-e os dois arquivos do tema Sleek. Atualizações do Spotify podem exigir executar
-novamente `~/.config/hypr/scripts/spotify-customize.sh`. Login, biblioteca,
-histórico e cache continuam no perfil privado do Flatpak e não entram no
-repositório.
+Cookies, sessions, messages and downloads stay in ZapZap's private Flatpak
+profile and are not versioned.
 
-Em uma instalação nova, primeiro abra o Spotify, faça login e aguarde pelo
-menos 60 segundos; depois execute `spotify-customize.sh`. Esse primeiro uso é
-necessário para o Spotify criar os arquivos esperados pelo Spicetify. Em um
-perfil já autenticado, o bootstrap aplica a personalização automaticamente.
+## Music
+
+The official Spotify client supplies authentication, library access and
+playback. [Spicetify](https://github.com/spicetify/cli) applies
+**Sleek/Catppuccin** and adds a visual Marketplace for themes, snippets and
+extensions. The user-scoped Flatpak makes customization reversible without
+root access. A system-wide Spotify installation can coexist unchanged.
+
+`Super+M` and Eww's **Spotify** button show a centered Wayland window without a
+title bar, sized for the current monitor. `spotify-tray.service` supplies a
+vector icon and a menu with the current track/artist, open, play/pause,
+previous/next, shuffle, repeat and copy-track-link actions. The tray, dashboard,
+`playerctl` and hardware keys all use MPRIS. A narrowly scoped Flatpak override
+blocks only Spotify's redundant native tray indicator, leaving one icon without
+affecting MPRIS.
+
+The customization installer pins and verifies Spicetify 2.44.0, Marketplace
+1.0.9 and both Sleek theme files using SHA-256. Spotify updates may require
+rerunning `~/.config/hypr/scripts/spotify-customize.sh`. Login, library, history
+and cache remain private to the Flatpak profile.
+
+On a fresh installation, open Spotify, sign in and wait at least 60 seconds
+before running `spotify-customize.sh`. This lets Spotify create the files
+Spicetify expects. The bootstrap automatically applies customization to
+already-authenticated profiles.
 
 ## Study Hub
 
-O Study Hub integra [Anki](https://apps.ankiweb.net/) à Waybar, ao Eww, ao
-Fuzzel e aos agentes:
+Study Hub integrates [Anki](https://apps.ankiweb.net/) with Waybar, Eww, Fuzzel
+and local agents:
 
-| Baralho | Notas | Cartões |
+| Deck | Notes | Cards |
 |---|---:|---:|
 | Kubernetes Core | 18 | 18 |
 | NVIDIA GPUs on Kubernetes | 18 | 18 |
 | French Essentials | 24 | 48 |
 | **Total** | **60** | **84** |
 
-As notas técnicas possuem links para documentação primária. As frases em
-francês têm cartões de reconhecimento e produção, com MP3 cacheado na mídia do
-Anki. O seed é idempotente e não substitui baralhos importados.
+Technical notes link to primary documentation. French sentences have
+recognition and production cards with cached MP3s in Anki's media collection.
+Seeding is idempotent and does not replace imported decks.
 
 AnkiConnect:
 
-- escuta somente em `127.0.0.1:8765`;
-- exige uma chave aleatória com permissão `0600`;
-- é instalado de uma release revisada e fixada por SHA-256;
-- nunca requer edição direta do SQLite do Anki.
+- Listens only on `127.0.0.1:8765`.
+- Requires a random key stored with `0600` permissions.
+- Is installed from a reviewed release pinned by SHA-256.
+- Never requires direct edits to Anki's SQLite database.
 
-Com o Anki aberto, valide TTS, templates e mídia sem reproduzir áudio:
+With Anki open, validate TTS, templates and media without playing audio:
 
 ```bash
 ~/.config/hypr/scripts/study-tts-check.sh
 ```
 
-Login, coleção, histórico e mídia pessoal do AnkiWeb não são versionados.
+AnkiWeb login, collection, history and personal media are not versioned.
 
-## Agentes locais
+## Local agents
 
-`Super+G` inicia o Codex no Ghostty com perfis para:
+`Super+G` starts Codex in Ghostty with profiles for:
 
-- editar esta configuração;
-- planejar usando a agenda;
-- criar ou revisar flashcards;
-- trabalhar em uma pasta escolhida;
-- inspecionar o computador em modo somente leitura;
-- retomar conversas anteriores.
+- Editing this configuration.
+- Planning with the calendar.
+- Creating or reviewing flashcards.
+- Working in a selected folder.
+- Inspecting the computer read-only.
+- Resuming previous conversations.
 
-Perfis editáveis usam `workspace-write` e aprovação `on-request`. Operações em
-massa no Anki, mudanças de templates e exclusões exigem confirmação explícita.
-No primeiro uso, execute `codex login`.
+Editing profiles use `workspace-write` and `on-request` approval. Bulk Anki
+operations, template changes and deletion require explicit confirmation.
+Run `codex login` before first use.
 
-## Estrutura do repositório
+## Repository layout
 
 ```text
 .
-├── hyprland.lua                   # entrada canônica do compositor
-├── lua/                           # módulos ativos do Hyprland
-├── conf.d/                        # configuração legada / rollback
-├── scripts/                       # automações do desktop
+├── hyprland.lua                   # canonical compositor entry point
+├── lua/                           # active Hyprland modules
+├── conf.d/                        # legacy configuration / rollback
+├── scripts/                       # desktop automation
 ├── portable/
-│   ├── anki/                      # bundle curado do Study Hub
-│   ├── eww/                       # dashboard e listeners
-│   ├── waybar/                    # barra e estilos
-│   ├── systemd/user/              # serviços da sessão
-│   └── ...                        # apps, temas e configurações auxiliares
-├── assets/                        # instruções para arquivos visuais locais
+│   ├── anki/                      # curated Study Hub bundle
+│   ├── eww/                       # dashboard and listeners
+│   ├── helix/                     # editor, languages and RPM-spec queries
+│   ├── yazi/                      # Helix/Glow openers and Mocha/Peach theme
+│   ├── herdr/                     # theme and graphics preview support
+│   ├── silverbullet/              # optional theme recipe
+│   ├── zapzap/                    # WhatsApp Web Mocha/Peach theme
+│   ├── waybar/                    # bar and styles
+│   ├── systemd/user/              # session services
+│   └── ...                        # apps, themes and companion settings
+├── assets/                        # optional local image instructions
+├── docs/                          # historical design notes and plans
 ├── bootstrap-opensuse-tumbleweed.sh
-└── SUGESTOES.md                   # histórico das decisões incorporadas
+├── WORKFLOW.md                    # Helix/Yazi/Herdr and citation reference
+└── DECISIONS.md                   # history of incorporated improvements
 ```
 
-## Verificação e diagnóstico
+## Verification and diagnostics
 
 ```bash
-# Configuração canônica
+# Canonical configuration
 Hyprland --verify-config --config ~/.config/hypr/hyprland.lua
 hyprctl configerrors
 
-# Scripts e dados
-bash -n ~/.config/hypr/scripts/*.sh
+# Scripts and data
+for script in ~/.config/hypr/scripts/*.sh; do bash -n "$script"; done
 jq empty ~/.config/hypr/portable/waybar/config.jsonc
 jq empty ~/.config/hypr/portable/anki/starter-decks.json
+hx --health markdown
+hx --health rpmspec
+herdr config check
+yazi --debug
 
-# Serviços principais
+# Main services
 systemctl --user status waybar eww mako hypridle
 
-# Reprodução segura
+# Non-mutating installation preview
 ~/.config/hypr/bootstrap-opensuse-tumbleweed.sh --dry-run
 ```
 
-## Dados deliberadamente não versionados
+## Deliberately unversioned data
 
-- tokens OAuth, KWallet e contas de agenda;
-- chave local do AnkiConnect;
-- login, coleção e mídia pessoal do AnkiWeb;
-- login, biblioteca, histórico e cache do Spotify;
-- autenticação e histórico do Codex;
-- perfis VPN e credenciais;
-- wallpaper, avatar e arquivos pessoais;
-- binários opcionais como Handy e configurações privadas do smarty-pants.
+- Calendar OAuth tokens, KWallet and account settings.
+- Local AnkiConnect key.
+- AnkiWeb login, collection and personal media.
+- ZapZap login, sessions, messages and downloads.
+- Spotify login, library, history and cache.
+- Codex authentication and history.
+- VPN profiles and credentials.
+- Herdr sessions, SilverBullet spaces/credentials and Zotero databases.
+- Dissertation texts and bibliographies; transfer your projects separately.
+- Wallpaper, avatar and personal files.
+- Optional binaries such as Handy and private smarty-pants settings.
 
-Para o registro detalhado das melhorias e decisões de segurança, consulte
-[`SUGESTOES.md`](SUGESTOES.md).
-
----
-
-<div align="center">
-
-Feito para um desktop pessoal que precisa ser bonito, rápido, estudável e
-reproduzível — sem transformar credenciais em dotfiles.
-
-</div>
+See [`DECISIONS.md`](DECISIONS.md) for the history of improvements and security
+decisions. Documentation is maintained in English; actual application labels
+and language-learning content may use other languages.

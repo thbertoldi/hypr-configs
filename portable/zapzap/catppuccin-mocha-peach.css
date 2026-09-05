@@ -1,0 +1,331 @@
+/*
+ * Catppuccin Mocha / Peach for ZapZap (WhatsApp Web)
+ *
+ * Adapted from Catppuccin Userstyles' WhatsApp Web theme 2026.07.03:
+ * https://github.com/catppuccin/userstyles/tree/main/styles/whatsapp-web
+ * Copyright (c) 2021 Catppuccin contributors, licensed under the MIT License.
+ * See CATPPUCCIN-LICENSE in this directory.
+ *
+ * This is static CSS because ZapZap injects CSS directly, without a LESS
+ * preprocessor. Both light and dark WhatsApp roots intentionally receive the
+ * same Mocha palette; ZapZap itself is configured to request dark mode.
+ */
+
+:root,
+:root .color-refresh,
+.color-refresh,
+.app-wrapper-web.app-wrapper-web,
+.app-wrapper-web.app-wrapper-web:root,
+.dark.color-refresh,
+.color-refresh.dark,
+.dark .app-wrapper-web.app-wrapper-web,
+.dark .app-wrapper-web.app-wrapper-web:root {
+  color-scheme: dark;
+
+  --ctp-rosewater: #f5e0dc;
+  --ctp-flamingo: #f2cdcd;
+  --ctp-pink: #f5c2e7;
+  --ctp-mauve: #cba6f7;
+  --ctp-red: #f38ba8;
+  --ctp-maroon: #eba0ac;
+  --ctp-peach: #fab387;
+  --ctp-yellow: #f9e2af;
+  --ctp-green: #a6e3a1;
+  --ctp-teal: #94e2d5;
+  --ctp-sky: #89dceb;
+  --ctp-sapphire: #74c7ec;
+  --ctp-blue: #89b4fa;
+  --ctp-lavender: #b4befe;
+  --ctp-text: #cdd6f4;
+  --ctp-subtext-0: #a6adc8;
+  --ctp-subtext-1: #bac2de;
+  --ctp-overlay-0: #6c7086;
+  --ctp-overlay-1: #7f849c;
+  --ctp-overlay-2: #9399b2;
+  --ctp-surface-0: #313244;
+  --ctp-surface-1: #45475a;
+  --ctp-surface-2: #585b70;
+  --ctp-base: #1e1e2e;
+  --ctp-mantle: #181825;
+  --ctp-crust: #11111b;
+
+  --ctp-peach-rgb: 250, 179, 135;
+  --ctp-red-rgb: 243, 139, 168;
+  --ctp-yellow-rgb: 249, 226, 175;
+  --ctp-green-rgb: 166, 227, 161;
+  --ctp-teal-rgb: 148, 226, 213;
+  --ctp-sky-rgb: 137, 220, 235;
+  --ctp-blue-rgb: 137, 180, 250;
+  --ctp-pink-rgb: 245, 194, 231;
+  --ctp-mauve-rgb: 203, 166, 247;
+  --ctp-text-rgb: 205, 214, 244;
+  --ctp-overlay-0-rgb: 108, 112, 134;
+  --ctp-overlay-2-rgb: 147, 153, 178;
+  --ctp-surface-0-rgb: 49, 50, 68;
+  --ctp-surface-1-rgb: 69, 71, 90;
+  --ctp-base-rgb: 30, 30, 46;
+  --ctp-mantle-rgb: 24, 24, 37;
+  --ctp-crust-rgb: 17, 17, 27;
+
+  --WDS-accent: var(--ctp-peach);
+  --WDS-accent-RGB: var(--ctp-peach-rgb);
+  --WDS-accent-rgb: var(--ctp-peach-rgb);
+  --WDS-accent-deemphasized: rgba(var(--ctp-peach-rgb), 0.3);
+  --WDS-accent-deemphasized-RGB: var(--ctp-peach-rgb);
+  --WDS-accent-deemphasized-rgb: var(--ctp-peach-rgb);
+  --WDS-accent-emphasized: #fcd2b8;
+  --WDS-accent-emphasized-RGB: 252, 210, 184;
+  --WDS-accent-emphasized-rgb: 252, 210, 184;
+
+  --WDS-secondary-negative: var(--ctp-red);
+  --WDS-secondary-negative-RGB: var(--ctp-red-rgb);
+  --WDS-secondary-negative-rgb: var(--ctp-red-rgb);
+  --WDS-secondary-negative-deemphasized: rgba(var(--ctp-red-rgb), 0.3);
+  --WDS-secondary-negative-emphasized: var(--ctp-red);
+  --WDS-secondary-positive: var(--ctp-green);
+  --WDS-secondary-positive-RGB: var(--ctp-green-rgb);
+  --WDS-secondary-positive-rgb: var(--ctp-green-rgb);
+  --WDS-secondary-positive-deemphasized: rgba(var(--ctp-green-rgb), 0.3);
+  --WDS-secondary-warning: var(--ctp-yellow);
+  --WDS-secondary-warning-RGB: var(--ctp-yellow-rgb);
+  --WDS-secondary-warning-rgb: var(--ctp-yellow-rgb);
+  --WDS-secondary-warning-deemphasized: rgba(var(--ctp-yellow-rgb), 0.3);
+
+  --WDS-content-default: var(--ctp-text);
+  --WDS-content-default-RGB: var(--ctp-text-rgb);
+  --WDS-content-default-rgb: var(--ctp-text-rgb);
+  --WDS-content-deemphasized: var(--ctp-overlay-2);
+  --WDS-content-deemphasized-RGB: var(--ctp-overlay-2-rgb);
+  --WDS-content-deemphasized-rgb: var(--ctp-overlay-2-rgb);
+  --WDS-content-disabled: rgba(var(--ctp-text-rgb), 0.5);
+  --WDS-content-on-accent: var(--ctp-crust);
+  --WDS-content-on-accent-RGB: var(--ctp-crust-rgb);
+  --WDS-content-on-accent-rgb: var(--ctp-crust-rgb);
+  --WDS-content-action-default: var(--ctp-peach);
+  --WDS-content-action-emphasized: #fcd2b8;
+  --WDS-content-external-link: var(--ctp-blue);
+  --WDS-content-inverse: var(--ctp-crust);
+  --WDS-content-read: var(--ctp-blue);
+
+  --WDS-background-wash-inset: var(--ctp-crust);
+  --WDS-background-wash-plain: var(--ctp-crust);
+  --WDS-background-elevated-wash-plain: var(--ctp-crust);
+  --WDS-background-elevated-wash-inset: var(--ctp-crust);
+  --WDS-background-dimmer: rgba(0, 0, 0, 0.3);
+  --WDS-modal-backdrop-solid: var(--ctp-crust);
+
+  --WDS-surface-default: var(--ctp-mantle);
+  --WDS-surface-default-RGB: var(--ctp-mantle-rgb);
+  --WDS-surface-default-rgb: var(--ctp-mantle-rgb);
+  --background-default: var(--WDS-surface-default);
+  --search-container-background: var(--WDS-surface-default);
+  --WDS-surface-emphasized: var(--ctp-base);
+  --WDS-surface-elevated-default: var(--ctp-base);
+  --WDS-surface-elevated-emphasized: #303042;
+  --WDS-surface-highlight: rgba(var(--ctp-text-rgb), 0.2);
+  --WDS-surface-inverse: var(--ctp-text);
+  --WDS-surface-pressed: rgba(var(--ctp-text-rgb), 0.2);
+
+  --WDS-lines-divider: rgba(var(--ctp-text-rgb), 0.1);
+  --WDS-lines-outline-default: var(--ctp-overlay-0);
+  --WDS-lines-outline-deemphasized: rgba(var(--ctp-text-rgb), 0.3);
+
+  --WDS-persistent-activity-indicator: rgba(var(--ctp-green-rgb), 0.9);
+  --WDS-persistent-always-black: #000000;
+  --WDS-persistent-always-white: #ffffff;
+  --WDS-persistent-always-branded: var(--ctp-peach);
+
+  --WDS-systems-bubble-surface-incoming: var(--ctp-base);
+  --WDS-systems-bubble-surface-incoming-RGB: var(--ctp-base-rgb);
+  --WDS-systems-bubble-surface-incoming-rgb: var(--ctp-base-rgb);
+  --WDS-systems-bubble-surface-outgoing: #4a3c40;
+  --WDS-systems-bubble-surface-outgoing-RGB: 74, 60, 64;
+  --WDS-systems-bubble-surface-outgoing-rgb: 74, 60, 64;
+  --WDS-systems-bubble-content-deemphasized: rgba(var(--ctp-text-rgb), 0.5);
+  --WDS-systems-bubble-surface-overlay: var(--ctp-mantle);
+  --WDS-systems-bubble-surface-system: var(--ctp-mantle);
+  --WDS-systems-bubble-surface-e2e: #454041;
+  --WDS-systems-bubble-content-e2e: var(--ctp-yellow);
+  --WDS-systems-bubble-surface-business: #314048;
+
+  --WDS-systems-chat-surface-composer: var(--ctp-base);
+  --WDS-systems-chat-background-wallpaper: var(--ctp-crust);
+  --WDS-systems-chat-foreground-wallpaper: var(--ctp-mantle);
+  --WDS-systems-chat-surface-tray: var(--ctp-base);
+  --WDS-systems-status-seen: rgba(var(--ctp-text-rgb), 0.5);
+
+  --WDS-components-platform-gesture-bar: rgba(var(--ctp-crust-rgb), 0.5);
+  --WDS-components-platform-status-bar: rgba(var(--ctp-crust-rgb), 0.8);
+  --WDS-components-surface-nav-bar: var(--ctp-base);
+  --WDS-app-wash: var(--ctp-surface-0);
+
+  --WDS-white: var(--ctp-crust);
+  --WDS-white-RGB: var(--ctp-crust-rgb);
+  --WDS-white-rgb: var(--ctp-crust-rgb);
+  --white: var(--ctp-crust);
+  --white-rgb: var(--ctp-crust-rgb);
+
+  --attachment-type-stickers-color: var(--ctp-green);
+  --attachment-type-stickers-color-rgb: var(--ctp-green-rgb);
+  --attachment-type-polls-color: var(--ctp-yellow);
+  --attachment-type-polls-color-rgb: var(--ctp-yellow-rgb);
+  --attachment-type-contacts-color: var(--ctp-sky);
+  --attachment-type-contacts-color-rgb: var(--ctp-sky-rgb);
+  --attachment-type-camera-color: var(--ctp-pink);
+  --attachment-type-camera-color-rgb: var(--ctp-pink-rgb);
+  --attachment-type-photos-color: var(--ctp-blue);
+  --attachment-type-photos-color-rgb: var(--ctp-blue-rgb);
+  --attachment-type-documents-color: var(--ctp-mauve);
+  --attachment-type-documents-color-rgb: var(--ctp-mauve-rgb);
+  --attachment-type-audio-color: var(--ctp-peach);
+  --attachment-type-audio-color-rgb: var(--ctp-peach-rgb);
+  --attachment-type-event-color: var(--ctp-pink);
+  --attachment-type-event-color-rgb: var(--ctp-pink-rgb);
+
+  --toast-background: var(--ctp-surface-1);
+  --toast-background-rgb: var(--ctp-surface-1-rgb);
+  --toast-text: var(--ctp-text);
+  --toast-text-rgb: var(--ctp-text-rgb);
+  --picker-background: var(--ctp-surface-1);
+  --picker-background-rgb: var(--ctp-surface-1-rgb);
+  --butterbar-blue-nux-background: var(--ctp-sky);
+  --butterbar-blue-nux-background-rgb: var(--ctp-sky-rgb);
+  --butterbar-blue-nux-icon-background: #20a3bb;
+  --butterbar-blue-nux-icon-background-rgb: 32, 163, 187;
+  --blue-light: var(--ctp-blue);
+  --blue-light-rgb: var(--ctp-blue-rgb);
+  --gray-500: var(--ctp-overlay-2);
+  --gray-500-rgb: var(--ctp-overlay-2-rgb);
+  --focus-animation: #765a52;
+  --focus-animation-rgb: 118, 90, 82;
+  --focus-animation-deeper: #604b49;
+  --focus-animation-deeper-rgb: 96, 75, 73;
+  --startup-icon: var(--ctp-surface-1);
+  --startup-icon-rgb: var(--ctp-surface-1-rgb);
+  --startup-background: var(--ctp-crust);
+  --startup-background-rgb: var(--ctp-crust-rgb);
+  --progress-background: var(--ctp-surface-0);
+  --progress-background-rgb: var(--ctp-surface-0-rgb);
+  --date-picker-text-color: var(--ctp-text);
+  --date-picker-text-color-rgb: var(--ctp-text-rgb);
+}
+
+[style*="--splashscreen-startup-background"] {
+  --splashscreen-startup-background: #11111b !important;
+  --splashscreen-startup-background-rgb: 17, 17, 27 !important;
+  --splashscreen-startup-icon: #313244 !important;
+  --splashscreen-startup-icon-rgb: 49, 50, 68 !important;
+  --splashscreen-primary-title: #cdd6f4 !important;
+  --splashscreen-primary-title-rgb: 205, 214, 244 !important;
+  --splashscreen-progress-primary: #fab387 !important;
+  --splashscreen-progress-primary-rgb: 250, 179, 135 !important;
+  --splashscreen-progress-background: #45475a !important;
+  --splashscreen-progress-background-rgb: 69, 71, 90 !important;
+  --splashscreen-secondary-lighter: #9399b2 !important;
+  --splashscreen-secondary-lighter-rgb: 147, 153, 178 !important;
+  --startup-icon: #45475a !important;
+  --startup-icon-rgb: 69, 71, 90 !important;
+  --startup-background: #11111b !important;
+  --startup-background-rgb: 17, 17, 27 !important;
+  --progress-background: #313244 !important;
+  --progress-background-rgb: 49, 50, 68 !important;
+}
+
+html,
+body,
+#app {
+  color-scheme: dark;
+  background-color: #11111b;
+}
+
+body,
+button,
+input,
+textarea,
+select {
+  font-family: "Noto Sans", sans-serif;
+}
+
+code,
+pre,
+kbd,
+samp {
+  font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
+}
+
+* {
+  scrollbar-color: #45475a transparent;
+  scrollbar-width: thin;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  min-height: 32px;
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: #45475a;
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: #585b70;
+  background-clip: padding-box;
+}
+
+::selection {
+  color: #11111b;
+  background: rgba(250, 179, 135, 0.78);
+}
+
+button:focus-visible,
+[role="button"]:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+[contenteditable="true"]:focus-visible {
+  outline: 2px solid #fab387;
+  outline-offset: 2px;
+}
+
+/* About-AI icon. */
+.st0 {
+  fill: #fab387 !important;
+  stroke: #313244;
+}
+
+input[type="time"]::-webkit-datetime-edit-hour-field:focus,
+input[type="time"]::-webkit-datetime-edit-minute-field:focus,
+input[type="time"]::-webkit-datetime-edit-second-field:focus,
+input[type="time"]::-webkit-datetime-edit-ampm-field:focus,
+input[type="date"]::-webkit-datetime-edit-year-field:focus,
+input[type="date"]::-webkit-datetime-edit-month-field:focus,
+input[type="date"]::-webkit-datetime-edit-day-field:focus {
+  color: #11111b;
+  background-color: #fab387;
+}
+
+[data-icon="wa-wordmark-refreshed"] path {
+  fill: currentcolor;
+}
+
+#wa-popovers-bucket
+  + span
+  > div
+  button:nth-of-type(1):not(:has(> [data-icon="x-alt"])) {
+  color: var(--WDS-accent-emphasized);
+}
+
+.react-calendar__tile:disabled {
+  color: #a6adc8;
+}
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  color: #9399b2;
+}

@@ -1,0 +1,24 @@
+# Catppuccin Mocha / Peach, matching Hyprland, Ghostty, GTK, and Waybar.
+# Herdr draws inside the terminal, so font and opacity stay with Ghostty.
+
+[theme]
+name = "catppuccin"
+auto_switch = false
+
+[theme.custom]
+accent = "#fab387"         # Peach: focused borders and highlights.
+panel_bg = "#181825"       # Mantle: menus and popup panels.
+sidebar_bg = "#181825"     # Mantle: workspace and agent sidebar.
+active_row_bg = "#313244"  # Surface 0: active workspace / agent.
+selection_bg = "#45475a"   # Surface 1: keyboard navigation cursor.
+text = "#cdd6f4"
+subtext0 = "#a6adc8"
+
+# Remaining surface and semantic status colors use the built-in Mocha palette.
+# Reload without restarting panes: herdr server reload-config
+
+[experimental]
+# Yazi's image/PDF previews use Kitty graphics, supported by the outer Ghostty.
+# After first enabling: reload config, detach/reattach Herdr, use a new pane.
+# Existing pane terminals retain the graphics setting from their creation.
+kitty_graphics = true

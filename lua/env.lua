@@ -14,6 +14,7 @@ hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 hl.env("TERMINAL", "ghostty")
 hl.env("BROWSER", "firefox")
 hl.env("EDITOR", "helix")
+hl.env("VISUAL", "helix")
 
 -- Cursor
 hl.env("HYPRCURSOR_THEME", "Bibata-Modern-Classic")

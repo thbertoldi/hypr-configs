@@ -1,10 +1,10 @@
-# Imagens opcionais
+# Optional images
 
-O instalador reconhece automaticamente estes arquivos, caso sejam colocados
-neste diretório antes da transferência:
+The installer automatically recognizes these files if you place them in this
+directory before transferring the bundle:
 
-- `whales-clouds.jpg`: wallpaper copiado para `~/Pictures/wallpapers/`;
-- `avatar.jpeg`: avatar copiado para `~/Pictures/icon/`.
+- `whales-clouds.jpg`: wallpaper copied to `~/Pictures/wallpapers/`.
+- `avatar.jpeg`: avatar copied to `~/Pictures/icon/`.
 
-As imagens pessoais atuais não são versionadas. Também é possível passá-las
-explicitamente com `--wallpaper` e `--avatar`.
+Personal images are not versioned. You can also provide them explicitly with
+`--wallpaper` and `--avatar`.

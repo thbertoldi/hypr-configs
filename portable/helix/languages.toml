@@ -1,0 +1,57 @@
+# Bootstrap installs lua-language-server, texlab, taplo and shfmt.
+# Markdown uses the standalone Marksman binary, independent of Neovim/Mason.
+# Other languages keep Helix's built-in settings; use hx --health LANGUAGE.
+#
+# Only the custom RPM parser needs building; bundled parsers remain available.
+use-grammars = { only = ["rpmspec"] }
+
+# ── Grammars ────────────────────────────────────────────────────────────
+# RPM .spec files (OBS packaging). Grammar not shipped by the openSUSE Helix
+# package, so it's compiled into ~/.config/helix/runtime/grammars/rpmspec.so
+# and highlight queries live in runtime/queries/rpmspec/. Mirrors upstream Helix.
+[[grammar]]
+name = "rpmspec"
+source = { git = "https://gitlab.com/cryptomilk/tree-sitter-rpmspec", rev = "d0275cd1316d9b7a2e0fae028ce95a5a18741e1d" }
+
+# ── Languages ───────────────────────────────────────────────────────────
+[[language]]
+name = "rpmspec"
+scope = "source.rpmspec"
+file-types = ["spec"]
+comment-token = "#"
+grammar = "rpmspec"
+
+[[language]]
+name = "lua"
+auto-format = true
+
+[[language]]
+name = "toml"
+auto-format = true
+
+[[language]]
+name = "bash"
+auto-format = true
+formatter = { command = "shfmt", args = ["-i", "2", "-ci"] }
+
+# Soft-wrap prose for academic writing
+[[language]]
+name = "markdown"
+language-servers = ["marksman"]
+auto-format = false
+text-width = 100
+soft-wrap.enable = true
+soft-wrap.wrap-indicator = ""
+
+[[language]]
+name = "latex"
+soft-wrap.enable = true
+
+# ── Language servers ────────────────────────────────────────────────────
+# lua-language-server: teach it the Hyprland `hl` API stubs so the compositor
+# config gets completion + no "undefined global hl" warnings.
+[language-server.lua-language-server.config.Lua.workspace]
+library = ["/usr/share/hypr/stubs"]
+
+[language-server.lua-language-server.config.Lua.diagnostics]
+globals = ["hl"]

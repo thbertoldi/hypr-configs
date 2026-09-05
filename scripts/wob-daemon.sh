@@ -11,6 +11,6 @@ fi
 
 [[ -p "$fifo" ]] || mkfifo -m 600 "$fifo"
 
-# Abrir o FIFO para leitura e escrita mantém a entrada viva entre atualizações.
+# Opening the FIFO for both reading and writing keeps it alive between updates.
 exec 3<>"$fifo"
 exec wob <&3
