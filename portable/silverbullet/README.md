@@ -5,11 +5,11 @@ the bootstrap. If you keep using it, install/connect the `sb` CLI following
 [SilverBullet's documentation](https://silverbullet.md/CLI), and create your
 own space separately. Neither spaces nor CLI credentials are versioned here.
 
-With the installed **sb 2.10.0** CLI and a space registered as `Dissertation`,
+With the **sb 2.10.0** CLI and a space registered as `Writing`,
 run this once (CLI command names can differ across releases; check `sb --help`):
 
 ```bash
-sb script --space Dissertation --file ~/.config/hypr/portable/silverbullet/catppuccin-mocha.lua
+sb script --space Writing --file ~/.config/hypr/portable/silverbullet/catppuccin-mocha.lua
 ```
 
 The script creates `Library/Custom/Catppuccin Mocha` inside that space and

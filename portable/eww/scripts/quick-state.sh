@@ -9,7 +9,7 @@ night_mode=auto
 
 [[ "$(nmcli radio wifi 2>/dev/null || true)" != enabled ]] || wifi=on
 bluetoothctl show 2>/dev/null | grep -q 'Powered: yes' && bluetooth=on || true
-makoctl mode 2>/dev/null | grep -q 'do-not-disturb' && dnd=on || true
+dnd=$(python3 ~/.config/hypr/scripts/notification_control.py dnd 2>/dev/null || printf off)
 night=$(~/.config/hypr/scripts/hyprsunset-toggle.sh status 2>/dev/null || printf 'off')
 night_mode=$(~/.config/hypr/scripts/hyprsunset-toggle.sh mode 2>/dev/null || printf 'auto')
 

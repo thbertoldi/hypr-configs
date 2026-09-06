@@ -1,0 +1,66 @@
+/* Companion trays · Catppuccin Mocha, Steam blue and calendar peach */
+#desktop-popup {
+    background: transparent;
+    color: #cdd6f4;
+    font-family: "Noto Sans", sans-serif;
+    font-size: 13px;
+}
+#desktop-popup .popup-card {
+    background: #1e1e2e;
+    border: 1px solid #45475a;
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+#desktop-popup .eyebrow { color: #a6adc8; font-size: 11px; font-weight: 700; letter-spacing: 1.2px; }
+#desktop-popup .badge { color: #a6e3a1; font-size: 11px; }
+#desktop-popup .heading { color: #cdd6f4; font-size: 21px; font-weight: 700; }
+#desktop-popup .title { color: #cdd6f4; font-size: 15px; font-weight: 700; }
+#desktop-popup .body { color: #cdd6f4; font-size: 13px; font-weight: 600; }
+#desktop-popup .muted { color: #a6adc8; font-size: 11px; }
+#desktop-popup .error { color: #f38ba8; font-size: 12px; }
+#desktop-popup .artwork { background: #313244; color: #89b4fa; border-radius: 10px; }
+#desktop-popup button {
+    background: transparent;
+    background-image: none;
+    color: #bac2de;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    box-shadow: none;
+    text-shadow: none;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 2px 6px;
+    transition: background 120ms ease, color 120ms ease;
+}
+#desktop-popup button:hover { background: #313244; color: #cdd6f4; }
+#desktop-popup button:focus { border-color: #fab387; }
+#desktop-popup .steam button:focus { border-color: #89b4fa; }
+#desktop-popup button:disabled { color: #6c7086; }
+#desktop-popup button.dismiss { min-width: 26px; min-height: 26px; padding: 0; }
+#desktop-popup button.small { min-width: 24px; min-height: 26px; padding: 0 6px; font-size: 11px; }
+#desktop-popup button.primary { color: #fab387; background: #313244; font-weight: 600; padding: 2px 12px; }
+#desktop-popup .steam button.primary { color: #89b4fa; }
+#desktop-popup button.primary:hover { background: #45475a; }
+#desktop-popup button.play-game { color: #181825; background: #89b4fa; padding: 2px 12px; font-weight: 700; }
+#desktop-popup button.play-game:hover { background: #b4befe; }
+#desktop-popup .hero { background: #181825; border-radius: 12px; padding-bottom: 12px; }
+#desktop-popup .hero-info { padding: 0 12px; }
+#desktop-popup button.game-row { padding: 7px; }
+#desktop-popup separator { background: #313244; min-height: 1px; }
+#desktop-popup .weekday { color: #a6adc8; font-size: 11px; padding: 1px 0 5px; }
+#desktop-popup button.day { min-width: 32px; min-height: 30px; padding: 2px 0 0; border-radius: 10px; }
+#desktop-popup .day-number { color: #cdd6f4; font-size: 12px; }
+#desktop-popup .event-dot { color: #b4befe; font-size: 8px; min-height: 7px; }
+#desktop-popup .other-month .day-number { color: #6c7086; }
+#desktop-popup button.today { background: #fab387; }
+#desktop-popup .today .day-number, #desktop-popup .today .event-dot { color: #181825; font-weight: 700; }
+#desktop-popup button.selected { border-color: #fab387; background: #313244; }
+#desktop-popup .selected .day-number, #desktop-popup .selected .event-dot { color: #fab387; }
+#desktop-popup .event-time { color: #fab387; font-size: 11px; }
+#desktop-popup button.event-row { padding: 8px; }
+#desktop-popup .event-stripe { background: #b4befe; min-width: 3px; border-radius: 3px; }
+#desktop-popup .empty-agenda { padding: 20px 10px; }
+#desktop-popup viewport, #desktop-popup scrolledwindow { background: transparent; border: none; }
+#desktop-popup scrollbar { background: transparent; }
+#desktop-popup scrollbar slider { min-width: 3px; min-height: 24px; background: #45475a; border-radius: 3px; }

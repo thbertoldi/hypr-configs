@@ -8,3 +8,6 @@ directory before transferring the bundle:
 
 Personal images are not versioned. You can also provide them explicitly with
 `--wallpaper` and `--avatar`.
+
+This directory's image files are ignored by Git. Review any screenshots or
+other visual assets separately before deliberately including them in a release.

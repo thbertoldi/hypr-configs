@@ -1,0 +1,22 @@
+/* Sound, focus and OSD · companion surfaces for the existing tray popups. */
+#desktop-popup .audio button.primary { color: #89b4fa; }
+#desktop-popup .audio combobox button { background: #313244; min-height: 32px; font-size: 11px; }
+#desktop-popup .audio combobox cellview { color: #cdd6f4; }
+#desktop-popup scale { padding: 7px 6px; }
+#desktop-popup scale trough { min-height: 5px; background: #313244; border-radius: 6px; }
+#desktop-popup scale highlight { background: #89b4fa; border-radius: 6px; }
+#desktop-popup scale slider { min-width: 13px; min-height: 13px; background: #cdd6f4; border: none; box-shadow: none; }
+#desktop-popup .countdown { font-family: "JetBrainsMono NF", monospace; font-size: 54px; font-weight: 700; color: #cba6f7; padding: 12px 0; }
+#desktop-popup .focus progressbar trough { background: #313244; min-height: 6px; border-radius: 6px; }
+#desktop-popup .focus progressbar progress { background: #cba6f7; min-height: 6px; border-radius: 6px; }
+#desktop-osd { background: transparent; color: #cdd6f4; font-family: "Noto Sans", sans-serif; }
+#desktop-osd .osd-card { background: #1e1e2e; border: 1px solid #45475a; border-radius: 18px; padding: 16px 20px; }
+#desktop-osd .title { color: #cdd6f4; font-size: 14px; font-weight: 700; }
+#desktop-osd .muted { color: #a6adc8; font-size: 11px; }
+#desktop-osd .osd-value { color: #89b4fa; font-family: "JetBrainsMono NF", monospace; font-size: 19px; font-weight: 700; }
+#desktop-osd progressbar trough { background: #313244; min-height: 6px; border-radius: 6px; }
+#desktop-osd progressbar progress { background: #89b4fa; min-height: 6px; border-radius: 6px; }
+#desktop-osd.brightness .osd-value { color: #f9e2af; }
+#desktop-osd.brightness progressbar progress { background: #f9e2af; }
+#desktop-osd.mic .osd-value { color: #cba6f7; }
+#desktop-osd.mic progressbar progress { background: #cba6f7; }

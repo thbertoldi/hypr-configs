@@ -1,0 +1,17 @@
+[Unit]
+Description=Steam game launcher in the tray
+PartOf=graphical-session.target
+After=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+ConditionPathExists=%h/.config/hypr/scripts/steam-tray.py
+
+[Service]
+Type=exec
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/usr/bin/python3 %h/.config/hypr/scripts/steam-tray.py
+Restart=on-failure
+RestartSec=2
+Slice=app-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target

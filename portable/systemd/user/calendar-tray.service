@@ -1,0 +1,18 @@
+[Unit]
+Description=DankCalendar agenda in the tray
+PartOf=graphical-session.target
+After=graphical-session.target dankcalendar.service
+Wants=dankcalendar.service
+ConditionEnvironment=WAYLAND_DISPLAY
+ConditionPathExists=%h/.config/hypr/scripts/calendar-tray.py
+
+[Service]
+Type=exec
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/usr/bin/python3 %h/.config/hypr/scripts/calendar-tray.py
+Restart=on-failure
+RestartSec=2
+Slice=app-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target

@@ -1,0 +1,17 @@
+[Unit]
+Description=Sound and focus controls with volume and brightness overlays
+PartOf=graphical-session.target
+After=graphical-session.target pipewire-pulse.service
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=dbus
+BusName=org.thbertoldi.DesktopControls
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/usr/bin/python3 %h/.config/hypr/scripts/desktop_controls.py --serve
+Restart=on-failure
+RestartSec=2
+Slice=app-graphical.slice
+
+[Install]
+WantedBy=graphical-session.target

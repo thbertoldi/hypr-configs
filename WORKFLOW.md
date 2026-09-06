@@ -37,7 +37,7 @@ Pandoc bibliography keys; the picker below does. Texlab is not a TeX distributio
 ## Daily routine
 
 ```bash
-cd ~/Documents/Dissertation
+cd ~/Documents/writing-project
 herdr                     # optional: reattaches to the existing workspace
 ```
 
@@ -81,7 +81,7 @@ Keys separated by spaces are pressed in sequence, in normal mode (`Esc`).
 
 ## Citations and quotations
 
-Keep your Zotero-exported bibliography with the project (for the dissertation,
+Keep your Zotero-exported bibliography with the project (for example,
 `bibliography/library.bib`). In another terminal/Herdr tab:
 
 ```bash
@@ -115,7 +115,7 @@ need a suitable PDF engine/fonts; this bundle does not install a full TeX stack.
 ## Reproduce / check
 
 Supported target: **openSUSE Tumbleweed, amd64/x86_64**. Follow the
-[desktop installation instructions](README.md#installation), beginning with
+[desktop installation instructions](docs/installation.md), beginning with
 `./bootstrap-opensuse-tumbleweed.sh --dry-run`. This is a similar configured
 experience, not a frozen OS image: distro packages follow Tumbleweed; existing
 Herdr/Marksman binaries are retained. New installs use verified upstream Herdr

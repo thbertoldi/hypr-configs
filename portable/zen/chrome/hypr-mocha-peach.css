@@ -1,0 +1,69 @@
+/* Desktop refinements for Zen 1.21: Catppuccin Mocha with Peach accents.
+ * Layered after the upstream Catppuccin theme. Only browser chrome is styled.
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    font-family: "Noto Sans", sans-serif !important;
+    --zen-border-radius: 10px !important;
+    --zen-colors-border: #45475a !important;
+    --zen-colors-primary-foreground: #cdd6f4 !important;
+    --zen-colors-input-bg: #1e1e2e !important;
+    --zen-dialog-background: #1e1e2e !important;
+    --zen-urlbar-background: #1e1e2e !important;
+    --toolbox-textcolor: #cdd6f4 !important;
+    --toolbarbutton-icon-fill: #cdd6f4 !important;
+    --toolbarbutton-icon-fill-attention: #fab387 !important;
+    --tab-selected-textcolor: #cdd6f4 !important;
+    --tab-selected-bgcolor: #313244 !important;
+    --toolbar-field-background-color: #1e1e2e !important;
+    --toolbar-field-focus-background-color: #1e1e2e !important;
+    --toolbar-field-border-color: #45475a !important;
+    --toolbar-field-focus-border-color: #fab387 !important;
+    --arrowpanel-border-color: #45475a !important;
+    --arrowpanel-dimmed: #313244 !important;
+    --panel-separator-color: #45475a !important;
+    --button-background-color-primary: #fab387 !important;
+    --button-background-color-primary-hover: #fbc3a1 !important;
+    --button-background-color-primary-active: #f5a97f !important;
+    --button-text-color-primary: #1e1e2e !important;
+    --color-accent-primary: #fab387 !important;
+    --color-accent-primary-hover: #fbc3a1 !important;
+    --color-accent-primary-active: #f5a97f !important;
+    --focus-outline-color: #fab387 !important;
+    --urlbarView-highlight-background: #313244 !important;
+    --urlbarView-highlight-color: #cdd6f4 !important;
+  }
+
+  /* Zen's workspace generator now writes these values on separate elements. */
+  :root,
+  #zen-browser-background,
+  #zen-toolbar-background,
+  #browser,
+  #navigator-toolbox {
+    --zen-main-browser-background: #181825 !important;
+    --zen-main-browser-background-toolbar: #181825 !important;
+    --zen-main-browser-background-old: #181825 !important;
+    --zen-main-browser-background-toolbar-old: #181825 !important;
+  }
+
+  .tabbrowser-tab:is([selected], [visuallyselected]) .tab-background {
+    background: #313244 !important;
+    box-shadow: inset 3px 0 #fab387 !important;
+    border-radius: 10px !important;
+  }
+
+  .tabbrowser-tab:not([selected], [visuallyselected]):hover .tab-background {
+    background: #313244 !important;
+  }
+
+  #urlbar-background,
+  .urlbar-background {
+    background: #1e1e2e !important;
+    border-color: #45475a !important;
+  }
+
+  #urlbar[focused] #urlbar-background,
+  #urlbar[focused] .urlbar-background {
+    border-color: #fab387 !important;
+  }
+}

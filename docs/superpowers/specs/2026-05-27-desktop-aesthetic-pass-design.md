@@ -10,7 +10,7 @@ status: approved
 
 Promote the existing minimal Hyprland stack from "functional with a cool Catppuccin accent" to "fully composed warm-palette desktop." Pull the accent color out of the new wallpaper, repaint every existing component, fill in the components still on system defaults (GTK, Qt, terminal), and add a styled power menu and a full Eww dashboard.
 
-Wallpaper drives the palette: `/home/thbertoldi/Downloads/3440x1440-minimalista.jpg` (low-poly coral/maroon/teal landscape, native 3440×1440).
+Wallpaper drives the palette: `~/Downloads/3440x1440-minimalista.jpg` (low-poly coral/maroon/teal landscape, native 3440×1440).
 
 ## Palette
 

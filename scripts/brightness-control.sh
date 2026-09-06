@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 
 send_wob() {
     local value=$1
@@ -35,4 +36,5 @@ case "${1:-}" in
         ;;
 esac
 
-send_wob "$(current_percent)"
+value=$(current_percent)
+"$script_dir/desktop-control.sh" osd brightness "$value" 2>/dev/null || send_wob "$value"

@@ -6,7 +6,7 @@ hl.bind(m .. " + D",         hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.
 hl.bind(m .. " + SHIFT + D", hl.dsp.exec_cmd("fuzzel --dmenu"))
 hl.bind(m .. " + B",         hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh firefox"))
 hl.bind(m .. " + E",         hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh ghostty -e yazi"))
-hl.bind(m .. " + V",         hl.dsp.exec_cmd("sh -c 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'"))
+hl.bind(m .. " + V",         hl.dsp.exec_cmd("python3 ~/.config/hypr/scripts/clipboard_picker.py"))
 hl.bind(m .. " + W",         hl.dsp.exec_cmd("sh -c 'eww open --toggle dashboard'"))
 hl.bind(m .. " + T",         hl.dsp.exec_cmd("~/.config/hypr/scripts/vpn-toggle.sh"))
 hl.bind(m .. " + G",         hl.dsp.exec_cmd("~/.config/hypr/scripts/agent-menu.sh"))
@@ -17,7 +17,17 @@ hl.bind(m .. " + CTRL + M",  hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.
 hl.bind(m .. " + CTRL + B",  hl.dsp.exec_cmd("~/.config/hypr/scripts/app-launch.sh ghostty -e btop"))
 
 -- === Window ===
-hl.bind(m .. " + Q",             hl.dsp.window.close())
+-- Keep Spotify playing on its own hidden workspace. The tray's Quit action
+-- still exits the client, and Super+M brings the window back.
+-- Lua uses follow=false; a silent=true field is ignored by the dispatcher.
+hl.bind(m .. " + Q", function()
+    local window = hl.get_active_window()
+    if window and window.class:lower() == "spotify" then
+        hl.dispatch(hl.dsp.window.move({ window = window, workspace = "special:spotify", follow = false }))
+    else
+        hl.dispatch(hl.dsp.window.close())
+    end
+end)
 hl.bind(m .. " + F",             hl.dsp.window.fullscreen({ mode = "maximized" }))  -- was fullscreen,1
 hl.bind(m .. " + SHIFT + F",     hl.dsp.window.fullscreen({ mode = "fullscreen" })) -- was fullscreen,0
 hl.bind(m .. " + SHIFT + space", hl.dsp.window.float({ action = "toggle" }))
@@ -61,6 +71,9 @@ hl.bind(m .. " + SHIFT + Tab", hl.dsp.focus({ workspace = "e-1" }))
 -- === Special / scratchpad ===
 hl.bind(m .. " + S",         hl.dsp.workspace.toggle_special())
 hl.bind(m .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special" }))
+hl.bind(m .. " + ALT + Return", hl.dsp.exec_cmd("python3 ~/.config/hypr/scripts/scratchpad.py terminal"))
+hl.bind(m .. " + ALT + N",      hl.dsp.exec_cmd("python3 ~/.config/hypr/scripts/scratchpad.py notes"))
+hl.bind(m .. " + ALT + F",      hl.dsp.exec_cmd("~/.config/hypr/scripts/desktop-control.sh focus"))
 
 -- === Mouse wheel switches workspace ===
 hl.bind(m .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
@@ -75,9 +88,10 @@ hl.bind(m .. " + Escape",         hl.dsp.exec_cmd("wlogout --protocol layer-shel
 hl.bind(m .. " + SHIFT + Escape", hl.dsp.exec_cmd("hyprlock"))
 hl.bind(m .. " + SHIFT + E",      hl.dsp.exec_cmd("~/.config/hypr/scripts/session-exit.sh"))
 hl.bind(m .. " + CTRL + R",       hl.dsp.exec_cmd("hyprctl reload"))
-hl.bind(m .. " + N",              hl.dsp.exec_cmd("makoctl dismiss"))
-hl.bind(m .. " + SHIFT + N",      hl.dsp.exec_cmd("makoctl dismiss -a"))
-hl.bind(m .. " + CTRL + space",   hl.dsp.exec_cmd("makoctl restore"))
+hl.bind(m .. " + N",              hl.dsp.exec_cmd("python3 ~/.config/hypr/scripts/notification_control.py dismiss"))
+hl.bind(m .. " + SHIFT + N",      hl.dsp.exec_cmd("python3 ~/.config/hypr/scripts/notification_control.py clear"))
+hl.bind(m .. " + CTRL + N",       hl.dsp.exec_cmd("python3 ~/.config/hypr/scripts/notification_control.py toggle"))
+hl.bind(m .. " + CTRL + space",   hl.dsp.exec_cmd("python3 ~/.config/hypr/scripts/notification_control.py history"))
 hl.bind(m .. " + space",          hl.dsp.exec_cmd("hyprctl switchxkblayout all next"))
 
 -- === Voice (Handy) ===

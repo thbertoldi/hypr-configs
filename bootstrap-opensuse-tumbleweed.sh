@@ -171,6 +171,11 @@ validate_host() {
 
     local required_source
     for required_source in \
+        "$SCRIPT_DIR/LICENSE" \
+        "$SCRIPT_DIR/NOTICE" \
+        "$SCRIPT_DIR/THIRD_PARTY.md" \
+        "$SCRIPT_DIR/third-party/README.md" \
+        "$SCRIPT_DIR/third-party/obsidian-style-settings-1.0.9.tar.gz" \
         "$SCRIPT_DIR/hyprland.lua" \
         "$SCRIPT_DIR/hypridle.conf" \
         "$SCRIPT_DIR/hyprlock.conf" \
@@ -182,15 +187,33 @@ validate_host() {
         "$SCRIPT_DIR/scripts/anki-tts-install.sh" \
         "$SCRIPT_DIR/scripts/anki.sh" \
         "$SCRIPT_DIR/scripts/calendar-open.sh" \
+        "$SCRIPT_DIR/scripts/calendar-tray.py" \
+        "$SCRIPT_DIR/scripts/desktop_controls.py" \
+        "$SCRIPT_DIR/scripts/desktop-control.sh" \
+        "$SCRIPT_DIR/scripts/desktop-controls.css" \
+        "$SCRIPT_DIR/scripts/audio_backend.py" \
+        "$SCRIPT_DIR/scripts/focus_timer.py" \
+        "$SCRIPT_DIR/scripts/notification_control.py" \
+        "$SCRIPT_DIR/scripts/clipboard_picker.py" \
+        "$SCRIPT_DIR/scripts/scratchpad.py" \
+        "$SCRIPT_DIR/scripts/configure-app-trays.py" \
         "$SCRIPT_DIR/scripts/cite-pick.sh" \
         "$SCRIPT_DIR/scripts/dcal.sh" \
         "$SCRIPT_DIR/scripts/monitor-listener.sh" \
         "$SCRIPT_DIR/scripts/music-open.sh" \
         "$SCRIPT_DIR/scripts/spotify-customize.sh" \
         "$SCRIPT_DIR/scripts/spotify-tray.py" \
+        "$SCRIPT_DIR/scripts/spotify-tray.css" \
+        "$SCRIPT_DIR/scripts/steam-tray.py" \
+        "$SCRIPT_DIR/scripts/tray_data.py" \
+        "$SCRIPT_DIR/scripts/tray_popup.py" \
+        "$SCRIPT_DIR/scripts/tray-popups.css" \
+        "$SCRIPT_DIR/scripts/zen-style.py" \
+        "$SCRIPT_DIR/scripts/obsidian-style.py" \
         "$SCRIPT_DIR/scripts/study-open.sh" \
         "$SCRIPT_DIR/scripts/study-seed.sh" \
         "$SCRIPT_DIR/scripts/study-status.sh" \
+        "$SCRIPT_DIR/scripts/study-tooltip.py" \
         "$SCRIPT_DIR/scripts/study-tts-check.sh" \
         "$SCRIPT_DIR/scripts/study-tts-repair.sh" \
         "$SCRIPT_DIR/scripts/study-tts-synthesize.sh" \
@@ -199,14 +222,37 @@ validate_host() {
         "$SCRIPT_DIR/DECISIONS.md" \
         "$SCRIPT_DIR/README.md" \
         "$SCRIPT_DIR/assets/README.md" \
+        "$SCRIPT_DIR/portable/alacritty/alacritty.toml" \
+        "$SCRIPT_DIR/portable/kitty/kitty.conf" \
+        "$SCRIPT_DIR/portable/starship/starship.toml" \
+        "$SCRIPT_DIR/portable/starship/CATPPUCCIN-LICENSE" \
+        "$SCRIPT_DIR/portable/obsidian/appearance.json" \
+        "$SCRIPT_DIR/portable/obsidian/style-settings.json" \
+        "$SCRIPT_DIR/portable/obsidian/CATPPUCCIN-LICENSE" \
+        "$SCRIPT_DIR/portable/obsidian/themes/Catppuccin/theme.css" \
+        "$SCRIPT_DIR/portable/obsidian/themes/Catppuccin/manifest.json" \
+        "$SCRIPT_DIR/portable/obsidian/plugins/obsidian-style-settings/main.js" \
+        "$SCRIPT_DIR/portable/obsidian/plugins/obsidian-style-settings/manifest.json" \
+        "$SCRIPT_DIR/portable/obsidian/plugins/obsidian-style-settings/styles.css" \
+        "$SCRIPT_DIR/portable/obsidian/plugins/obsidian-style-settings/LICENSE.md" \
+        "$SCRIPT_DIR/portable/zen/user.js" \
+        "$SCRIPT_DIR/portable/zen/CATPPUCCIN-LICENSE" \
+        "$SCRIPT_DIR/portable/zen/chrome/catppuccin-mocha-peach.css" \
+        "$SCRIPT_DIR/portable/zen/chrome/catppuccin-mocha-peach-content.css" \
+        "$SCRIPT_DIR/portable/zen/chrome/hypr-mocha-peach.css" \
+        "$SCRIPT_DIR/portable/zen/chrome/zen-logo-mocha.svg" \
         "$SCRIPT_DIR/portable/helix/config.toml" \
         "$SCRIPT_DIR/portable/helix/languages.toml" \
         "$SCRIPT_DIR/portable/helix/runtime/queries/rpmspec/highlights.scm" \
         "$SCRIPT_DIR/portable/yazi/yazi.toml" \
         "$SCRIPT_DIR/portable/yazi/theme.toml" \
+        "$SCRIPT_DIR/portable/yazi/Catppuccin-mocha.tmTheme" \
+        "$SCRIPT_DIR/portable/yazi/CATPPUCCIN-LICENSE" \
         "$SCRIPT_DIR/portable/herdr/config.toml" \
         "$SCRIPT_DIR/portable/zapzap/catppuccin-mocha-peach.css" \
         "$SCRIPT_DIR/portable/waybar/config.jsonc" \
+        "$SCRIPT_DIR/portable/swaync/config.json" \
+        "$SCRIPT_DIR/portable/swaync/style.css" \
         "$SCRIPT_DIR/portable/eww/eww.yuck" \
         "$SCRIPT_DIR/portable/eww/scripts/calendar-list.sh" \
         "$SCRIPT_DIR/portable/applications/hypr-study.desktop" \
@@ -215,6 +261,11 @@ validate_host() {
         "$SCRIPT_DIR/portable/systemd/user/hyprland-session.target" \
         "$SCRIPT_DIR/portable/systemd/user/dankcalendar.service" \
         "$SCRIPT_DIR/portable/systemd/user/spotify-tray.service" \
+        "$SCRIPT_DIR/portable/systemd/user/steam-tray.service" \
+        "$SCRIPT_DIR/portable/systemd/user/calendar-tray.service" \
+        "$SCRIPT_DIR/portable/systemd/user/desktop-controls.service" \
+        "$SCRIPT_DIR/portable/systemd/user/focus-timer.service" \
+        "$SCRIPT_DIR/portable/systemd/user/swaync.service.d/desktop.conf" \
         "$SCRIPT_DIR/portable/wayland-sessions/hyprland-uwsm.desktop" \
         "$SCRIPT_DIR/portable/monitors-generic.lua"; do
         [[ -f "$required_source" ]] || die "incomplete bundle; missing $required_source"
@@ -226,13 +277,13 @@ install_packages() {
 
     local packages=(
         hyprland hyprland-wallpapers hypridle hyprlock hyprpicker awww
-        waybar mako eww fuzzel wlogout
+        waybar SwayNotificationCenter mako eww fuzzel wlogout
         xdg-desktop-portal xdg-desktop-portal-hyprland xdg-desktop-portal-gtk
         polkit hyprpolkitagent kwalletd6 pam_kwallet6
         NetworkManager NetworkManager-applet NetworkManager-connection-editor
         NetworkManager-openvpn NetworkManager-applet-openvpn
         bluez blueman
-        pipewire pipewire-pulseaudio wireplumber pavucontrol
+        pipewire pipewire-pulseaudio wireplumber pavucontrol pulseaudio-utils
         power-profiles-daemon upower hyprsunset wob
         wl-clipboard cliphist grim slurp
         brightnessctl playerctl swappy udiskie
@@ -240,13 +291,13 @@ install_packages() {
         merkuro korganizer kalendarac kdepim-runtime akonadi-calendar-tools kaccounts-integration
         kaccounts-providers libkgapi6 kdialog
         nodejs24 npm24
-        ghostty yazi MozillaFirefox helix
+        ghostty alacritty kitty starship yazi MozillaFirefox helix
         glow pandoc-cli lua-language-server texlab taplo shfmt ShellCheck gcc
         poppler-tools file fd ripgrep fzf zoxide 7zip ImageMagick chafa resvg ffmpeg-8
         qt6ct kvantum-manager kvantum-qt6
         papirus-icon-theme fontawesome-fonts symbols-only-nerd-fonts
         google-noto-sans-fonts google-noto-coloremoji-fonts
-        python3-gobject python3-gobject-Gdk typelib-1_0-AyatanaAppIndicator3-0_1
+        python3-gobject python3-gobject-Gdk python3-gobject-cairo python3-pycairo typelib-1_0-GtkLayerShell-0_1
         libnotify-tools
         jq socat curl unzip xz tar rsync git procps gawk dbus-1-tools glib2-tools
         xdg-user-dirs
@@ -296,6 +347,22 @@ install_dankcalendar() {
     flatpak --user remote-add --if-not-exists flathub \
         https://flathub.org/repo/flathub.flatpakrepo
     flatpak --user install --noninteractive flathub "$app_id"
+}
+
+install_zen() {
+    local app_id='app.zen_browser.zen'
+    if command -v zen >/dev/null 2>&1 || command -v zen-browser >/dev/null 2>&1; then
+        log "Native Zen is already installed"
+        return
+    fi
+    if command -v flatpak >/dev/null 2>&1 && flatpak info "$app_id" >/dev/null 2>&1; then
+        log "Zen Flatpak is already installed"
+        return
+    fi
+    log "Installing Zen from Flathub for the current user"
+    run flatpak --user remote-add --if-not-exists flathub \
+        https://flathub.org/repo/flathub.flatpakrepo
+    run flatpak --user install --noninteractive flathub "$app_id"
 }
 
 install_spotify() {
@@ -410,6 +477,20 @@ configure_zapzap() {
     fi
 
     flatpak run --command=python3 "$app_id" -c "$settings_code"
+}
+
+configure_zen() {
+    log "Applying Catppuccin Mocha/Peach to initialized Zen profiles"
+    local args=()
+    (( DRY_RUN )) && args+=(--dry-run)
+    python3 "$SCRIPT_DIR/scripts/zen-style.py" "${args[@]}"
+}
+
+configure_obsidian() {
+    log "Applying Catppuccin Mocha/Peach to open Obsidian vaults"
+    local args=()
+    (( DRY_RUN )) && args+=(--dry-run)
+    python3 "$SCRIPT_DIR/scripts/obsidian-style.py" "${args[@]}"
 }
 
 configure_spotify() {
@@ -626,8 +707,12 @@ backup_existing_configuration() {
         "$HOME/.config/waybar" \
         "$HOME/.config/eww" \
         "$HOME/.config/mako" \
+        "$HOME/.config/swaync" \
         "$HOME/.config/fuzzel" \
         "$HOME/.config/ghostty" \
+        "$HOME/.config/alacritty" \
+        "$HOME/.config/kitty" \
+        "$HOME/.config/starship.toml" \
         "$HOME/.config/helix" \
         "$HOME/.config/yazi" \
         "$HOME/.config/herdr/config.toml" \
@@ -707,12 +792,18 @@ deploy_configuration() {
     # Keep the deployed bundle usable as an installation/reference source too.
     copy_tree "$SCRIPT_DIR/portable" "$hypr_target/portable"
     copy_tree "$SCRIPT_DIR/docs" "$hypr_target/docs"
+    copy_tree "$SCRIPT_DIR/tests" "$hypr_target/tests"
+    copy_tree "$SCRIPT_DIR/third-party" "$hypr_target/third-party"
     run install -d "$hypr_target/assets"
     install_file 0644 "$SCRIPT_DIR/assets/README.md" "$hypr_target/assets/README.md"
     install_file 0755 "$SCRIPT_DIR/bootstrap-opensuse-tumbleweed.sh" "$hypr_target/bootstrap-opensuse-tumbleweed.sh"
     install_file 0644 "$SCRIPT_DIR/README.md" "$hypr_target/README.md"
     install_file 0644 "$SCRIPT_DIR/WORKFLOW.md" "$hypr_target/WORKFLOW.md"
     install_file 0644 "$SCRIPT_DIR/DECISIONS.md" "$hypr_target/DECISIONS.md"
+    install_file 0644 "$SCRIPT_DIR/LICENSE" "$hypr_target/LICENSE"
+    install_file 0644 "$SCRIPT_DIR/NOTICE" "$hypr_target/NOTICE"
+    install_file 0644 "$SCRIPT_DIR/THIRD_PARTY.md" "$hypr_target/THIRD_PARTY.md"
+    install_file 0644 "$SCRIPT_DIR/.gitignore" "$hypr_target/.gitignore"
     if (( ! SAME_HARDWARE )); then
         install_file 0644 "$SCRIPT_DIR/portable/monitors-generic.lua" "$hypr_target/lua/monitors.lua"
         install_file 0644 "$SCRIPT_DIR/portable/monitors-generic.conf" "$hypr_target/conf.d/10-monitors.conf"
@@ -721,8 +812,12 @@ deploy_configuration() {
     copy_tree "$SCRIPT_DIR/portable/waybar" "$HOME/.config/waybar"
     copy_tree "$SCRIPT_DIR/portable/eww" "$HOME/.config/eww"
     copy_tree "$SCRIPT_DIR/portable/mako" "$HOME/.config/mako"
+    copy_tree "$SCRIPT_DIR/portable/swaync" "$HOME/.config/swaync"
     copy_tree "$SCRIPT_DIR/portable/fuzzel" "$HOME/.config/fuzzel"
     copy_tree "$SCRIPT_DIR/portable/ghostty" "$HOME/.config/ghostty"
+    copy_tree "$SCRIPT_DIR/portable/alacritty" "$HOME/.config/alacritty"
+    copy_tree "$SCRIPT_DIR/portable/kitty" "$HOME/.config/kitty"
+    install_file 0644 "$SCRIPT_DIR/portable/starship/starship.toml" "$HOME/.config/starship.toml"
     copy_tree "$SCRIPT_DIR/portable/helix" "$HOME/.config/helix"
     copy_tree "$SCRIPT_DIR/portable/yazi" "$HOME/.config/yazi"
     run install -d "$HOME/.config/herdr"
@@ -828,18 +923,22 @@ apply_desktop_theme() {
 
 reload_user_units() {
     local units=(
-        awww.service mako.service eww.service wob.service udiskie.service
+        awww.service swaync.service eww.service desktop-controls.service focus-timer.service udiskie.service
         cliphist.service monitor-listener.service nm-applet.service kwalletd.service
         smarty-pants.service kalendarac.service dankcalendar.service spotify-tray.service
+        steam-tray.service calendar-tray.service
         waybar.service hypridle.service hyprsunset.service
         hyprpolkitagent.service
     )
     if (( DRY_RUN )); then
         print_command systemctl --user daemon-reload
+        print_command systemctl --user disable mako.service wob.service
         print_command systemctl --user enable "${units[@]}"
         return
     fi
     if systemctl --user daemon-reload; then
+        systemctl --user disable mako.service wob.service \
+            || warn "cannot disable legacy notification/OSD units"
         systemctl --user enable "${units[@]}" \
             || warn "cannot enable all units; repeat 'systemctl --user enable ...' after login"
     else
@@ -864,11 +963,11 @@ validate_result() {
     fi
 
     local required_commands=(
-        Hyprland hypridle hyprlock hyprsunset hyprpolkitagent awww-daemon waybar mako eww fuzzel
-        ghostty helix hx yazi herdr marksman glow pandoc wl-paste cliphist grimblast wpctl brightnessctl playerctl
+        Hyprland hypridle hyprlock hyprsunset hyprpolkitagent awww-daemon waybar swaync swaync-client eww fuzzel
+        ghostty alacritty kitty starship helix hx yazi herdr marksman glow pandoc wl-paste cliphist grimblast wpctl brightnessctl playerctl
         pdftoppm file fd rg fzf zoxide 7zz magick chafa resvg ffmpeg
         lua-language-server texlab taplo shfmt shellcheck gcc
-        nmcli nm-applet blueman-manager pavucontrol notify-send jq socat wlogout
+        nmcli nm-applet blueman-manager pavucontrol pactl notify-send jq socat wlogout
         wob swappy wf-recorder udiskie uwsm nwg-displays btop
         merkuro-calendar korganizer kalendarac konsolekalendar kdialog python3 codex
     )
@@ -920,11 +1019,11 @@ validate_result() {
     if ! python3 - <<'PY'
 import gi
 gi.require_version("Gtk", "3.0")
-gi.require_version("AyatanaAppIndicator3", "0.1")
-from gi.repository import AyatanaAppIndicator3, Gtk
+gi.require_version("GtkLayerShell", "0.1")
+from gi.repository import Gio, Gtk, GtkLayerShell
 PY
     then
-        die "Ayatana AppIndicator integration unavailable"
+        die "GTK Spotify popup integration unavailable"
     fi
 }
 
@@ -960,8 +1059,9 @@ Next steps:
   8. Open Spotify with Super+M. On a fresh installation, sign in, wait at least
      60 seconds, then run ~/.config/hypr/scripts/spotify-customize.sh.
      Already-authenticated profiles receive Sleek/Catppuccin and Marketplace
-     automatically. The tray offers the current track, play/pause, previous,
-     next, shuffle, repeat and copy-track-link actions.
+     automatically. Super+Q hides Spotify while it keeps playing; Super+M
+     restores it. Click the tray icon for artwork, playback, seek and volume
+     controls. Use the popup's Quit Spotify action to exit the client.
   9. Super+E opens Yazi; text opens in Helix, and O offers Glow reading for
      Markdown. Start with hx --tutor and see ~/.config/hypr/WORKFLOW.md.
      Herdr is optional: run herdr inside Ghostty. Transfer projects,
@@ -980,6 +1080,7 @@ main() {
     export PATH="$HOME/.local/bin:$PATH"
     install_packages
     install_dankcalendar
+    install_zen
     install_spotify
     install_zapzap
     install_anki
@@ -996,6 +1097,9 @@ main() {
     configure_helix
     configure_spotify
     configure_zapzap
+    configure_zen
+    configure_obsidian
+    run python3 "$SCRIPT_DIR/scripts/configure-app-trays.py"
     install_user_images
     apply_desktop_theme
     reload_user_units

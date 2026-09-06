@@ -2,3 +2,31 @@
 *-backup-*
 .superpowers/
 install.log
+__pycache__/
+
+# Local data and credentials are not part of a configuration release.
+*.bak
+*.log
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.sqlite*
+*.db
+*.db-journal
+*.anki2
+*.apkg
+*.colpkg
+auth.json
+credentials.json
+tokens.json
+api-key
+/local/
+/backups/
+
+# The installer accepts private images here; do not add them accidentally.
+/assets/*
+!/assets/README.md

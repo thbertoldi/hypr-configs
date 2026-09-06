@@ -5,6 +5,28 @@ script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 readonly spotify_id='com.spotify.Client'
 readonly spotify_cache="$HOME/.var/app/$spotify_id/cache/spotify"
 
+hide_spotify() {
+    local address
+    address=$(hyprctl clients -j | jq -r '[.[] | select(
+        (.class // "" | ascii_downcase) == "spotify" and .mapped
+    )][0].address // empty')
+    [[ "$address" =~ ^0x[0-9a-fA-F]+$ ]] || return 1
+    # Lua's follow=false keeps the special workspace closed while moving.
+    hyprctl dispatch "hl.dsp.window.move({ window = 'address:$address', workspace = 'special:spotify', follow = false })" >/dev/null
+}
+
+restore_spotify() {
+    local address workspace_id
+    address=$(hyprctl clients -j 2>/dev/null | jq -r '[.[] | select(
+        (.class // "" | ascii_downcase) == "spotify" and .mapped
+        and .workspace.name == "special:spotify"
+    )][0].address // empty')
+    [[ "$address" =~ ^0x[0-9a-fA-F]+$ ]] || return 0
+    workspace_id=$(hyprctl activeworkspace -j | jq -r '.id')
+    [[ "$workspace_id" =~ ^[0-9]+$ ]] || return 1
+    hyprctl dispatch "hl.dsp.window.move({ window = 'address:$address', workspace = $workspace_id, follow = false })" >/dev/null
+}
+
 spotify_window_exists() {
     command -v hyprctl >/dev/null 2>&1 || return 1
     command -v jq >/dev/null 2>&1 || return 1
@@ -17,6 +39,7 @@ spotify_window_exists() {
 }
 
 focus_spotify() {
+    restore_spotify || return 1
     spotify_window_exists || return 1
 
     # Prefer Spotify's standard MPRIS Raise method. It handles activation
@@ -90,6 +113,11 @@ launch_flatpak_spotify() {
         --command=/app/extra/bin/spotify \
         "$spotify_id" "$@"
 }
+
+if [[ ${1:-} == --hide ]]; then
+    hide_spotify
+    exit
+fi
 
 if focus_spotify; then
     exit 0

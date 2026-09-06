@@ -59,6 +59,15 @@ hl.window_rule({
     persistent_size = true,
 })
 
+-- Dedicated terminal and notes scratchpads
+hl.window_rule({
+    match = { class = "^com\\.thbertoldi\\.(QuickTerminal|QuickNotes)$" },
+    float = true,
+    center = true,
+    size = { "monitor_w*0.66", "monitor_h*0.70" },
+    persistent_size = true,
+})
+
 -- Picture-in-Picture (float, pinned, fixed size, bottom-right corner)
 hl.window_rule({
     match = { title = "^(Picture-in-Picture)$" },

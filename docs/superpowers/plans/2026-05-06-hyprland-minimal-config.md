@@ -667,8 +667,8 @@ If `~/Pictures/harpy.webp` exists, use it. Otherwise pick the first file from th
 - [ ] **Step 2: Create the config**
 
 ```conf
-preload   = /home/thbertoldi/Pictures/harpy.webp
-wallpaper = , /home/thbertoldi/Pictures/harpy.webp
+preload   = ~/Pictures/harpy.webp
+wallpaper = , ~/Pictures/harpy.webp
 
 # Slight memory savings; turn off if you want sharper scaling on the ultrawide.
 splash = false
@@ -918,7 +918,7 @@ Expected: `3`.
 - [ ] **Step 2: Validate JSON**
 
 ```bash
-python3 -c "import json,re; s=open('/home/thbertoldi/.config/waybar/config.jsonc').read(); s=re.sub(r'(?<!:)//.*','',s); json.loads(s)" && echo OK
+python3 -c "import json,re; from pathlib import Path; s=Path('~/.config/waybar/config.jsonc').expanduser().read_text(); s=re.sub(r'(?<!:)//.*','',s); json.loads(s)" && echo OK
 ```
 
 Expected: `OK`. (jsonc allows comments; we strip `//` lines before parsing.)

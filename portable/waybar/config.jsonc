@@ -9,7 +9,7 @@
 
     "modules-left": ["hyprland/workspaces", "hyprland/window"],
     "modules-center": ["clock", "custom/study"],
-    "modules-right": ["custom/recording", "privacy", "idle_inhibitor", "power-profiles-daemon", "tray", "custom/kblayout", "custom/vpn", "network", "bluetooth", "pulseaudio", "battery", "cpu", "memory", "custom/power"],
+    "modules-right": ["custom/recording", "privacy", "custom/focus", "tray", "custom/notifications", "custom/kblayout", "custom/vpn", "network", "pulseaudio", "battery", "group/system", "custom/power"],
 
     "hyprland/workspaces": {
         "format": "{icon}",
@@ -29,15 +29,31 @@
     },
 
     "clock": {
+        "interval": 1,
         "format": "{:%a %d %b · %H:%M}",
-        "tooltip-format": "<big>{:%Y %B}</big>\n<tt>{calendar}</tt>\nClique: DankCalendar · meio: Outlook web · direito: Proton",
+        "tooltip-format": "<span font_family='Noto Sans' foreground='#cdd6f4' line_height='1.25'><span foreground='#fab387' size='small' weight='bold' letter_spacing='1600'>DATE &amp; TIME</span>\n<span size='32000' weight='bold' font_features='tnum'>{0:%H:%M}<span size='18000' foreground='#fab387'>:{0:%S}</span></span>\n<span foreground='#a6adc8'>{0:%A, %d %B %Y}</span>\n<span foreground='#a6adc8' size='small'>Local time · UTC{0:%z}   /   Week {0:%V}</span>\n<span foreground='#45475a'>────────────────────────────</span>\n<span font_family='JetBrainsMono NF' size='11000' line_height='1.65' letter_spacing='1200'>{calendar}</span>\n<span foreground='#45475a'>────────────────────────────</span>\n<span foreground='#fab387' size='small'>Scroll to explore months</span>\n<span foreground='#a6adc8' size='small'>Click: Calendar  ·  Middle: Outlook\nRight-click: Proton Calendar</span></span>",
+        "calendar": {
+            "mode": "month",
+            "iso8601": true,
+            "on-scroll": 1,
+            "format": {
+                "months": "<span foreground='#cdd6f4' weight='bold'>{}</span>",
+                "weekdays": "<span foreground='#fab387' weight='bold'>{}</span>",
+                "days": "<span foreground='#bac2de'>{}</span>",
+                "today": "<span foreground='#181825' background='#fab387' weight='bold'>{}</span>"
+            }
+        },
+        "actions": {
+            "on-scroll-up": "shift_down",
+            "on-scroll-down": "shift_up"
+        },
         "on-click": "~/.config/hypr/scripts/calendar-open.sh agenda",
         "on-click-middle": "~/.config/hypr/scripts/calendar-open.sh outlook",
         "on-click-right": "~/.config/hypr/scripts/calendar-open.sh proton"
     },
 
     "custom/study": {
-        "exec": "~/.config/hypr/scripts/study-status.sh",
+        "exec": "~/.config/hypr/scripts/study-status.sh | python3 ~/.config/hypr/scripts/study-tooltip.py",
         "return-type": "json",
         "interval": 60,
         "signal": 7,
@@ -50,6 +66,43 @@
     "tray": {
         "icon-size": 16,
         "spacing": 8
+    },
+
+    "group/system": {
+        "orientation": "inherit",
+        "drawer": {"transition-duration": 180, "children-class": "system-child"},
+        "modules": ["custom/system", "bluetooth", "power-profiles-daemon", "idle_inhibitor", "cpu", "memory"]
+    },
+
+    "custom/system": {
+        "format": "󰒓",
+        "tooltip-format": "System drawer\nBluetooth · Power profile · Keep awake · CPU · Memory\nClick: dashboard",
+        "on-click": "eww open --toggle dashboard"
+    },
+
+    "custom/focus": {
+        "exec": "python3 ~/.config/hypr/scripts/focus_timer.py watch",
+        "return-type": "json",
+        "restart-interval": 2,
+        "on-click": "~/.config/hypr/scripts/desktop-control.sh focus",
+        "on-click-middle": "python3 ~/.config/hypr/scripts/focus_timer.py pause",
+        "on-click-right": "python3 ~/.config/hypr/scripts/focus_timer.py stop"
+    },
+
+    "custom/notifications": {
+        "exec": "python3 ~/.config/hypr/scripts/notification_control.py watch",
+        "return-type": "json",
+        "restart-interval": 2,
+        "format": "{icon}",
+        "format-icons": {
+            "none": "󰂚", "notification": "󱅫",
+            "dnd-none": "󰂛", "dnd-notification": "󰅸",
+            "inhibited-none": "󰂛", "inhibited-notification": "󰅸",
+            "dnd-inhibited-none": "󰂛", "dnd-inhibited-notification": "󰅸"
+        },
+        "tooltip": true,
+        "on-click": "python3 ~/.config/hypr/scripts/notification_control.py toggle",
+        "on-click-right": "python3 ~/.config/hypr/scripts/notification_control.py dnd-toggle"
     },
 
     "custom/recording": {
@@ -126,7 +179,12 @@
         "format": "{icon}  {volume}%",
         "format-muted": "  muted",
         "format-icons": {"default": ["", "", ""]},
-        "on-click": "pavucontrol",
+        "on-click": "~/.config/hypr/scripts/desktop-control.sh audio",
+        "on-click-right": "pavucontrol",
+        "on-click-middle": "~/.config/hypr/scripts/audio-control.sh mic-toggle",
+        "on-scroll-up": "~/.config/hypr/scripts/audio-control.sh up",
+        "on-scroll-down": "~/.config/hypr/scripts/audio-control.sh down",
+        "tooltip-format": "{desc}\nClick: sound & devices · Scroll: volume\nMiddle-click: microphone mute · Right-click: advanced mixer",
         "scroll-step": 5
     },
 

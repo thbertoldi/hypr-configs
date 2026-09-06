@@ -1,0 +1,14 @@
+hypr-configs
+Copyright (c) 2026 hypr-configs contributors
+
+Original configuration, scripts, tests, documentation, and integration code in
+this repository are licensed under the Mozilla Public License, version 2.0.
+
+This Source Code Form is subject to the terms of the Mozilla Public License,
+v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
+one at https://mozilla.org/MPL/2.0/.
+
+The complete license is in LICENSE. Third-party files retain their upstream
+licenses and copyright notices, as identified in THIRD_PARTY.md. This notice
+does not replace those licenses, claim ownership of those files, or grant
+rights in third-party trademarks.

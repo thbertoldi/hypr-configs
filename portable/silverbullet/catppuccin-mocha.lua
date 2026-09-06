@@ -1,5 +1,5 @@
 -- Create the theme page in a SilverBullet space using its supported API.
--- Run: sb script --space Dissertation --file ~/.config/hypr/portable/silverbullet/catppuccin-mocha.lua
+-- Run: sb script --space Writing --file ~/.config/hypr/portable/silverbullet/catppuccin-mocha.lua
 -- CSS variables checked against the installed SilverBullet 2.10.0 bundle.
 
 local page = "Library/Custom/Catppuccin Mocha"
@@ -213,4 +213,4 @@ html[data-theme="dark"] .sb-admonition[admonition="success" i] {
 
 space.writePage(page, content)
 assert(space.readPage(page) == content, "Theme page verification failed: " .. page)
-return "Created " .. page .. ". Enable dark mode and run System: Reload (Ctrl+Alt+R) in the Dissertation window."
+return "Created " .. page .. ". Enable dark mode and run System: Reload (Ctrl+Alt+R) in the selected space."

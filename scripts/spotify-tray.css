@@ -1,0 +1,68 @@
+/* Native Spotify controls · Catppuccin Mocha / Peach */
+#spotify-popup {
+    background: transparent;
+    color: #cdd6f4;
+    font-family: "Noto Sans", sans-serif;
+    font-size: 13px;
+}
+#spotify-popup .player-card {
+    background: #1e1e2e;
+    border: 1px solid #45475a;
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+#spotify-popup .eyebrow { color: #a6adc8; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; }
+#spotify-popup .status { color: #a6adc8; font-size: 11px; }
+#spotify-popup .status.playing { color: #a6e3a1; }
+#spotify-popup .cover { background: #313244; border-radius: 10px; color: #fab387; }
+#spotify-popup .track-title { font-size: 18px; font-weight: 700; color: #cdd6f4; }
+#spotify-popup .artist { color: #bac2de; font-size: 13px; }
+#spotify-popup .album { color: #a6adc8; font-size: 11px; }
+#spotify-popup .time { color: #a6adc8; font-size: 11px; font-feature-settings: "tnum"; }
+#spotify-popup button {
+    background: transparent;
+    background-image: none;
+    color: #bac2de;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    box-shadow: none;
+    text-shadow: none;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 2px;
+    transition: background 120ms ease, color 120ms ease;
+}
+#spotify-popup button:hover { background: #313244; color: #cdd6f4; }
+#spotify-popup button:focus { border-color: #fab387; }
+#spotify-popup button:disabled { color: #6c7086; }
+#spotify-popup button.enabled { color: #fab387; background: #313244; }
+#spotify-popup button.play {
+    background: #fab387;
+    color: #181825;
+    border-radius: 28px;
+    min-width: 50px;
+    min-height: 50px;
+}
+#spotify-popup button.play:hover { background: #f5c2e7; }
+#spotify-popup button.play:focus { border-color: #cdd6f4; box-shadow: 0 0 0 2px #45475a; }
+#spotify-popup button.play:disabled { background: #45475a; color: #a6adc8; }
+#spotify-popup button.dismiss { min-width: 26px; min-height: 26px; }
+#spotify-popup button.open { color: #fab387; background: #313244; font-weight: 600; padding: 0 12px; }
+#spotify-popup button.open:hover { background: #45475a; }
+#spotify-popup separator { background: #313244; min-height: 1px; }
+#spotify-popup scale { padding: 6px 0; min-height: 12px; }
+#spotify-popup scale trough { min-height: 4px; background: #45475a; border: none; border-radius: 4px; }
+#spotify-popup scale highlight { background: #fab387; border: none; border-radius: 4px; }
+#spotify-popup scale slider {
+    background: #cdd6f4;
+    background-image: none;
+    border: none;
+    box-shadow: none;
+    min-width: 10px;
+    min-height: 10px;
+    margin: -3px 0;
+    border-radius: 8px;
+}
+#spotify-popup scale:focus slider { background: #fab387; box-shadow: 0 0 0 2px #cdd6f4; }
+#spotify-popup scale:disabled highlight, #spotify-popup scale:disabled slider { background: #6c7086; }

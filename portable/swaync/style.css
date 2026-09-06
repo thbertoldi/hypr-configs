@@ -1,0 +1,44 @@
+@import url("/etc/xdg/swaync/style.css");
+
+/* SwayNC 0.12+ · keep upstream layout, give it the desktop's Mocha surfaces. */
+:root {
+    --cc-bg: #1e1e2e;
+    --noti-border-color: #45475a;
+    --noti-bg: 30, 30, 46;
+    --noti-bg-alpha: 1;
+    --noti-bg-darker: #181825;
+    --noti-bg-hover: #313244;
+    --noti-bg-focus: #313244;
+    --noti-close-bg: #313244;
+    --noti-close-bg-hover: #45475a;
+    --text-color: #cdd6f4;
+    --text-color-disabled: #a6adc8;
+    --bg-selected: #fab387;
+    --border-radius: 18px;
+    --notification-icon-size: 48px;
+    --font-size-body: 13px;
+    --font-size-summary: 14px;
+    --notification-shadow: none;
+}
+* { font-family: "Noto Sans", sans-serif; }
+.control-center { border: 1px solid #45475a; padding: 10px; }
+.widget-title > label { color: #cdd6f4; font-size: 23px; font-weight: 700; }
+.widget-title > button { color: #fab387; background: #313244; border-radius: 10px; padding: 6px 12px; }
+.widget-dnd { background: #181825; padding: 14px; }
+.widget-dnd label { font-size: 13px; }
+.widget-dnd switch { background: #45475a; border: none; }
+.widget-dnd switch:checked { background: #fab387; }
+.widget-dnd switch slider { background: #cdd6f4; border: none; }
+.notification-row .notification-background .notification .notification-default-action { padding: 12px; }
+.notification-row:focus { background: transparent; }
+.notification-row:focus .notification-background .notification { border-color: #fab387; }
+.control-center .notification-row .notification-background .notification { background: #181825; }
+.notification-row .notification-background .notification .notification-default-action .notification-content .text-box .time {
+    color: #a6adc8; font-size: 11px; font-weight: 400;
+}
+.notification-row .notification-background .notification.critical { border-color: #f38ba8; }
+.notification-group .notification-group-headers { color: #b4befe; padding: 6px 0; }
+.control-center .control-center-list-placeholder { opacity: 1; color: #a6adc8; }
+.notification-action { color: #fab387; background: #313244; padding: 6px 10px; }
+.close-button { color: #a6adc8; min-width: 28px; min-height: 28px; }
+button:focus-visible { outline: 2px solid #fab387; outline-offset: -2px; }

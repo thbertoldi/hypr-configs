@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="122" height="20" role="img" aria-label="License: MPL 2.0">
+  <title>License: MPL 2.0</title>
+  <rect width="58" height="20" fill="#1e1e2e"/>
+  <rect x="58" width="64" height="20" fill="#cba6f7"/>
+  <g font-family="Verdana,DejaVu Sans,sans-serif" font-size="11" text-anchor="middle">
+    <text x="29" y="14" fill="#cdd6f4">License</text>
+    <text x="90" y="14" fill="#1e1e2e">MPL 2.0</text>
+  </g>
+</svg>

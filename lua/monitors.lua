@@ -4,7 +4,7 @@
 -- monitor that doesn't exist. desc: survives DP<->HDMI / connector renames.
 -- Max refresh over the current link is ~85Hz (the old @100 was unreachable).
 hl.monitor({
-    output   = "desc:LG Electronics LG ULTRAWIDE 508AZBZFN861",
+    output   = "desc:LG Electronics LG ULTRAWIDE",
     mode     = "3440x1440@85",
     position = "0x0",
     scale    = 1,

@@ -1,0 +1,104 @@
+[
+  {
+    "repository": "catppuccin/starship",
+    "commit": "5906cc369dd8207e063c0e6e2d27bd0c0b567cb8",
+    "path": "themes/mocha.toml",
+    "sha256": "712699ad27db93deddda4577ab9753f76e0c82652e63c7982085343c8ca01f9c",
+    "bytes": 527
+  },
+  {
+    "repository": "catppuccin/starship",
+    "commit": "5906cc369dd8207e063c0e6e2d27bd0c0b567cb8",
+    "path": "LICENSE",
+    "sha256": "814096d2c34cc216c624738a49356f32b7237733b4f7edb0685f4e50ef5074ba",
+    "bytes": 1067
+  },
+  {
+    "repository": "catppuccin/yazi",
+    "commit": "d62802be39210ea10e54b3e3b09735c6cb9e57c1",
+    "path": "themes/mocha/catppuccin-mocha-peach.toml",
+    "sha256": "f856d7ae34bc2ac9c6e3a240e87e4bbb73d33bec362abfdfef8e7dc9f9ca8f02",
+    "bytes": 42199
+  },
+  {
+    "repository": "catppuccin/yazi",
+    "commit": "d62802be39210ea10e54b3e3b09735c6cb9e57c1",
+    "path": "LICENSE",
+    "sha256": "814096d2c34cc216c624738a49356f32b7237733b4f7edb0685f4e50ef5074ba",
+    "bytes": 1067
+  },
+  {
+    "repository": "catppuccin/obsidian",
+    "commit": "1316e03af5c31964116661ab08e7784bfa1d00b3",
+    "path": "theme.css",
+    "sha256": "f1cab3be0129f6e9850d12d89462fa034f7a1437c48a6b3817dc96c95cbca422",
+    "bytes": 2306367
+  },
+  {
+    "repository": "catppuccin/obsidian",
+    "commit": "1316e03af5c31964116661ab08e7784bfa1d00b3",
+    "path": "manifest.json",
+    "sha256": "ac2010055c5ffdeb652d5a024497b1b754e15fb01697d67bef3273730d12ce03",
+    "bytes": 157
+  },
+  {
+    "repository": "catppuccin/obsidian",
+    "commit": "1316e03af5c31964116661ab08e7784bfa1d00b3",
+    "path": "LICENSE",
+    "sha256": "814096d2c34cc216c624738a49356f32b7237733b4f7edb0685f4e50ef5074ba",
+    "bytes": 1067
+  },
+  {
+    "repository": "catppuccin/obsidian",
+    "commit": "1316e03af5c31964116661ab08e7784bfa1d00b3",
+    "path": "scss/base/_ctp-style-settings.scss",
+    "sha256": "16e68d19321ea8982c4f8a9dfb997139078d6f3dc53428b844c59e9c20ddfa03",
+    "bytes": 27714
+  },
+  {
+    "repository": "catppuccin/bat",
+    "commit": "6810349b28055dce54076712fc05fc68da4b8ec0",
+    "path": "themes/Catppuccin Mocha.tmTheme",
+    "sha256": "395566f08ceb301b936b91c077690ef94f7aeb651b121553f201c99c2bd4aa77",
+    "bytes": 65906
+  },
+  {
+    "repository": "catppuccin/bat",
+    "commit": "6810349b28055dce54076712fc05fc68da4b8ec0",
+    "path": "LICENSE",
+    "sha256": "814096d2c34cc216c624738a49356f32b7237733b4f7edb0685f4e50ef5074ba",
+    "bytes": 1067
+  },
+  {
+    "repository": "community-archive/obsidian-style-settings",
+    "version": "1.0.9",
+    "path": "main.js",
+    "url": "https://github.com/community-archive/obsidian-style-settings/releases/download/1.0.9/main.js",
+    "sha256": "1828abaacdab4c5578b705a625c585b30512f8efad4c7cfc5a18e70cc3557468",
+    "bytes": 154561
+  },
+  {
+    "repository": "community-archive/obsidian-style-settings",
+    "version": "1.0.9",
+    "path": "manifest.json",
+    "url": "https://github.com/community-archive/obsidian-style-settings/releases/download/1.0.9/manifest.json",
+    "sha256": "9cffdc20cf2aa1354820e0050b694b0f9b576446e3d5d44a36ae8b0187e5bfb8",
+    "bytes": 321
+  },
+  {
+    "repository": "community-archive/obsidian-style-settings",
+    "version": "1.0.9",
+    "path": "styles.css",
+    "url": "https://github.com/community-archive/obsidian-style-settings/releases/download/1.0.9/styles.css",
+    "sha256": "ee7937d2be50653a89ccb30ae5f0572b23507d5b7f1328d005271a363075bfd8",
+    "bytes": 13906
+  },
+  {
+    "repository": "community-archive/obsidian-style-settings",
+    "version": "1.0.9",
+    "path": "LICENSE.md",
+    "url": "https://raw.githubusercontent.com/community-archive/obsidian-style-settings/1.0.9/LICENSE.md",
+    "sha256": "8b1ba204bb69a0ade2bfcf65ef294a920f6bb361b317dba43c7ef29d96332b9b",
+    "bytes": 35148
+  }
+]

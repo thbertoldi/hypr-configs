@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 set -euo pipefail
+script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)
 
 send_wob() {
     local value=$1 style=$2
@@ -11,18 +12,20 @@ send_wob() {
         _ "$fifo" "$value" "$style" 2>/dev/null || true
 }
 
-sink_state() {
-    local state volume muted style
-    state=$(wpctl get-volume @DEFAULT_AUDIO_SINK@)
+show_state() {
+    local target=$1 kind=$2 state volume style
+    state=$(wpctl get-volume "$target")
     volume=$(awk '{printf "%.0f", $2 * 100}' <<<"$state")
-    muted=0
-    style=volume
+    style=$kind
     if [[ "$state" == *'[MUTED]'* ]]; then
-        muted=1
         style=muted
     fi
-    (( muted )) && volume=0
-    send_wob "$volume" "$style"
+    "$script_dir/desktop-control.sh" osd "$kind" "$volume" "$style" 2>/dev/null \
+        || send_wob "$volume" "$style"
+}
+
+sink_state() {
+    show_state @DEFAULT_AUDIO_SINK@ volume
 }
 
 case "${1:-}" in
@@ -46,12 +49,7 @@ case "${1:-}" in
         ;;
     mic-toggle)
         wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle
-        state=$(wpctl get-volume @DEFAULT_AUDIO_SOURCE@)
-        if [[ "$state" == *'[MUTED]'* ]]; then
-            send_wob 0 muted
-        else
-            send_wob 100 mic
-        fi
+        show_state @DEFAULT_AUDIO_SOURCE@ mic
         ;;
     show)
         sink_state

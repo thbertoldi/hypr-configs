@@ -17,11 +17,7 @@ case "${1:-}" in
         fi
         ;;
     dnd)
-        if makoctl mode | grep -q 'do-not-disturb'; then
-            makoctl mode -r do-not-disturb
-        else
-            makoctl mode -a do-not-disturb
-        fi
+        python3 ~/.config/hypr/scripts/notification_control.py dnd-toggle
         ;;
     night)
         ~/.config/hypr/scripts/hyprsunset-toggle.sh toggle
