@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Sound/focus popups and a passive volume/brightness display."""
+"""Sound, network and focus popups with a passive volume/brightness display."""
 from concurrent.futures import ThreadPoolExecutor
 import json
 from pathlib import Path
@@ -340,13 +340,17 @@ class DesktopControls:
 
     def call(self, _b, _s, _p, _i, method, args, invocation):
         values = args.unpack()
-        if method == 'Toggle' and values[0] in ('audio', 'focus'):
+        if method == 'Toggle' and values[0] in ('audio', 'focus', 'network'):
             key, x, y = values
             for name, panel in self.panels.items():
                 if name != key:
                     panel.dismiss()
             if key not in self.panels:
-                self.panels[key] = SoundPopup() if key == 'audio' else FocusPopup()
+                if key == 'network':
+                    from network_popup import NetworkPopup
+                    self.panels[key] = NetworkPopup()
+                else:
+                    self.panels[key] = SoundPopup() if key == 'audio' else FocusPopup()
             self.panels[key].toggle(x, y)
         elif method == 'OSD' and values[0] in ('volume', 'mic', 'brightness'):
             self.osd.show(*values)

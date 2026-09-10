@@ -210,8 +210,9 @@
 
 (defwidget actions-row []
   (box :class "card actions-row" :orientation "h" :spacing 8 :space-evenly true :halign "center"
-    (button :class "action-btn ${quick.wifi}" :tooltip "Alternar Wi-Fi"
-            :onclick "~/.config/eww/scripts/quick-toggle.sh wifi" "")
+    (button :class "action-btn ${quick.wifi}" :tooltip "Escolher rede Wi-Fi"
+            :onclick "~/.config/hypr/scripts/wifi-menu.sh"
+            :onrightclick "~/.config/hypr/scripts/wifi-menu.sh" "")
     (button :class "action-btn ${quick.bluetooth}" :tooltip "Alternar Bluetooth"
             :onclick "~/.config/eww/scripts/quick-toggle.sh bluetooth" "")
     (button :class "action-btn ${quick.dnd}" :tooltip "Alternar não perturbe"

@@ -192,6 +192,9 @@ validate_host() {
         "$SCRIPT_DIR/scripts/desktop-control.sh" \
         "$SCRIPT_DIR/scripts/desktop-controls.css" \
         "$SCRIPT_DIR/scripts/audio_backend.py" \
+        "$SCRIPT_DIR/scripts/network_backend.py" \
+        "$SCRIPT_DIR/scripts/network_popup.py" \
+        "$SCRIPT_DIR/scripts/wifi-menu.sh" \
         "$SCRIPT_DIR/scripts/focus_timer.py" \
         "$SCRIPT_DIR/scripts/portal-healthcheck.py" \
         "$SCRIPT_DIR/scripts/notification_control.py" \
@@ -302,6 +305,7 @@ install_packages() {
         papirus-icon-theme fontawesome-fonts symbols-only-nerd-fonts
         google-noto-sans-fonts google-noto-coloremoji-fonts
         python3-gobject python3-gobject-Gdk python3-gobject-cairo python3-pycairo typelib-1_0-GtkLayerShell-0_1
+        typelib-1_0-NM-1_0
         libnotify-tools
         jq socat curl unzip xz tar rsync git procps gawk dbus-1-tools glib2-tools
         xdg-user-dirs
@@ -1025,7 +1029,8 @@ validate_result() {
 import gi
 gi.require_version("Gtk", "3.0")
 gi.require_version("GtkLayerShell", "0.1")
-from gi.repository import Gio, Gtk, GtkLayerShell
+gi.require_version("NM", "1.0")
+from gi.repository import Gio, Gtk, GtkLayerShell, NM
 PY
     then
         die "GTK Spotify popup integration unavailable"

@@ -1,4 +1,24 @@
-/* Sound, focus and OSD · companion surfaces for the existing tray popups. */
+/* Sound, network, focus and OSD · companion surfaces for the existing trays. */
+#desktop-popup .network button.primary, #desktop-popup .network-action { color: #89b4fa; }
+#desktop-popup .network button:focus { border-color: #89b4fa; }
+#desktop-popup .network-summary { background: #181825; border-radius: 12px; padding: 14px; }
+#desktop-popup .network-summary .title { color: #89b4fa; }
+#desktop-popup .network-auth { background: #181825; border-radius: 12px; padding: 12px; }
+#desktop-popup .network entry { color: #cdd6f4; background: #181825; border: 1px solid #45475a; border-radius: 10px; min-height: 34px; padding: 3px 10px; box-shadow: none; }
+#desktop-popup .network entry:focus { border-color: #89b4fa; }
+#desktop-popup .network entry image { color: #a6adc8; }
+#desktop-popup .network switch { background: #45475a; border: 1px solid #585b70; border-radius: 15px; }
+#desktop-popup .network switch:checked { background: #89b4fa; }
+#desktop-popup .network switch slider { background: #cdd6f4; border: none; border-radius: 12px; min-width: 20px; min-height: 20px; }
+#desktop-popup button.network-row { padding: 10px; min-height: 44px; }
+#desktop-popup button.network-row.connected { background: #313244; border-color: #45475a; }
+#desktop-popup .network-row.connected .body, #desktop-popup .network-row image { color: #89b4fa; }
+#desktop-popup .network-action { font-size: 11px; font-weight: 700; }
+#desktop-popup .network scrollbar.vertical,
+#desktop-popup .network scrollbar.vertical trough { min-width: 7px; background: transparent; border: none; padding: 0; box-shadow: none; }
+#desktop-popup .network scrollbar.vertical slider { min-width: 3px; min-height: 28px; margin: 2px; border: none; border-radius: 3px; background: alpha(#6c7086, 0.4); box-shadow: none; }
+#desktop-popup .network scrollbar.vertical slider:hover { background: alpha(#7f849c, 0.65); }
+#desktop-popup .network scrollbar.vertical slider:active { background: alpha(#7f849c, 0.85); }
 #desktop-popup .audio button.primary { color: #89b4fa; }
 #desktop-popup .audio combobox button { background: #313244; min-height: 32px; font-size: 11px; }
 #desktop-popup .audio combobox cellview { color: #cdd6f4; }

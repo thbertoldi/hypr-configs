@@ -20,6 +20,7 @@ connect them through the desktop's existing APIs.
 |---|---|
 | **App trays** | Spotify player with artwork and seeking; Steam's recently played games; a calendar with day selection and upcoming events |
 | **Sound** | Output and microphone selection, per-app volume, mic mute, and a passive volume/brightness OSD |
+| **Network** | One Wi-Fi picker for either mouse button, with saved networks, password entry, background scanning and connection progress |
 | **Notifications & focus** | SwayNC history and DND; 25/50-minute sessions that quiet notifications without overwriting your DND preference |
 | **Waybar & Eww** | Rich clock and Anki hover cards, recording/mic indicators, VPN status, and a compact system drawer |
 | **Clipboard & scratchpads** | Searchable text/image history; terminal and quick-note windows that launch once and toggle into view |
@@ -122,7 +123,8 @@ are connected interactively after installation.
 | `Super+G` | Local agent menu |
 | `Super+Escape` | Session menu |
 
-Click the **volume** icon for the mixer, right-click the **bell** for DND, and
+Click or right-click **network** to switch Wi-Fi, click **volume** for the mixer,
+right-click the **bell** for DND, and
 hover the **gear** to reveal Bluetooth, power profiles, keep-awake, CPU and memory.
 The [full control reference](docs/desktop-controls.md) documents secondary clicks,
 notification dismissal, timer behavior and scratchpad storage.

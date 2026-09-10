@@ -1,11 +1,12 @@
 # Desktop controls
 
-The sound/focus cards, notification center and OSD use the same Mocha surfaces
+The network/sound/focus cards, notification center and OSD use the same Mocha surfaces
 as the Spotify, Steam and calendar tray controls. The bootstrap deploys their
 configuration and enables the services at login.
 
 | Control | Action |
 |---|---|
+| Network icon: left or right click / dashboard Wi-Fi | Open the shared network picker |
 | Volume icon | Open output/input selection, microphone mute and app volumes |
 | Volume scroll | Adjust playback volume with OSD feedback |
 | Volume middle-click | Toggle the default microphone's mute state |
@@ -45,6 +46,31 @@ Cliphist remains the only clipboard history. Up to 40 image entries receive
 previews in a private temporary directory, removed when the picker exits.
 Clipboard contents, quick notes and focus state are not part of the portable bundle.
 
+## Network selection
+
+Both mouse buttons on the bar's network indicator open the same Mocha/Blue
+network card. The dashboard Wi-Fi button opens it too. The current network is
+marked **Connected**; choosing it again leaves the connection alone.
+
+- Select a saved network to switch using its existing NetworkManager profile.
+- Select a new personal network, enter its password, and press Enter or **Connect**.
+- Open networks connect without a password prompt. **Refresh** scans in the
+  background; search filters the results. Duplicate access points are grouped.
+- The Wi-Fi switch controls the radio explicitly. **Advanced settings** opens
+  profile management for enterprise credentials, hidden-network setup, IP
+  configuration and VPNs. Saved hidden networks appear in the picker afterward.
+
+The card shows connection progress until NetworkManager reports activation,
+including address configuration. Errors allow a retry. Closing the card clears
+the password field; an already-started connection can finish in the background.
+The existing NetworkManager applet handles additional authentication prompts.
+
+The picker uses [libnm](https://networkmanager.dev/docs/libnm/latest/NMClient.html)
+and keeps original SSID bytes and saved profile identities. Display labels are
+never parsed back into network names. Passwords are sent through D-Bus and kept
+by NetworkManager, outside this repository. Scripts do not put them in command
+arguments or temporary files. The bootstrap includes the libnm Python typelib.
+
 ## Services and configuration
 
 ```bash
@@ -53,6 +79,9 @@ hyprctl configerrors
 python3 ~/.config/hypr/scripts/focus_timer.py status
 ```
 
+Network UI and operations live in `scripts/network_popup.py` and
+`scripts/network_backend.py`, served by the existing `desktop-controls` service.
+`scripts/wifi-menu.sh` is the common launcher for the bar and dashboard.
 Notification settings live in `~/.config/swaync/`; their portable copies are in
 `portable/swaync/`. Mixer/focus/OSD styling lives in `scripts/desktop-controls.css`
 and shares `scripts/tray-popups.css` with Steam and calendar. Update the portable
@@ -72,7 +101,8 @@ Hyprland --verify-config --config "$PWD/hyprland.lua"
 ./bootstrap-opensuse-tumbleweed.sh --dry-run
 ```
 
-Behavior tests cover focus expiry/pause/restoration, audio routing and refresh
-guards, and clipboard cancellation/binary copying. Live checks exercised both
+Behavior tests cover network/profile selection and activation states, password
+cancellation, focus expiry/pause/restoration, audio routing and refresh guards,
+and clipboard cancellation/binary copying. Live checks exercised both
 scratchpads through launch/hide/restore, focus pause/resume/cancel, image previews,
 the notification center and the passive OSD.

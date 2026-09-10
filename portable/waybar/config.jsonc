@@ -155,9 +155,9 @@
         "format-wifi": "  {essid} ({signalStrength}%)",
         "format-ethernet": "  {ifname}",
         "format-disconnected": "  off",
-        "tooltip-format": "{ifname}: {ipaddr}",
+        "tooltip-format": "{ifname}: {ipaddr}\nClick or right-click: choose a network",
         "on-click": "~/.config/hypr/scripts/wifi-menu.sh",
-        "on-click-right": "nm-connection-editor"
+        "on-click-right": "~/.config/hypr/scripts/wifi-menu.sh"
     },
 
     "custom/vpn": {
@@ -184,7 +184,7 @@
         "on-click-middle": "~/.config/hypr/scripts/audio-control.sh mic-toggle",
         "on-scroll-up": "~/.config/hypr/scripts/audio-control.sh up",
         "on-scroll-down": "~/.config/hypr/scripts/audio-control.sh down",
-        "tooltip-format": "{desc}\nClick: sound & devices · Scroll: volume\nMiddle-click: microphone mute · Right-click: advanced mixer",
+        "tooltip-format": "{desc}\nClick: sound &amp; devices · Scroll: volume\nMiddle-click: microphone mute · Right-click: advanced mixer",
         "scroll-step": 5
     },
 
