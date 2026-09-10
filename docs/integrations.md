@@ -28,6 +28,34 @@ to match Ghostty's 10 / 12 pixels at 96 DPI. The settings are self-contained;
 the old `dank-theme.conf` and `dank-tabs.conf` files are no longer included.
 See the [Kitty configuration reference](https://sw.kovidgoyal.net/kitty/conf/).
 
+## Desktop portal recovery
+
+`portal-healthcheck.timer` checks the running Hyprland portal once a minute.
+It restarts the portal only after two five-second D-Bus probe failures, each
+accompanied by CPU use above half a core. Waiting in a screen picker, normal
+screen sharing, an immediate bus error, or an inactive portal does not trigger
+recovery. The timer stops with the graphical session.
+
+This mitigates the unbounded screencast startup loop described in
+[upstream issue #433](https://github.com/hyprwm/xdg-desktop-portal-hyprland/issues/433),
+which remains present in 1.4.1. It does not patch the upstream implementation.
+A recovery interrupts portal screen sharing and portal-managed shortcuts;
+applications may need to start their sharing session again.
+
+The portal's systemd drop-in limits starts to three per ten minutes and forces
+a stuck process to exit after ten seconds during a restart. If the limit is
+reached, inspect the journal and the application triggering the hang before
+manually recovering:
+
+```bash
+journalctl --user -u portal-healthcheck.service -u xdg-desktop-portal-hyprland.service
+systemctl --user reset-failed xdg-desktop-portal-hyprland.service
+systemctl --user start xdg-desktop-portal-hyprland.service
+```
+
+Disable automatic checks with `systemctl --user disable --now portal-healthcheck.timer`.
+The bootstrap deploys these units and enables the timer for future sessions.
+
 ## Starship, Yazi and Obsidian
 
 Starship uses the official Mocha palette with a Peach directory and prompt,

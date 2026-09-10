@@ -193,6 +193,7 @@ validate_host() {
         "$SCRIPT_DIR/scripts/desktop-controls.css" \
         "$SCRIPT_DIR/scripts/audio_backend.py" \
         "$SCRIPT_DIR/scripts/focus_timer.py" \
+        "$SCRIPT_DIR/scripts/portal-healthcheck.py" \
         "$SCRIPT_DIR/scripts/notification_control.py" \
         "$SCRIPT_DIR/scripts/clipboard_picker.py" \
         "$SCRIPT_DIR/scripts/scratchpad.py" \
@@ -265,6 +266,9 @@ validate_host() {
         "$SCRIPT_DIR/portable/systemd/user/calendar-tray.service" \
         "$SCRIPT_DIR/portable/systemd/user/desktop-controls.service" \
         "$SCRIPT_DIR/portable/systemd/user/focus-timer.service" \
+        "$SCRIPT_DIR/portable/systemd/user/portal-healthcheck.service" \
+        "$SCRIPT_DIR/portable/systemd/user/portal-healthcheck.timer" \
+        "$SCRIPT_DIR/portable/systemd/user/xdg-desktop-portal-hyprland.service.d/recovery.conf" \
         "$SCRIPT_DIR/portable/systemd/user/swaync.service.d/desktop.conf" \
         "$SCRIPT_DIR/portable/wayland-sessions/hyprland-uwsm.desktop" \
         "$SCRIPT_DIR/portable/monitors-generic.lua"; do
@@ -927,6 +931,7 @@ reload_user_units() {
         cliphist.service monitor-listener.service nm-applet.service kwalletd.service
         smarty-pants.service kalendarac.service dankcalendar.service spotify-tray.service
         steam-tray.service calendar-tray.service
+        portal-healthcheck.timer
         waybar.service hypridle.service hyprsunset.service
         hyprpolkitagent.service
     )
@@ -967,7 +972,7 @@ validate_result() {
         ghostty alacritty kitty starship helix hx yazi herdr marksman glow pandoc wl-paste cliphist grimblast wpctl brightnessctl playerctl
         pdftoppm file fd rg fzf zoxide 7zz magick chafa resvg ffmpeg
         lua-language-server texlab taplo shfmt shellcheck gcc
-        nmcli nm-applet blueman-manager pavucontrol pactl notify-send jq socat wlogout
+        nmcli nm-applet blueman-manager pavucontrol pactl notify-send jq socat busctl wlogout
         wob swappy wf-recorder udiskie uwsm nwg-displays btop
         merkuro-calendar korganizer kalendarac konsolekalendar kdialog python3 codex
     )

@@ -1,0 +1,12 @@
+[Unit]
+Description=Check Hyprland desktop portal responsiveness
+PartOf=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Timer]
+OnActiveSec=1min
+OnUnitInactiveSec=1min
+AccuracySec=5s
+
+[Install]
+WantedBy=graphical-session.target

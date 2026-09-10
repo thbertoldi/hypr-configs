@@ -1,0 +1,11 @@
+[Unit]
+Description=Recover an unresponsive Hyprland desktop portal
+PartOf=graphical-session.target
+After=graphical-session.target
+Requisite=graphical-session.target
+ConditionEnvironment=WAYLAND_DISPLAY
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/.config/hypr/scripts/portal-healthcheck.py
+TimeoutStartSec=1min
