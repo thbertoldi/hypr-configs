@@ -56,6 +56,34 @@ systemctl --user start xdg-desktop-portal-hyprland.service
 Disable automatic checks with `systemctl --user disable --now portal-healthcheck.timer`.
 The bootstrap deploys these units and enables the timer for future sessions.
 
+## Smarty Pants
+
+The optional [Smarty Pants](https://github.com/thbertoldi/smarty-pants) daemon
+rewrites selected text in the focused application. The Lua bindings call its
+CLI directly, so they do not depend on desktop-portal shortcut registration:
+
+| Shortcut | Writing mode |
+|---|---|
+| `Super+R` | Grammar and fluency |
+| `Super+A` | Academic writing |
+| `Super+I` | LinkedIn writing |
+| `Super+C` | Condense |
+
+Copy and paste also require Smarty Pants' `hl.dsp.send_shortcut` integration
+on Lua-based Hyprland; older builds use an incompatible dispatcher command.
+
+Install the CLI and daemon from a revision with provider and tray support.
+The tray selects DeepSeek or another supported provider, configures the API
+connection, and pauses rewriting. **Set API key…** opens a local password
+dialog; credentials stay outside this repository. Provider settings live in
+`~/.config/smarty-pants/config.toml`. With these Lua bindings, set
+`[shortcuts] enabled = false` in that file to use the CLI for activation.
+
+An API-only build uses `--no-default-features --features tray` and requires
+no local model. Local inference requires rebuilding with the `local` feature.
+Use `smarty-pants status` to check the active provider and
+`systemctl --user restart smarty-pants.service` after upgrading its binaries.
+
 ## Starship, Yazi and Obsidian
 
 Starship uses the official Mocha palette with a Peach directory and prompt,

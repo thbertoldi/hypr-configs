@@ -1,6 +1,7 @@
 theme = "catppuccin_mocha"
 
 [editor]
+default-yank-register = "+" # share yank/paste with the system clipboard
 line-number = "relative"
 cursorline = true
 color-modes = true          # tint the mode indicator (NOR/INS/SEL)

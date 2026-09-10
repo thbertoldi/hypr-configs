@@ -100,11 +100,11 @@ hl.bind(m .. " + space",          hl.dsp.exec_cmd("hyprctl switchxkblayout all n
 hl.bind("CTRL + space",  hl.dsp.exec_cmd([[sh -c 'test -x "$HOME/Applications/Handy.AppImage" && "$HOME/Applications/Handy.AppImage" --toggle-transcription']]))
 hl.bind("CTRL + Escape", hl.dsp.exec_cmd([[sh -c 'test -x "$HOME/Applications/Handy.AppImage" && "$HOME/Applications/Handy.AppImage" --cancel']]))
 
--- === smarty-pants AI rewrite (xdg-desktop-portal-hyprland GlobalShortcuts) ===
-hl.bind(m .. " + R", hl.dsp.global("surface-transient:rewrite"))
-hl.bind(m .. " + A", hl.dsp.global("surface-transient:academic"))
-hl.bind(m .. " + I", hl.dsp.global("surface-transient:linkedin"))
-hl.bind(m .. " + C", hl.dsp.global("surface-transient:condense"))
+-- === smarty-pants AI rewrite (CLI; the portal requires an application ID) ===
+hl.bind(m .. " + R", hl.dsp.exec_cmd("~/.cargo/bin/smarty-pants trigger --mode rewrite"))
+hl.bind(m .. " + A", hl.dsp.exec_cmd("~/.cargo/bin/smarty-pants trigger --mode academic"))
+hl.bind(m .. " + I", hl.dsp.exec_cmd("~/.cargo/bin/smarty-pants trigger --mode linkedin"))
+hl.bind(m .. " + C", hl.dsp.exec_cmd("~/.cargo/bin/smarty-pants trigger --mode condense"))
 
 -- === Screenshots (grimblast -> clipboard + file) ===
 hl.bind("Print",         hl.dsp.exec_cmd("grimblast --notify copysave area   ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png"))

@@ -47,6 +47,14 @@ Cliphist remains the only clipboard history. Up to 40 image entries receive
 previews in a private temporary directory, removed when the picker exits.
 Clipboard contents, quick notes and focus state are not part of the portable bundle.
 
+Helix shares this system clipboard by default: `y` copies the selection, and
+`p` / `P` paste text copied in Helix or another app. Its `+` register is the
+default via `editor.default-yank-register`; clipboard provider detection uses
+`wl-copy` and `wl-paste` on this Wayland desktop. Named registers remain available.
+Normal `d` / `c` also yank deleted text; `Alt+d` / `Alt+c` delete/change without
+yanking. Use `:config-reload` in an already-open Helix session after deploying
+the configuration. See [Helix's register documentation](https://docs.helix-editor.com/registers.html).
+
 ## Workspace switching
 
 Click a workspace number at the left of Waybar to switch to it. The active
