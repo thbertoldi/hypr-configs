@@ -223,6 +223,12 @@ Technical notes link to primary documentation. French sentences have
 recognition and production cards with cached MP3s in Anki's media collection.
 Seeding is idempotent and does not replace imported decks.
 
+French realtime audio uses saved Google Translate presets in HyperTTS. Each
+TTS tag must name its preset; `voices=HyperTTS` alone cannot play audio.
+`scripts/study-tts-repair.sh` backs up and repairs the original bare French
+tags after the presets are installed. The diagnostic also checks for missing
+or disabled presets.
+
 AnkiConnect:
 
 - Listens only on `127.0.0.1:8765`.

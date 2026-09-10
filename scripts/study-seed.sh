@@ -37,13 +37,13 @@ french_request=$(jq -cn '{
   cardTemplates:[
     {
       Name:"Reconnaissance",
-      Front:"<div class=topic>Français · reconnaissance</div><div class=phrase>{{French}}</div>{{#Audio}}<div class=audio>{{Audio}}</div>{{/Audio}}{{^Audio}}{{tts fr_FR voices=HyperTTS:French}}{{/Audio}}",
+      Front:"<div class=topic>Français · reconnaissance</div><div class=phrase>{{French}}</div>{{#Audio}}<div class=audio>{{Audio}}</div>{{/Audio}}{{^Audio}}{{tts fr_FR hypertts_preset=Front_hypr_study_french voices=HyperTTS:French}}{{/Audio}}",
       Back:"{{FrontSide}}<hr id=answer><div class=meaning>{{Portuguese}}</div>{{#Hint}}<div class=hint>{{Hint}}</div>{{/Hint}}{{#Example}}<div class=example>{{Example}}</div>{{/Example}}"
     },
     {
       Name:"Production",
       Front:"<div class=topic>Français · production</div><div class=prompt>Como se diz em francês?</div><div class=meaning>{{Portuguese}}</div>{{#Hint}}<div class=hint>{{Hint}}</div>{{/Hint}}<div>{{type:French}}</div>",
-      Back:"{{FrontSide}}<hr id=answer><div class=phrase>{{French}}</div>{{#Audio}}<div class=audio>{{Audio}}</div>{{/Audio}}{{^Audio}}{{tts fr_FR voices=HyperTTS:French}}{{/Audio}}{{#Example}}<div class=example>{{Example}}</div>{{/Example}}"
+      Back:"{{FrontSide}}<hr id=answer><div class=phrase>{{French}}</div>{{#Audio}}<div class=audio>{{Audio}}</div>{{/Audio}}{{^Audio}}{{tts fr_FR hypertts_preset=Back_hypr_study_french voices=HyperTTS:French}}{{/Audio}}{{#Example}}<div class=example>{{Example}}</div>{{/Example}}"
     }
   ]
 }')

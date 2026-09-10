@@ -22,6 +22,7 @@ version=$(sed -n "s/^ANKI_HYPER_TTS_VERSION='\\([^']*\\)'.*/\\1/p" \
 models=$("$connect" request modelNames)
 obsolete=0
 hypertts_templates=0
+invalid=0
 while IFS= read -r model; do
     params=$(jq -cn --arg modelName "$model" '{modelName:$modelName}')
     templates=$("$connect" request modelTemplates "$params")
@@ -29,7 +30,12 @@ while IFS= read -r model; do
         >/dev/null <<<"$templates" && (( obsolete += 1 ))
     jq -e '.result | tostring | contains("voices=HyperTTS")' \
         >/dev/null <<<"$templates" && (( hypertts_templates += 1 ))
+    if ! python3 "$script_dir/study-tts-validate.py" "$addon/meta.json" "$model" <<<"$templates"; then
+        (( invalid += 1 ))
+    fi
 done < <(jq -r '.result[]' <<<"$models")
+
+(( invalid == 0 )) || exit 4
 
 audio=$("$script_dir/study-tts-synthesize.sh" \
     'Bonjour, je parle un peu français.')

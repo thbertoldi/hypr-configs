@@ -29,7 +29,7 @@ if ! "$connect" wait 30; then
 fi
 
 seed_marker="${XDG_STATE_HOME:-$HOME/.local/state}/hypr-study/seed-v1.done"
-tts_marker="${XDG_STATE_HOME:-$HOME/.local/state}/hypr-study/tts-template-v1.done"
+tts_marker="${XDG_STATE_HOME:-$HOME/.local/state}/hypr-study/tts-template-v2.done"
 if [[ ! -f "$tts_marker" ]]; then
     "$script_dir/study-tts-repair.sh" >/dev/null || {
         notify-send -a Hyprland -u critical \

@@ -81,8 +81,9 @@ documents the decisions and components needed to reproduce the environment.
     study session.
 
 18. **French with verifiable audio.** Starter sentences have cached MP3s and
-    HyperTTS fallback. Legacy templates referring to `AwesomeTTS` are backed
-    up and migrated to `HyperTTS`; a diagnostic checks versions, templates and
+    HyperTTS fallback with saved French voice presets. Bare French tags using
+    `AwesomeTTS` or `HyperTTS` are backed up and given explicit preset references;
+    a diagnostic checks preset references, versions, templates and
     synthesis without playing audio.
 
 19. **Study agent with explicit limits.** The agent menu gained a profile

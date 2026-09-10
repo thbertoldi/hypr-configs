@@ -1,0 +1,42 @@
+{
+  "hypr_study_french": {
+    "front": {
+      "side_enabled": true,
+      "source": {"mode": "AnkiTTSTag", "field_name": "French", "field_type": "Regular"},
+      "voice_selection": {
+        "voice_selection_mode": "single",
+        "voice": {"voice_id": {"service": "GoogleTranslate", "voice_key": "fr"}, "options": {}}
+      },
+      "text_processing": {"html_to_text_line": true}
+    },
+    "back": {
+      "side_enabled": true,
+      "source": {"mode": "AnkiTTSTag", "field_name": "French", "field_type": "Regular"},
+      "voice_selection": {
+        "voice_selection_mode": "single",
+        "voice": {"voice_id": {"service": "GoogleTranslate", "voice_key": "fr"}, "options": {}}
+      },
+      "text_processing": {"html_to_text_line": true}
+    }
+  },
+  "hypr_study_sentence_fr": {
+    "front": {
+      "side_enabled": true,
+      "source": {"mode": "AnkiTTSTag", "field_name": "Sentence", "field_type": "Regular"},
+      "voice_selection": {
+        "voice_selection_mode": "single",
+        "voice": {"voice_id": {"service": "GoogleTranslate", "voice_key": "fr"}, "options": {}}
+      },
+      "text_processing": {"html_to_text_line": true}
+    },
+    "back": {
+      "side_enabled": true,
+      "source": {"mode": "AnkiTTSTag", "field_name": "Sentence", "field_type": "Regular"},
+      "voice_selection": {
+        "voice_selection_mode": "single",
+        "voice": {"voice_id": {"service": "GoogleTranslate", "voice_key": "fr"}, "options": {}}
+      },
+      "text_processing": {"html_to_text_line": true}
+    }
+  }
+}
