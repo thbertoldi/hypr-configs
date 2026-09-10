@@ -6,6 +6,7 @@ configuration and enables the services at login.
 
 | Control | Action |
 |---|---|
+| Workspace number | Switch to that workspace, like `Super+number` |
 | Network icon: left or right click / dashboard Wi-Fi | Open the shared network picker |
 | Volume icon | Open output/input selection, microphone mute and app volumes |
 | Volume scroll | Adjust playback volume with OSD feedback |
@@ -45,6 +46,54 @@ hides and restores the existing window; `Super+Q` closes it normally. The generi
 Cliphist remains the only clipboard history. Up to 40 image entries receive
 previews in a private temporary directory, removed when the picker exits.
 Clipboard contents, quick notes and focus state are not part of the portable bundle.
+
+## Workspace switching
+
+Click a workspace number at the left of Waybar to switch to it. The active
+workspace keeps its highlighted indicator; `Super+1` through `Super+0` continue
+to select workspaces 1 through 10 using the Lua bindings.
+
+The bar uses `ext/workspaces` with `on-click: activate`, so clicks go through
+Wayland's `ext_workspace_manager_v1` protocol. This avoids the legacy
+`hyprctl dispatch workspace` command used by Waybar 0.15's Hyprland module,
+which is incompatible with the Lua dispatch syntax in Hyprland 0.56. Numeric
+workspace names sort numerically, and hidden special workspaces stay out of
+the list. The module uses the existing `#workspaces` styles.
+
+## Display wake and docking
+
+Some HDMI displays briefly disconnect while waking from DPMS (screen power
+saving). The monitor reconciler waits up to three seconds before enabling the
+laptop panel, checking fresh output state each second. A returning external
+display therefore keeps the docked layout; a real unplug or failed modeset still
+enables the laptop. A valid external display with DPMS off still counts as docked.
+On docking, the laptop stays active for two seconds while Wayland clients attach
+to the external display. The reconciler checks the link again before disabling
+the panel, avoiding an output removal in the middle of the bar's configuration.
+Lid and hotplug events share a runtime `flock` so they cannot change the layout
+concurrently.
+
+Waybar accepts real outputs and explicitly excludes Hyprland's temporary
+`FALLBACK` output with `"output": ["!FALLBACK", "*"]`. Creating bars across a
+rapid `HDMI -> FALLBACK -> laptop -> HDMI` transition can hit
+[GTK layer shell's initial configuration timeout](https://github.com/wmww/gtk-layer-shell/blob/master/src/custom-shell-surface.c).
+That timeout unmaps the bar while leaving its process alive, so systemd's
+`Restart=on-failure` cannot restore it. The filter and delays reduce output
+churn, but proved insufficient for the overnight failure on Aquamarine 0.15.0.
+
+Both the live Waybar configuration and `portable/waybar/config.jsonc` carry this
+output filter. The monitor listener reads `scripts/monitor-autoswitch.sh` for
+each event. It also verifies nonzero output dimensions after wake, skips
+inactive VTs, and bounds configuration recovery attempts with a cooldown.
+
+The underlying failure was a rejected DRM disconnect cleanup, followed by an
+enabled **0×0** HDMI output. Hyprlock remained alive but had no usable screen.
+The targeted Aquamarine patch and upstream Waybar callback fix are documented
+in [Display wake fixes](../packaging/display-wake/README.md), together with
+reproduction evidence, package sources and validation limits. Activating the
+backend fix requires a fresh login; configuration reloads cannot replace the
+running compositor's library. The monitor recovery script is a fallback, not
+the backend fix.
 
 ## Network selection
 

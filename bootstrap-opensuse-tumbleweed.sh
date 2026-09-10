@@ -307,7 +307,7 @@ install_packages() {
         python3-gobject python3-gobject-Gdk python3-gobject-cairo python3-pycairo typelib-1_0-GtkLayerShell-0_1
         typelib-1_0-NM-1_0
         libnotify-tools
-        jq socat curl unzip xz tar rsync git procps gawk dbus-1-tools glib2-tools
+        jq socat curl unzip xz tar rsync git procps gawk util-linux dbus-1-tools glib2-tools
         xdg-user-dirs
     )
     local extras=(wev)
@@ -976,7 +976,7 @@ validate_result() {
         ghostty alacritty kitty starship helix hx yazi herdr marksman glow pandoc wl-paste cliphist grimblast wpctl brightnessctl playerctl
         pdftoppm file fd rg fzf zoxide 7zz magick chafa resvg ffmpeg
         lua-language-server texlab taplo shfmt shellcheck gcc
-        nmcli nm-applet blueman-manager pavucontrol pactl notify-send jq socat busctl wlogout
+        nmcli nm-applet blueman-manager pavucontrol pactl notify-send jq socat flock busctl wlogout
         wob swappy wf-recorder udiskie uwsm nwg-displays btop
         merkuro-calendar korganizer kalendarac konsolekalendar kdialog python3 codex
     )

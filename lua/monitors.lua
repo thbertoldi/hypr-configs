@@ -11,7 +11,7 @@ hl.monitor({
 })
 
 -- Laptop panel disabled while docked; scripts/monitor-listener.sh re-enables it
--- when undocked (via `hyprctl keyword monitor` at runtime).
+-- when undocked or the external mode fails (via `hyprctl eval` at runtime).
 hl.monitor({ output = "eDP-1", disabled = true })
 
 -- NO per-workspace monitor bindings. This is a single-active-monitor setup

@@ -1,0 +1,3 @@
+# Preserve unified-diff context markers and imported RPM changelog history.
+*/*.patch whitespace=-blank-at-eol
+*/*.changes whitespace=-blank-at-eol

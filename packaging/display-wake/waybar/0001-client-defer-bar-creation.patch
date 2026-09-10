@@ -1,0 +1,71 @@
+From: Mervius <dhagemeier2001@gmail.com>
+Subject: [PATCH] client: defer output bar creation to the GLib main loop
+References: https://github.com/Alexays/Waybar/pull/4984
+Upstream-commit: f57decf81c3770d857c611898d2841b33ba5f579
+
+--- a/include/client.hpp
++++ b/include/client.hpp
+@@ -44,6 +44,7 @@
+                            const char* interface, uint32_t version);
+   static void handleGlobalRemove(void* data, struct wl_registry* registry, uint32_t name);
+   static void handleOutputDone(void*, struct zxdg_output_v1*);
++  void createBarsBatch();
+   static void handleOutputName(void*, struct zxdg_output_v1*, const char*);
+   static void handleOutputDescription(void*, struct zxdg_output_v1*, const char*);
+   void handleMonitorAdded(Glib::RefPtr<Gdk::Monitor> monitor);
+@@ -58,6 +59,8 @@
+   std::string m_cssFile;
+   sigc::connection monitor_added_connection_;
+   sigc::connection monitor_removed_connection_;
++  std::list<waybar_output*> pending_outputs_;
++  bool bars_scheduled_ = false;
+ };
+ 
+ }  // namespace waybar
+--- a/src/client.cpp
++++ b/src/client.cpp
+@@ -78,16 +78,38 @@
+       output.xdg_output.reset();
+       spdlog::debug("Output detection done: {} ({})", output.name, output.identifier);
+ 
+-      auto configs = client->getOutputConfigs(output);
++      client->pending_outputs_.push_back(&output);
++
++      if (!client->bars_scheduled_) {
++        client->bars_scheduled_ = true;
++
++        Glib::signal_idle().connect_once([client]() {
++          client->createBarsBatch();
++        }, Glib::PRIORITY_HIGH_IDLE);
++      }
++    }
++  } catch (const std::exception& e) {
++    spdlog::warn("caught exception in zxdg_output_v1_listener::done: {}", e.what());
++  }
++}
++
++void waybar::Client::createBarsBatch() {
++  pending_outputs_.remove_if([this](auto* output) { return std::none_of(outputs_.begin(), outputs_.end(), [&output](const auto& o) { return &o == output; }); });
++  for (auto* output : pending_outputs_) {
++    try {
++      auto configs = getOutputConfigs(*output);
+       if (!configs.empty()) {
+         for (const auto& config : configs) {
+-          client->bars.emplace_back(std::make_unique<Bar>(&output, config));
++          bars.emplace_back(std::make_unique<Bar>(output, config));
+         }
+       }
+-    }
+-  } catch (const std::exception& e) {
+-    spdlog::warn("caught exception in zxdg_output_v1_listener::done: {}", e.what());
+-  }
++    } catch (const std::exception& e) {
++      spdlog::warn("Error creating bar: {}", e.what());
++    }
++  }
++
++  pending_outputs_.clear();
++  bars_scheduled_ = false;
+ }
+ 
+ void waybar::Client::handleOutputName(void* data, struct zxdg_output_v1* /*xdg_output*/,

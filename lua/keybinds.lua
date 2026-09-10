@@ -131,7 +131,6 @@ hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl --player=playerctld play-pau
 hl.bind("XF86AudioNext", hl.dsp.exec_cmd("playerctl --player=playerctld next"),       { locked = true })
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl --player=playerctld previous"),   { locked = true })
 
--- === Lid switch (disable the internal panel whether the lid opens or closes;
--- the undock listener re-enables it when no external monitor is present) ===
-hl.bind("switch:on:Lid Switch",  hl.dsp.exec_cmd('hyprctl keyword monitor "eDP-1, disable"'), { locked = true })
-hl.bind("switch:off:Lid Switch", hl.dsp.exec_cmd('hyprctl keyword monitor "eDP-1, disable"'), { locked = true })
+-- === Lid switch (keep the panel available when no external display works) ===
+hl.bind("switch:on:Lid Switch",  hl.dsp.exec_cmd("~/.config/hypr/scripts/monitor-autoswitch.sh"), { locked = true })
+hl.bind("switch:off:Lid Switch", hl.dsp.exec_cmd("~/.config/hypr/scripts/monitor-autoswitch.sh"), { locked = true })

@@ -1,0 +1,312 @@
+-------------------------------------------------------------------
+Mon Sep  7 15:30:42 UTC 2026 - thbertoldi <9389084+thbertoldi@users.noreply.github.com>
+
+- Add 0001-drm-allow-disconnect-disable.patch: release the CRTC when a
+  connector disappears, preventing 0x0 modes after reconnect
+  (gh#hyprwm/aquamarine#386).
+- Run headless upstream tests and DRM teardown regression checks.
+- Modernize spec file.
+
+-------------------------------------------------------------------
+Sat Aug 29 18:37:35 UTC 2026 - Nassim Lhadj <lhadjnassim311@gmail.com>
+
+- Update to aquamarine version 0.15.0:
+  - A new ABI breaking release:
+    * frame: reschedule one more idle frame if requested
+    * Fix connector sequencing on high-performance multiple
+      monitor setups
+    * drm: drop unaccounted pageflip, don't present tearing twice
+    * Handle atomic modeset DRM for AMD iGPU (Ryzen AI 9 370HX)
+      panel max BPC reporting failure
+    * drm: keep scanning extension blocks after the first CTA
+    * swapchain: preserve multigpu flag in resize()
+    * drm: use libdisplay-info API di_info_get_hdr_static_metadata()
+    * drm: don't delete HDR_OUTPUT_METADATA when EOTF is 0
+    * core/drm: introduce async commits
+
+-------------------------------------------------------------------
+Tue Jul 28 06:59:50 UTC 2026 - Nassim Lhadj <lhadjnassim311@gmail.com>
+
+- Update to aquamarine version 0.14.0:
+  - A New ABI breaking release:
+     * drm: do not stash failed commits
+     * drm: add support for COLOR_RANGE prop
+     * drm: add frameguard for idle frame
+     * drm: dont set HW_CLOCK on nvidia reporting seq 0
+
+-------------------------------------------------------------------
+Thu Jul 23 16:27:27 UTC 2026 - Nassim Lhadj <lhadjnassim311@gmail.com>
+
+- Update to aquamarine version 0.13.0:
+  - A new major ABI breaking release for aquamarine:
+     * renderer: use version-compatible EGL debug context attributes
+     * drm: fix resource leaks
+     * atomic: fix undefined behavior in cursor plane position cast
+     * frame: ensure only one frame when pageflip occurs
+     * internal: chase hu fixes
+     * backend: fix implicit bool cast
+     * drm: deterministic page-flip scheduling + coalescing (#304,#306)
+     * drm: attach a right-sized swapchain buffer on modeset commits
+     * backend: enable libinput plugins if available
+     * drm: snapshot the commit for stashing
+     * backend/drm: fix dangling "this" in a callback
+     * drm: don't reset needFrame on stashing
+     
+-------------------------------------------------------------------
+Tue Jul 14 10:52:32 UTC 2026 - Nassim Lhadj <lhadjnassim311@gmail.com>
+
+- Update to aquamarine version 0.12.1:
+  - New major release, includes a new ABI-breaking release (0.12.0)
+  - Changes in version 0.12.1:
+    * drm: avoid redundant identity ctm modesets
+    * headless: don't use raw this in lambda capture without checking
+    * backend/headless: fix framecb never firing
+  - Changes from version 0.12.0:
+    - A New ABI-breaking release
+    * drm: CRTC starvation recovery + clear stale page-flip state
+      after suspend
+    * FormatUtils: null-check drmGetFormatModifierName result
+    * drm: skip unchanged connector_state on page-flips
+    * backend: avoid duplicate auto-named outputs
+    * drm: clear stale color state on modeset
+    * drm: re-read EDID on resume to detect dock port swaps
+    * drm: fall back to first render node on single-renderD systems
+      when parent-syspath match fails
+    * output/state: init ctm to identity
+    * session: Add AQ_NO_KMS_REQUIREMENT environment variable for
+      bypassing KMS requirement
+    * backend: remove trailing newlines from libseat and libinput logs
+    * Fix DisplayLink/evdi monitor hotplug
+    * drm: fix crash on null crtc in getGammaSize/getDeGammaSize
+  - Changes from version 0.11.0:
+    * headless: hold ref in next frame timer
+    * headless: verify fn is valid before calling
+    * backend/headless: implement FPS caps for headless outputs
+    * backend: move logger to backend
+    * backend: add freeDrmDevice on error in initDmabuf
+    * drm: convert vd path before compare with explicit device path
+    * Remove Unnecessary Modeset After Restoring from VT
+    * output: fix degammalut typo
+    * libinput: fix pad groups not being ref'd
+    * modifiers: add drmModifierToName and print names
+    * backend: read idle timer
+    * renderer: set EGL_CONTEXT_RELEASE_BEHAVIOR_KHR if supported
+    * atomic fixes
+    * drm: use parent device matching for render nodes
+    * drm: ignore redundant tiled display connectors
+    * drm: keep secondary renderers alive only when they're needed
+    * backend: fix use-after-free of logger during teardown
+    * drm: make pageflips drive the frames
+    * Split input and output buffer attachments
+    * drm: re-send HDR metadata blob on modeset
+    * drm: reduce duplicated code in render creation
+    * output: add a pendingPageFlips() method
+    * drm/renderer: glFlush when clearing buffers
+    * drm: re-send ctm blob on modeset
+    * Improve and optimize timer FD logic
+    * backend/drm: fix multi-GPU buffer import failure during
+      restoreAfterVT
+    * backend: include algorithm header
+    * backend: handle unhandled libinput switch enum with
+      default case
+    * drm: guard logging in connector disconnect to avoid
+      null dereference
+    * libinput: method to get libinput_tablet_tool from ITabletTool
+    * CI: use org-wide actions
+    * refactor: avoid repeated vector access in backend
+      and DRM loops
+    
+-------------------------------------------------------------------
+Mon Dec 29 22:10:17 UTC 2025 - Florian "sp1rit" <sp1rit@disroot.org>
+
+- Update to aquamarine-0.10.0:
+  - A new ABI-breaking release.
+  - Changes:
+    * wayland: send commit after frame
+    * backend: implement hyprutils' cli::logger
+    * rendernode: dont bother finding one on evdi
+    * Ensure disconnect called for removed connectors
+    * minor renderer changes
+    * prevent use-after-free during DRM backend shutdown
+
+-------------------------------------------------------------------
+Wed Sep 10 19:39:13 UTC 2025 - Marcus Rueckert <mrueckert@suse.de>
+
+- Update to aquamarine-0.9.4:
+  - Small patch release with a small fix to drm renderer's node
+    handling
+- Changes from aquamarine aquamarine-0.9.3:
+  - libinput: handle tablet axis on proximity, tip and button
+    events by @DarkCreepy59 in #194
+  - core: introduce drmRenderNodeFD() by @gulafaran in #193
+  - allocator: Default to forcing linear blit for multigpu by
+    @PlasmaPower in #197
+  - renderer: use rendernode if available by @gulafaran in #202
+- Changes from aquamarine aquamarine-0.9.2:
+  - core: use -Wpedantic and fix warnings by @gulafaran in #187
+  - hdr: don't skip setting up HDR even when the modes are the same
+    by @coffeeispower in #188
+  - allocator: workaround linear blitting by @gulafaran in #174
+
+-------------------------------------------------------------------
+Wed Jul 16 12:35:08 UTC 2025 - Florian "sp1rit" <sp1rit@disroot.org>
+
+- Update to aquamarine-0.9.1:
+  * A small patch release fixing builds with hl <= 0.49
+  * Fixes:
+    - backend: don't use a shorthand for SP
+    - Avoid unnecessary modeset
+
+- Changes from aquamarine aquamarine-0.9.0:
+  * A new major update, breaking ABI, but bringing a lot of
+    improvements
+  * Fixes:
+    - swapchain: fix age
+    - wayland: don't force swapchain length
+    - backend: Fix compiler warnings
+    - Restore hdr metadata after vt switch
+    - atomic: fix compiler warning with string
+    - clang-tidy: fix some errors
+  * Other:
+    - a few small renderer optimisations
+    - depend on gles3 and use vertex array objects
+    - reduce a bit of local temporar copies going around in renderer
+    - Use typed signals from hyprutils
+    - optimize blitting and use gles3 shaders
+
+-------------------------------------------------------------------
+Sun Mar 23 22:17:25 UTC 2025 - Florian "sp1rit" <sp1rit@disroot.org>
+
+- Update to aquamarine-0.8.0:
+  * New major release with various fixes to the infrastructure. ABI
+    break.
+  * Changes:
+    - consolidate EGL init/state
+    - Support setting drm content type property
+    - Compiler fixes and options
+    - drm: only allow multigpu blit to implcit, not all external
+      formats
+    - prioritize gpus with the most internal panels
+    - Get max bpc from drm format
+    - fix atomic reset being skipped, check nullptr elsewhere instead
+    - drm: Use RAII to manage EGL context
+    - Fix multi-GPU support for Nvidia
+    - misc: Add strict typing to attachment manager
+    - drm: only scan connected connectors
+    - backend: Fix Wayland backend idleCallbacks destruction
+    - misc: Fix Attachment shared pointer reinterpret
+    - backend, allocator: Fix multi-GPU format selection
+
+-------------------------------------------------------------------
+Thu Jan 30 08:49:15 UTC 2025 - Florian "spirit" <sp1rit@disroot.org>
+
+- Update to aquamarine-0.7.2:
+  * A minor update with fixes to headless displays in general, with a
+    fix to headless buffers and presentation feedback.
+  * Fixes:
+    - headless/wayland: emit present events after commit
+    - fix headless supported formats
+  * Other:
+    - Core: add clang-tidy
+
+- Changes from aquamarine-0.7.1:
+  * A minor update with some small fixes.
+  * Fixes:
+    - remove wrong property settings
+
+- Changes from aquamarine-0.7.0:
+  * Another major release because we broke ABI again.
+    From better news, optimization and GPU hotplug infrastructure
+    thanks to our wonderful community contributors.
+  * Additions:
+    - GPU hotplug support
+  * Fixes:
+    - Avoid excessive atomic properties updates
+
+- Changes from aquamarine-0.6.0:
+  * A new major release with various fixes, but also shiny new HDR
+    support.
+    Please note this release does break ABI.
+  * Additions:
+    - HDR Support
+  * Fixes:
+    - udev scan only cards (drm_minor), not connectors
+      (drm_connector)
+    - drm: moved null check for renderer to shouldBlit()
+    - only fail INVALID format when it's set as that
+    - only clear buffers when fullReconfigure succeeds
+  * Others:
+    - log errno set by drmModeAtomicCommit
+
+-------------------------------------------------------------------
+Tue Dec 17 13:24:25 UTC 2024 - Florian "sp1rit" <sp1rit@disroot.org>
+
+- Update to aquamarine-0.5.1:
+  * A minor update with some stability improvements.
+  * Fixes:
+    - buffer: remove useless forward def
+    - drm: Validate conn before dereference in
+      CDRMAtomicRequest::commit()
+    - clearer flow when rescanning connectors
+    - allow multigpu blit from explicit to implicit
+
+- Changes from aquamarine-0.5.0:
+  * A new major update with a few fixes.
+    This update breaks ABI and API compatibility. Sover has been
+    bumped to 4.
+  * Fixes:
+    - Fix fences according to spec
+    - scan only cards and not outputs, safeguard against null
+      renderer
+
+- Changes from aquamarine-0.4.5:
+  * A small update to add a drm_dumb allocator.
+
+-------------------------------------------------------------------
+Sat Nov  9 16:40:43 UTC 2024 - Florian "spirit" <sp1rit@disroot.org>
+
+- Update to aquamarine-0.4.4:
+  * drm: guard cursorFB buffer in restoreAfterVT
+
+- Changes from aquamarine-0.4.3:
+  * fix drm lease crash
+
+- Changes from aquamarine-0.4.2:
+  * A minor update with some fixes and fresh new CTM support.
+  * Fixes:
+    - session: only dispatch udev in dispatchPendingEventsAsync if on
+	  linux
+	- wayland: log compositor name on startup
+
+-------------------------------------------------------------------
+Tue Sep 17 07:37:29 UTC 2024 - Alessio Biancalana <alessio.biancalana@suse.com>
+
+- Update to aquamarine-0.4.1
+  * drm: fix crash on null crtc setCursor
+  * gbm: improve trace logging around allocs
+  * drm: reconfigure swapchain props after creating
+  * output: avoid crashing on no crtc
+  * GBM: fixup good() return value
+  * drm: verify output format in commit
+  * drm: request page flip events after commit
+  * drm: add missing destructor
+  * drm: fix typo in schedule
+  * backend: dont overflow on 32bit builds
+  * wayland: fix possible out-of-range crash in setCursor
+  * drm: recheck crtcs before connecting on udev event
+  * misc: make for loops const reference
+  * gbm: improve automatic format selection
+  * drm: don't connect before crtcs are guaranteed
+  * output: always emit a destroy event in ~dtor
+  * gbm/drm: conform to different scanout requirements for different planes
+  * wayland: send 1280x720 if w/h is 0 in configure
+  * gbm: override gbm_bo_get_modifier results for modifier-based allocation
+  * drm: allow disabling commit, even if pageFlipPending
+  * drm: add AQ_NO_MODIFIERS to try to mitigate hardware limitations
+  * gbm: don't select opaque pixel formats for cursor 
+- Run spec-cleaner over the specfile
+
+-------------------------------------------------------------------
+Thu Aug  8 07:10:47 UTC 2024 - Florian "sp1rit" <sp1rit@disroot.org>
+
+- Initial packaging of aquamarine-0.3.0
