@@ -28,11 +28,13 @@ Errors stay red and Vim's normal mode uses green. The complete official Mocha
 palette is embedded, with aliases for default ANSI color names and overrides
 for modules that otherwise use fixed indexed or RGB colors.
 
-The bootstrap installs Starship and backs up an existing configuration before
-deployment. Shell integration is separate: the current Fish setup already runs
-`starship init fish | source`. On another machine, initialize Starship using
-the [instructions for that shell](https://starship.rs/guide/#step-2-set-up-your-shell-to-use-starship).
-The theme takes effect on the next prompt.
+The bootstrap installs Fish, zoxide and Starship, backs up existing settings,
+and selects Fish as the login shell. Its managed Fish snippet initializes
+Starship and zoxide for interactive sessions while preserving `config.fish`.
+The theme takes effect in new shells after login. Fish and Starship settings
+follow `$XDG_CONFIG_HOME` when set; see the [shell setup and restoration
+instructions](installation.md#fish-shell). Other shells can use Starship's
+[shell integration instructions](https://starship.rs/guide/#step-2-set-up-your-shell-to-use-starship).
 
 ## Yazi
 
