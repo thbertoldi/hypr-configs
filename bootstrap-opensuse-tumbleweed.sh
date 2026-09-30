@@ -228,6 +228,7 @@ validate_host() {
         "$SCRIPT_DIR/assets/README.md" \
         "$SCRIPT_DIR/portable/alacritty/alacritty.toml" \
         "$SCRIPT_DIR/portable/kitty/kitty.conf" \
+        "$SCRIPT_DIR/portable/fish/conf.d/hypr-bootstrap.fish" \
         "$SCRIPT_DIR/portable/starship/starship.toml" \
         "$SCRIPT_DIR/portable/starship/CATPPUCCIN-LICENSE" \
         "$SCRIPT_DIR/portable/obsidian/appearance.json" \
@@ -298,9 +299,9 @@ install_packages() {
         merkuro korganizer kalendarac kdepim-runtime akonadi-calendar-tools kaccounts-integration
         kaccounts-providers libkgapi6 kdialog
         nodejs24 npm24
-        ghostty alacritty kitty starship yazi MozillaFirefox helix
+        ghostty alacritty kitty fish starship zoxide yazi MozillaFirefox helix
         glow pandoc-cli lua-language-server texlab taplo shfmt ShellCheck gcc
-        poppler-tools file fd ripgrep fzf zoxide 7zip ImageMagick chafa resvg ffmpeg-8
+        poppler-tools file fd ripgrep fzf 7zip ImageMagick chafa resvg ffmpeg-8
         qt6ct kvantum-manager kvantum-qt6
         papirus-icon-theme fontawesome-fonts symbols-only-nerd-fonts
         google-noto-sans-fonts google-noto-coloremoji-fonts
@@ -308,7 +309,7 @@ install_packages() {
         typelib-1_0-NM-1_0
         libnotify-tools
         jq socat curl unzip xz tar rsync git procps gawk util-linux dbus-1-tools glib2-tools
-        xdg-user-dirs
+        xdg-user-dirs shadow-pw-mgmt
     )
     local extras=(wev)
 
@@ -720,7 +721,8 @@ backup_existing_configuration() {
         "$HOME/.config/ghostty" \
         "$HOME/.config/alacritty" \
         "$HOME/.config/kitty" \
-        "$HOME/.config/starship.toml" \
+        "${XDG_CONFIG_HOME:-$HOME/.config}/fish" \
+        "${XDG_CONFIG_HOME:-$HOME/.config}/starship.toml" \
         "$HOME/.config/helix" \
         "$HOME/.config/yazi" \
         "$HOME/.config/herdr/config.toml" \
@@ -825,7 +827,8 @@ deploy_configuration() {
     copy_tree "$SCRIPT_DIR/portable/ghostty" "$HOME/.config/ghostty"
     copy_tree "$SCRIPT_DIR/portable/alacritty" "$HOME/.config/alacritty"
     copy_tree "$SCRIPT_DIR/portable/kitty" "$HOME/.config/kitty"
-    install_file 0644 "$SCRIPT_DIR/portable/starship/starship.toml" "$HOME/.config/starship.toml"
+    copy_tree "$SCRIPT_DIR/portable/fish" "${XDG_CONFIG_HOME:-$HOME/.config}/fish"
+    install_file 0644 "$SCRIPT_DIR/portable/starship/starship.toml" "${XDG_CONFIG_HOME:-$HOME/.config}/starship.toml"
     copy_tree "$SCRIPT_DIR/portable/helix" "$HOME/.config/helix"
     copy_tree "$SCRIPT_DIR/portable/yazi" "$HOME/.config/yazi"
     run install -d "$HOME/.config/herdr"
@@ -973,7 +976,7 @@ validate_result() {
 
     local required_commands=(
         Hyprland hypridle hyprlock hyprsunset hyprpolkitagent awww-daemon waybar swaync swaync-client eww fuzzel
-        ghostty alacritty kitty starship helix hx yazi herdr marksman glow pandoc wl-paste cliphist grimblast wpctl brightnessctl playerctl
+        ghostty alacritty kitty fish starship chsh helix hx yazi herdr marksman glow pandoc wl-paste cliphist grimblast wpctl brightnessctl playerctl
         pdftoppm file fd rg fzf zoxide 7zz magick chafa resvg ffmpeg
         lua-language-server texlab taplo shfmt shellcheck gcc
         nmcli nm-applet blueman-manager pavucontrol pactl notify-send jq socat flock busctl wlogout
@@ -987,6 +990,7 @@ validate_result() {
     done
     (( ${#missing[@]} == 0 )) || die "commands missing after installation: ${missing[*]}"
 
+    /usr/bin/fish --no-config --no-execute "${XDG_CONFIG_HOME:-$HOME/.config}/fish/conf.d/hypr-bootstrap.fish"
     hx --health markdown
     hx --health rpmspec
     herdr config check
@@ -1037,6 +1041,36 @@ PY
     fi
 }
 
+configure_fish_shell() {
+    # Use the distro binary, even if ~/.local/bin contains another Fish build.
+    local fish_shell=/usr/bin/fish
+    local user_name current_shell
+    user_name=$(id -un)
+    current_shell=$(getent passwd "$user_name" | cut -d: -f7) \
+        || die "cannot read the login shell for $user_name"
+    [[ -n "$current_shell" ]] || die "no login shell found for $user_name"
+
+    if [[ "$current_shell" == "$fish_shell" || "$current_shell" -ef "$fish_shell" ]]; then
+        log "Fish is already the login shell for $user_name"
+        return
+    fi
+
+    log "Setting Fish as the login shell for $user_name"
+    if (( DRY_RUN )); then
+        printf '  save previous login shell %s -> %s/login-shell\n' "$current_shell" "$BACKUP_DIR"
+        print_command sudo chsh -s "$fish_shell" "$user_name"
+        return
+    fi
+
+    [[ -x "$fish_shell" ]] || die "Fish is unavailable; install fish or rerun without --skip-packages"
+    grep -Fxq "$fish_shell" /etc/shells \
+        || die "$fish_shell is not registered in /etc/shells; reinstall the fish package"
+
+    mkdir -p "$BACKUP_DIR"
+    printf '%s\n' "$current_shell" > "$BACKUP_DIR/login-shell"
+    sudo chsh -s "$fish_shell" "$user_name"
+}
+
 report_service_state() {
     (( DRY_RUN )) && return
     systemctl is-active --quiet NetworkManager.service \
@@ -1052,6 +1086,7 @@ finish() {
 
 Next steps:
   1. Log out and select "Hyprland (UWSM)" in the display manager.
+     New terminals will use Fish with zoxide (z/zi) and the Starship prompt.
   2. Run `hyprctl monitors` and adjust ~/.config/hypr/lua/monitors.lua.
   3. Import VPN profiles; credentials and KWallet data are not copied.
   4. Run `codex login`. Add Google and personal Outlook in DankCalendar's
@@ -1114,8 +1149,11 @@ main() {
     apply_desktop_theme
     reload_user_units
     validate_result
+    configure_fish_shell
     report_service_state
     finish
 }
 
-main "$@"
+if [[ "${BASH_SOURCE[0]}" == "$0" ]]; then
+    main "$@"
+fi

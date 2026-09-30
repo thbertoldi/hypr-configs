@@ -83,7 +83,8 @@ cd hypr-configs
 ```
 
 The bootstrap installs the full profile, including application integrations and
-the Anki starter decks. Existing collections are retained. It deploys the bundle
+the Anki starter decks, and sets Fish as your login shell with zoxide and the
+Starship prompt. Existing collections are retained. It deploys the bundle
 to `~/.config/hypr/` and backs up affected settings under
 `~/.local/state/hypr-bootstrap/backups/`. Review the dry run when adapting an
 existing desktop.
@@ -166,6 +167,7 @@ Run checks from the repository root on a configured desktop:
 Hyprland --verify-config --config "$PWD/hyprland.lua"
 NO_AT_BRIDGE=1 PYTHONDONTWRITEBYTECODE=1 python3 -m unittest discover -s tests
 bash -n bootstrap-opensuse-tumbleweed.sh
+fish --no-config --no-execute portable/fish/conf.d/hypr-bootstrap.fish
 ./bootstrap-opensuse-tumbleweed.sh --dry-run
 git diff --check
 ```
